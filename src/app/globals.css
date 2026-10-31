@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #c5cdd6;
+  --color-ink: #0b0b0b;
+  --color-accent: #f8641d;
+  --color-violet: #7209fb;
+  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * Archivo is a variable font with a width axis, so one family covers every
+ * display style in the design. Change a style here and it updates everywhere.
+ */
+@utility font-cond {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 62, "wght" 800;
+  letter-spacing: -0.02em;
+  word-spacing: 0.12em;
+}
+
+@utility font-statement {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 64, "wght" 800;
+  letter-spacing: -0.01em;
+}
+
+@utility font-numeral {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 112, "wght" 600;
+}
+
+@utility font-ghost {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 100, "wght" 900;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  [id] {
+    scroll-margin-top: 1.5rem;
+  }
+
+  ::selection {
+    background-color: var(--color-ink);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-violet);
+    outline-offset: 3px;
+  }
+
+  input,
+  textarea {
+    font: inherit;
+  }
+}
+
+@keyframes badge-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-badge {
+  animation: badge-spin 24s linear infinite;
+}
+
+@utility animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-badge,
+  .animate-marquee {
+    animation: none;
+  }
+}
