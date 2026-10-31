@@ -21,7 +21,9 @@ Requires Node 20.9 or newer.
 | Colours and fonts | `src/app/globals.css` (`@theme`) and `src/app/layout.tsx` |
 | A section's layout | `src/components/sections/` |
 | Shared pieces (buttons, accordion, ghost headings, badges, scroll effects) | `src/components/ui/` |
-| Smooth scrolling, progress line, navbar | `src/components/layout/` |
+| Smooth scrolling, progress line, navbar, mobile menu, footer | `src/components/layout/` |
+| Phone contact sheet (full-screen form) | `src/components/contact/` |
+| Which links the desktop bar shows | `inBar` on each entry of `navLinks` in `content.ts` |
 | Portfolio card colours | `tone` on each project in `src/data/content.ts` |
 | Images | `public/images/` (WebP, referenced from `content.ts`) |
 
@@ -36,7 +38,9 @@ Requires Node 20.9 or newer.
 ## Responsive behaviour
 
 - **1024px and up:** every size is measured against the page width (CSS `cqw` units), so the layout scales like the original design and stops growing at 1440px.
-- **Tablet and mobile:** redesigned from the same system. The hero stacks, the stats move under the portrait, the portfolio cards become a plain list (one column on phones, two on tablets), and client logos become a slow marquee. The nav collapses into a full-screen menu.
+- **Tablet and mobile:** redesigned from the same system. The hero fills the first screen with the artwork and the greeting + headline (the card sits below), the portfolio cards are compact and stack over each other as you scroll, client feedback uses a small avatar beside the name, and client logos become a slow marquee. The nav collapses into a full-screen menu.
+- **Below 768px:** every "Hire Me", "Start a project" and "Let's discuss" button opens the contact form as a full-screen sheet; the in-page form is used from 768px up.
+- **Desktop first screen:** the artwork only. The introduction and the card start just below the fold.
 
 ## Scroll experience
 
@@ -48,7 +52,7 @@ Requires Node 20.9 or newer.
 | Hero layers drift apart as the hero scrolls away | `sections/Hero.tsx` | The intro animation is unchanged and plays first. |
 | Ghost words slide in; footer and contact photo drift | `ui/ScrollShift.tsx` | |
 | About statement lights up word by word; stats count up | `ui/ScrollWords.tsx`, `ui/CountUp.tsx` | |
-| Portfolio: cards pin and stack, with 3D tilt on the image | `sections/ProjectStack.tsx` | Desktop only. Phones and tablets get a plain list. |
+| Portfolio: cards pin and stack, with 3D tilt on the image | `sections/ProjectStack.tsx` | The tilt is desktop with a mouse only; the stacking works at every size. |
 | Testimonials fade in and out of focus | `sections/Testimonials.tsx` | |
 | Client strip on phones speeds up while scrolling | `ui/VelocityMarquee.tsx` | |
 

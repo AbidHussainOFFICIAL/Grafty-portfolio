@@ -14,7 +14,8 @@ interface GhostHeadingProps {
 }
 
 /**
- * Giant decorative word that fades from white to transparent.
+ * Giant decorative word that fades from white to transparent. When only part of the
+ * word is visible, the fade is spread over that part so it still softens away.
  * The SVG text is stretched to fill its box, so it always spans the full width
  * of the container whatever the screen size. It is hidden from assistive tech;
  * sections provide their own real heading.
@@ -43,7 +44,7 @@ export function GhostHeading({ text, ratio, visible = 1, className }: GhostHeadi
             x1="0"
             y1="0"
             x2="0"
-            y2={capHeight}
+            y2={height}
           >
             <stop offset="0" stopColor="#fff" stopOpacity="0.9" />
             <stop offset="0.5" stopColor="#fff" stopOpacity="0.45" />

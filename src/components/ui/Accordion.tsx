@@ -18,24 +18,33 @@ interface AccordionProps {
   defaultOpenId?: string;
 }
 
+/*
+ * The padding lives on the header button (and on the panel's inner wrapper), not on the
+ * item, so the whole header area is clickable and not just the title and the icon.
+ * While open, the button's bottom padding shrinks to the gap above the answer.
+ */
 const styles = {
   card: {
     list: "flex flex-col gap-2.5 lg:gap-[0.98cqw]",
-    item: "rounded-xl bg-white px-5 py-5 md:px-8 md:py-7 lg:rounded-[1.4cqw] lg:px-[3.9cqw] lg:py-[4.1cqw]",
-    button: "gap-4",
+    item: "overflow-hidden rounded-xl bg-white lg:rounded-[1.4cqw]",
+    button:
+      "gap-4 px-5 py-5 hover:bg-ink/[0.03] aria-expanded:pb-3 md:px-8 md:py-7 md:aria-expanded:pb-4 lg:px-[3.9cqw] lg:py-[4.1cqw] lg:aria-expanded:pb-[2.8cqw]",
     title:
       "font-cond translate-y-[0.04em] text-[clamp(2.25rem,11vw,4.5rem)] uppercase leading-[0.9] lg:text-[8.2cqw]",
     icon: "h-6 w-6 shrink-0 md:h-9 md:w-9 lg:h-[4.3cqw] lg:w-[4.3cqw]",
-    body: "max-w-prose pt-3 text-base leading-snug md:pt-4 md:text-xl lg:max-w-[66cqw] lg:pt-[2.8cqw] lg:text-[2.35cqw] lg:leading-[1.4]",
+    panel: "px-5 pb-5 md:px-8 md:pb-7 lg:px-[3.9cqw] lg:pb-[4.1cqw]",
+    body: "max-w-prose text-base leading-snug md:text-xl lg:max-w-[66cqw] lg:text-[2.35cqw] lg:leading-[1.4]",
   },
   line: {
     list: "border-t border-ink",
-    item: "border-b border-ink py-5 md:py-6 lg:py-[3.2cqw]",
-    button: "gap-6",
+    item: "border-b border-ink",
+    button:
+      "gap-6 py-5 hover:bg-ink/[0.03] aria-expanded:pb-3 md:py-6 lg:py-[3.2cqw] lg:aria-expanded:pb-[1cqw]",
     title:
       "font-cond text-lg uppercase leading-tight md:text-2xl lg:text-[2.25cqw] lg:leading-none",
     icon: "h-4 w-4 shrink-0 md:h-5 md:w-5 lg:h-[1.6cqw] lg:w-[1.6cqw]",
-    body: "pt-3 text-sm leading-relaxed md:text-base lg:max-w-[88cqw] lg:pt-[1cqw] lg:text-[max(14px,1.4cqw)] lg:leading-[1.65]",
+    panel: "pb-5 md:pb-6 lg:pb-[3.2cqw]",
+    body: "text-sm leading-relaxed md:text-base lg:max-w-[88cqw] lg:text-[max(14px,1.4cqw)] lg:leading-[1.65]",
   },
 } as const;
 
@@ -61,7 +70,10 @@ export function Accordion({ items, variant, defaultOpenId }: AccordionProps) {
                 aria-expanded={open}
                 aria-controls={panelId}
                 onClick={() => setOpenId(open ? null : item.id)}
-                className={cn("flex w-full items-center justify-between text-left", style.button)}
+                className={cn(
+                  "flex w-full cursor-pointer items-center justify-between text-left transition-colors duration-300",
+                  style.button,
+                )}
               >
                 <span className={style.title}>{item.title}</span>
                 <PlusMinusIcon open={open} className={style.icon} />
@@ -83,7 +95,10 @@ export function Accordion({ items, variant, defaultOpenId }: AccordionProps) {
                   }}
                   className="overflow-hidden"
                 >
-                  <p className={style.body}>{item.body}</p>
+                  {/* Padding sits on this inner wrapper: the animated element above must be able to shrink to zero height. */}
+                  <div className={style.panel}>
+                    <p className={style.body}>{item.body}</p>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

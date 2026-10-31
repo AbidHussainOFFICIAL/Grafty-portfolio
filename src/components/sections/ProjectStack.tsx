@@ -68,7 +68,7 @@ function ImageTilt({ project, tilt }: ImageTiltProps) {
 
   return (
     <div
-      className="relative aspect-square shrink-0 overflow-hidden [perspective:900px] lg:h-full"
+      className="relative aspect-[16/10] shrink-0 overflow-hidden [perspective:900px] md:aspect-[16/9] lg:aspect-square lg:h-full"
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
     >
@@ -107,7 +107,7 @@ interface StackCardProps {
 function StackCard({ project, index, total, ownRef, nextRef }: StackCardProps) {
   const reduceMotion = useReducedMotion();
   const desktop = useMediaQuery("(min-width: 1024px)");
-  const stacked = desktop && !reduceMotion;
+  const stacked = !reduceMotion;
   const tone = panelTone[project.tone];
   const depth = total - 1 - index;
 
@@ -123,7 +123,7 @@ function StackCard({ project, index, total, ownRef, nextRef }: StackCardProps) {
   return (
     <li
       ref={ownRef}
-      className="lg:sticky lg:mb-[3cqw] lg:h-[min(46cqw,calc(100svh-11rem))] lg:last:mb-0 lg:motion-reduce:static"
+      className="sticky mb-4 last:mb-0 motion-reduce:static md:mb-6 lg:mb-[3cqw] lg:h-[min(46cqw,calc(100svh-11rem))] lg:motion-reduce:static"
       style={{ top: `calc(var(--stack-top) + ${index} * var(--stack-step))` }}
     >
       <motion.div
@@ -135,16 +135,16 @@ function StackCard({ project, index, total, ownRef, nextRef }: StackCardProps) {
           className="group flex h-full flex-col lg:flex-row"
           aria-label={`${project.title}, project ${index + 1} of ${total}`}
         >
-          <ImageTilt project={project} tilt={stacked} />
+          <ImageTilt project={project} tilt={stacked && desktop} />
 
           <div
-            className={`flex flex-1 flex-col justify-between gap-8 p-5 md:p-6 lg:gap-0 lg:p-[3cqw] ${tone.panel}`}
+            className={`flex flex-1 flex-col justify-between gap-4 p-4 md:gap-8 md:p-6 lg:gap-0 lg:p-[3cqw] ${tone.panel}`}
           >
             <p className="font-numeral text-sm lg:text-[max(14px,1.4cqw)]" aria-hidden="true">
               {pad(index + 1)} / {pad(total)}
             </p>
 
-            <h3 className="font-cond text-[clamp(2.25rem,10vw,3.5rem)] uppercase leading-[0.88] lg:text-[7.4cqw]">
+            <h3 className="font-cond text-[clamp(2rem,9vw,3.5rem)] uppercase leading-[0.88] lg:text-[7.4cqw]">
               {project.title.split(" ").map((word) => (
                 <span key={word} className="block">
                   {word}
@@ -177,15 +177,15 @@ function StackCard({ project, index, total, ownRef, nextRef }: StackCardProps) {
 }
 
 /**
- * The portfolio list. On desktop the cards pin to the top of the screen and the next one
- * slides over the last, which shrinks and darkens beneath it. On smaller screens the cards
- * simply stack down the page.
+ * The portfolio list. At every screen size the cards pin to the top of the screen and the
+ * next one slides over the last, which shrinks and darkens beneath it. Phones use compact
+ * cards so a whole card fits on screen; with reduced motion they simply scroll past.
  */
 export function ProjectStack() {
   const refs = useMemo(() => projects.map(() => createRef<HTMLLIElement>()), []);
 
   return (
-    <ul className="mt-3 grid gap-4 [--stack-step:1.25rem] [--stack-top:5.5rem] md:grid-cols-2 lg:mt-[1.8cqw] lg:block">
+    <ul className="mt-3 [--stack-step:0.75rem] [--stack-top:1rem] md:[--stack-step:1rem] md:[--stack-top:1.5rem] lg:mt-[1.8cqw] lg:[--stack-step:1.25rem] lg:[--stack-top:5.5rem]">
       {projects.map((project, index) => (
         <StackCard
           key={project.id}

@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { testimonials, type Testimonial } from "@/data/content";
-import { Button } from "@/components/ui/Button";
+import { ContactLink } from "@/components/contact/ContactLink";
 import { Stars } from "@/components/ui/Icons";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
@@ -23,11 +23,11 @@ function TestimonialRow({ testimonial }: { testimonial: Testimonial }) {
   return (
     <motion.article
       ref={ref}
-      className="border-t border-ink py-6 md:py-8 lg:py-[3.9cqw]"
+      className="border-t border-ink py-5 md:py-8 lg:py-[3.9cqw]"
       style={reduceMotion ? undefined : { opacity }}
     >
-      <div className="flex flex-col gap-6 md:flex-row md:items-stretch md:justify-between md:gap-8">
-        <div className="flex flex-col justify-between gap-8 md:max-w-[60%] lg:max-w-[52cqw]">
+      <div className="flex flex-col gap-4 md:flex-row md:items-stretch md:justify-between md:gap-8">
+        <div className="flex flex-col justify-between gap-5 md:gap-8 md:max-w-[60%] lg:max-w-[52cqw]">
           <div>
             <p className="flex items-center gap-1.5 text-xs font-medium lg:gap-[0.5cqw] lg:text-[max(13px,1.2cqw)]">
               <span>{rating}</span>
@@ -37,14 +37,25 @@ function TestimonialRow({ testimonial }: { testimonial: Testimonial }) {
               <p>&ldquo;{quote}&rdquo;</p>
             </blockquote>
           </div>
-          <p className="text-sm lg:text-[max(14px,1.4cqw)]">
-            <span className="block font-semibold">{name}</span>
-            <span className="block text-xs lg:text-[max(13px,1.2cqw)]">{role}</span>
-          </p>
+          <div className="flex items-center gap-3">
+            {/* Phones: a small avatar sits beside the name; larger screens show the big portrait instead. */}
+            <Image
+              src={image.src}
+              alt={image.alt}
+              width={96}
+              height={96}
+              sizes="48px"
+              className="h-12 w-12 shrink-0 rounded-full object-cover md:hidden"
+            />
+            <p className="text-sm lg:text-[max(14px,1.4cqw)]">
+              <span className="block font-semibold">{name}</span>
+              <span className="block text-xs lg:text-[max(13px,1.2cqw)]">{role}</span>
+            </p>
+          </div>
         </div>
 
         <motion.div
-          className="order-first shrink-0 md:order-none"
+          className="hidden shrink-0 md:block"
           style={reduceMotion ? undefined : { y: portraitY }}
         >
           <Image
@@ -52,8 +63,8 @@ function TestimonialRow({ testimonial }: { testimonial: Testimonial }) {
             alt={image.alt}
             width={474}
             height={474}
-            sizes="(min-width: 1440px) 340px, (min-width: 768px) 24vw, 40vw"
-            className="h-36 w-36 rounded-full object-cover md:h-52 md:w-52 lg:h-[23.5cqw] lg:w-[23.5cqw]"
+            sizes="(min-width: 1440px) 340px, 24vw"
+            className="h-52 w-52 rounded-full object-cover lg:h-[23.5cqw] lg:w-[23.5cqw]"
           />
         </motion.div>
       </div>
@@ -72,12 +83,9 @@ export function Testimonials() {
         <SectionLabel bar="before" id="feedback-title">
           Client Feedback
         </SectionLabel>
-        <Button
-          href="#work"
-          className="h-9 px-5 text-sm lg:h-[3.4cqw] lg:px-[2.3cqw] lg:text-[max(14px,1.4cqw)]"
-        >
-          Explore All
-        </Button>
+        <ContactLink className="h-11 px-5 text-sm md:h-9 lg:h-[3.4cqw] lg:px-[2.3cqw] lg:text-[max(14px,1.4cqw)]">
+          Start a project
+        </ContactLink>
       </div>
 
       <div className="mt-5 lg:mt-[2.8cqw]">

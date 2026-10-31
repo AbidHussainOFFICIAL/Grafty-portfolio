@@ -12,11 +12,22 @@ export const site = {
   cvUrl: "/jessy-linda-cv.pdf",
 } as const;
 
-export const navLinks = [
-  { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
-  { label: "Contact", href: "#contact" },
-] as const;
+export interface NavLink {
+  readonly label: string;
+  readonly href: string;
+  /** Shown in the desktop bar. Every link appears in the mobile menu and footer. */
+  readonly inBar: boolean;
+}
+
+export const navLinks: readonly NavLink[] = [
+  { label: "Home", href: "#home", inBar: true },
+  { label: "Services", href: "#services", inBar: true },
+  { label: "About", href: "#about", inBar: true },
+  { label: "Work", href: "#work", inBar: true },
+  { label: "Reviews", href: "#feedback", inBar: false },
+  { label: "FAQ", href: "#faq", inBar: false },
+  { label: "Contact", href: "#contact", inBar: true },
+];
 
 export type SocialId = "dribbble" | "linkedin" | "x" | "behance";
 
@@ -246,5 +257,5 @@ export const contact = {
 export const footerLinks = [
   { label: "About", href: "#about" },
   { label: "Work Gallery", href: "#work" },
-  { label: "Service", href: "#services" },
+  { label: "Services", href: "#services" },
 ] as const;

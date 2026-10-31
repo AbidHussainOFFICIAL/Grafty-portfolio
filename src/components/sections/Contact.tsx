@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { contact } from "@/data/content";
+import { ContactLink } from "@/components/contact/ContactLink";
+import { CopyEmail } from "@/components/ui/CopyEmail";
 import { GhostHeading } from "@/components/ui/GhostHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { ScrollShift } from "@/components/ui/ScrollShift";
@@ -22,7 +24,19 @@ export function Contact() {
       </ScrollShift>
 
       <Reveal className="relative mt-2 overflow-hidden rounded-2xl bg-white lg:mt-[3cqw] lg:grid lg:h-[44.4cqw] lg:grid-cols-[40.6%_1fr] lg:rounded-[1.76cqw]">
-        <div className="relative h-64 overflow-hidden md:h-80 lg:h-full">
+        {/* Phones: a compact card; the form itself opens full screen from the button. */}
+        <div className="p-6 md:hidden">
+          <h3 className="font-cond text-[clamp(2.5rem,12vw,3.5rem)] uppercase leading-none">
+            {title}
+          </h3>
+          <p className="mt-3 text-base leading-snug">
+            Have a project in mind? Send me a few lines and I will get back to you.
+          </p>
+          <ContactLink className="mt-6 h-12 w-full px-8 text-base">Write me a message</ContactLink>
+          <CopyEmail className="mt-5 text-sm" />
+        </div>
+
+        <div className="relative hidden h-80 overflow-hidden md:block lg:h-full">
           {/* Taller than its frame so the photo can drift slowly as the page scrolls. */}
           <ScrollShift y={["-6%", "6%"]} className="absolute inset-x-0 -inset-y-[8%]">
             <Image
@@ -36,7 +50,7 @@ export function Contact() {
           </ScrollShift>
         </div>
 
-        <div className="p-6 md:p-10 lg:py-[4.6cqw] lg:pl-[6cqw] lg:pr-[4.9cqw]">
+        <div className="hidden p-6 md:block md:p-10 lg:py-[4.6cqw] lg:pl-[6cqw] lg:pr-[4.9cqw]">
           <h3 className="font-cond text-[clamp(2.5rem,12vw,3.5rem)] uppercase leading-none lg:text-[5cqw]">
             {title}
           </h3>

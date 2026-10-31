@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Inter_Tight } from "next/font/google";
+import { ContactSheetProvider } from "@/components/contact/ContactSheetProvider";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { site } from "@/data/content";
@@ -50,7 +51,7 @@ export default function RootLayout({
         </a>
         <ScrollProgress />
         <SmoothScroll />
-        {children}
+        <ContactSheetProvider>{children}</ContactSheetProvider>
       </body>
     </html>
   );

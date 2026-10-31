@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
+import { createContext, useContext, useId, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { validateContact, type ContactErrors, type ContactValues } from "@/lib/validation";
 
@@ -9,8 +9,12 @@ type Status = "idle" | "sending" | "success" | "error";
 const emptyValues: ContactValues = { name: "", email: "", subject: "", message: "" };
 
 const labelClass = "block text-[13px] font-semibold lg:text-[max(13px,1.15cqw)]";
+// 16px on phones: anything smaller makes iOS zoom the page when a field is focused.
 const controlClass =
-  "block w-full border-b-[1.5px] border-ink bg-transparent pb-1.5 pt-1.5 text-sm outline-none placeholder:text-ink/45 lg:pt-[0.3cqw] lg:text-[max(13px,1.05cqw)]";
+  "block w-full border-b-[1.5px] border-ink bg-transparent pb-2 pt-2 text-base outline-none placeholder:text-ink/45 md:pb-1.5 md:pt-1.5 md:text-sm lg:pt-[0.3cqw] lg:text-[max(13px,1.05cqw)]";
+
+/** Field ids are prefixed per form instance so two forms on one page never share ids. */
+const FormIdContext = createContext("contact");
 
 interface FieldProps {
   label: string;
@@ -21,9 +25,10 @@ interface FieldProps {
 }
 
 function Field({ label, name, error, className, children }: FieldProps) {
+  const prefix = useContext(FormIdContext);
   return (
     <div className={className}>
-      <label htmlFor={`contact-${name}`} className={labelClass}>
+      <label htmlFor={`${prefix}-${name}`} className={labelClass}>
         {label}
         <span aria-hidden="true">*</span>
       </label>
@@ -31,7 +36,7 @@ function Field({ label, name, error, className, children }: FieldProps) {
         {children}
       </div>
       {error && (
-        <p id={`contact-${name}-error`} className="mt-1 text-xs text-red-700 lg:text-[max(11px,1cqw)]">
+        <p id={`${prefix}-${name}-error`} className="mt-1 text-xs text-red-700 lg:text-[max(11px,1cqw)]">
           {error}
         </p>
       )}
@@ -39,7 +44,13 @@ function Field({ label, name, error, className, children }: FieldProps) {
   );
 }
 
-export function ContactForm() {
+interface ContactFormProps {
+  /** Called after a message was sent successfully (the sheet uses it to move focus). */
+  onSent?: () => void;
+}
+
+export function ContactForm({ onSent }: ContactFormProps) {
+  const prefix = useId();
   const [values, setValues] = useState<ContactValues>(emptyValues);
   const [honeypot, setHoneypot] = useState("");
   const [errors, setErrors] = useState<ContactErrors>({});
@@ -56,13 +67,13 @@ export function ContactForm() {
     };
 
   const fieldProps = (field: keyof ContactValues) => ({
-    id: `contact-${field}`,
+    id: `${prefix}-${field}`,
     name: field,
     value: values[field],
     onChange: update(field),
     "aria-required": true as const,
     "aria-invalid": errors[field] ? true : undefined,
-    "aria-describedby": errors[field] ? `contact-${field}-error` : undefined,
+    "aria-describedby": errors[field] ? `${prefix}-${field}-error` : undefined,
     className: controlClass,
   });
 
@@ -74,7 +85,7 @@ export function ContactForm() {
     setErrors(found);
     const firstInvalid = (Object.keys(found) as Array<keyof ContactValues>)[0];
     if (firstInvalid) {
-      formRef.current?.querySelector<HTMLElement>(`#contact-${firstInvalid}`)?.focus();
+      (formRef.current?.elements.namedItem(firstInvalid) as HTMLElement | null)?.focus();
       return;
     }
 
@@ -94,6 +105,7 @@ export function ContactForm() {
         setValues(emptyValues);
         setStatus("success");
         setFeedback("Thank you. Your message is on its way and I will reply soon.");
+        onSent?.();
         return;
       }
       if (response.status === 422 && data.errors) setErrors(data.errors);
@@ -106,6 +118,7 @@ export function ContactForm() {
   }
 
   return (
+    <FormIdContext.Provider value={prefix}>
     <form
       ref={formRef}
       noValidate
@@ -154,7 +167,7 @@ export function ContactForm() {
         <Button
           type="submit"
           disabled={status === "sending"}
-          className="h-11 px-8 text-sm lg:h-[3.1cqw] lg:px-[2.4cqw] lg:text-[max(13px,1.2cqw)]"
+          className="h-12 px-8 text-sm md:h-11 lg:h-[3.1cqw] lg:px-[2.4cqw] lg:text-[max(13px,1.2cqw)]"
         >
           {status === "sending" ? "Sending…" : "Send Message"}
         </Button>
@@ -167,5 +180,6 @@ export function ContactForm() {
         </p>
       </div>
     </form>
+    </FormIdContext.Provider>
   );
 }
