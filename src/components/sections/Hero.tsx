@@ -1,7 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { hero, site } from "@/data/content";
 import { signature } from "@/data/artwork";
 import { CircularBadge } from "@/components/ui/CircularBadge";
@@ -51,6 +52,17 @@ function Tag({ label, rotate, className, delay }: TagProps) {
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // As the hero scrolls away its layers part ways: the ghost word and portrait lag behind
+  // the page while the signature drifts up. These only move the wrappers, so they never
+  // interfere with the entrance animation on the layers themselves.
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const ghostY = useTransform(scrollYProgress, [0, 1], ["0vw", "7vw"]);
+  const portraitY = useTransform(scrollYProgress, [0, 1], ["0vw", "3vw"]);
+  const signatureY = useTransform(scrollYProgress, [0, 1], ["0vw", "-3vw"]);
+  const layer = (y: typeof ghostY) => (reduceMotion ? undefined : { y });
+
   const rise = (delay: number) =>
     reduceMotion
       ? {}
@@ -61,40 +73,49 @@ export function Hero() {
         };
 
   return (
-    <section id="home" aria-labelledby="hero-title" className="relative">
+    <section ref={sectionRef} id="home" aria-labelledby="hero-title" className="relative">
       <div className="relative px-5 md:px-8 lg:aspect-[1024/760] lg:px-0">
         {/* Artwork: ghost word, arch portrait, signature and floating tags */}
         <div className="relative mx-auto aspect-[1/0.6] max-w-[760px] md:max-w-none lg:absolute lg:inset-0 lg:aspect-auto">
-          <GhostHeading
-            text={hero.ghost}
-            ratio={5.26}
+          <motion.div
             className="absolute left-0 top-[14%] w-full lg:left-[5.08%] lg:top-[9.87%] lg:w-[89.84%]"
-          />
+            style={layer(ghostY)}
+          >
+            <GhostHeading text={hero.ghost} ratio={5.26} className="w-full" />
+          </motion.div>
 
           <motion.div
             className="absolute left-[17%] top-0 z-10 w-[66%] lg:left-[30.57%] lg:top-[1.71%] lg:w-[38.87%]"
-            initial={reduceMotion ? false : { opacity: 0, scale: 0.94, y: 24 }}
-            animate={reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: EASE }}
+            style={layer(portraitY)}
           >
-            <Image
-              src={hero.portrait.src}
-              alt={hero.portrait.alt}
-              width={hero.portrait.width}
-              height={hero.portrait.height}
-              priority
-              sizes="(min-width: 1440px) 560px, 40vw"
-              className="h-auto w-full rounded-t-full [mask-image:linear-gradient(to_bottom,#000_86%,transparent)]"
-            />
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.94, y: 24 }}
+              animate={reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: EASE }}
+            >
+              <Image
+                src={hero.portrait.src}
+                alt={hero.portrait.alt}
+                width={hero.portrait.width}
+                height={hero.portrait.height}
+                priority
+                sizes="(min-width: 1440px) 560px, 40vw"
+                className="h-auto w-full rounded-t-full [mask-image:linear-gradient(to_bottom,#000_86%,transparent)]"
+              />
+            </motion.div>
           </motion.div>
 
           <motion.div
             className="pointer-events-none absolute left-0 top-[36%] z-20 w-full text-violet lg:left-[6.35%] lg:top-[28.7%] lg:w-[87.9%]"
-            initial={reduceMotion ? false : { clipPath: "inset(0 100% 0 0)" }}
-            animate={reduceMotion ? undefined : { clipPath: "inset(0 0% 0 0)" }}
-            transition={{ duration: 1.4, delay: 0.5, ease: "easeInOut" }}
+            style={layer(signatureY)}
           >
-            <VectorArt art={signature} className="block h-auto w-full" />
+            <motion.div
+              initial={reduceMotion ? false : { clipPath: "inset(0 100% 0 0)" }}
+              animate={reduceMotion ? undefined : { clipPath: "inset(0 0% 0 0)" }}
+              transition={{ duration: 1.4, delay: 0.5, ease: "easeInOut" }}
+            >
+              <VectorArt art={signature} className="block h-auto w-full" />
+            </motion.div>
           </motion.div>
 
           <Tag
@@ -113,7 +134,7 @@ export function Hero() {
 
         {/* Introduction */}
         <div className="relative z-30 mt-2 md:mt-4 lg:absolute lg:left-[5.27%] lg:top-[48.2%] lg:mt-0">
-          <motion.p className="text-base md:text-lg lg:text-[1.5cqw]" {...rise(0.3)}>
+          <motion.p className="text-base md:text-lg lg:text-[max(14px,1.5cqw)]" {...rise(0.3)}>
             {hero.greeting} <span aria-hidden="true">👋</span> I&rsquo;m{" "}
             <span className="font-medium">{hero.name}</span>
           </motion.p>
@@ -146,7 +167,7 @@ export function Hero() {
           </p>
           <a
             href={`mailto:${site.email}`}
-            className="mt-6 inline-block border-b border-ink text-sm lg:mt-[3.2cqw] lg:text-[1.5cqw]"
+            className="mt-6 inline-block border-b border-ink text-sm lg:mt-[3.2cqw] lg:text-[max(14px,1.5cqw)]"
           >
             {site.email}
           </a>
@@ -158,7 +179,7 @@ export function Hero() {
           >
             <CircularBadge tone="dark" className="h-[88px] w-[88px] lg:h-[8.6cqw] lg:w-[8.6cqw]">
               <span className="flex -rotate-[20deg] flex-col items-center text-white">
-                <span className="text-center text-[10px] font-semibold uppercase leading-tight tracking-wide lg:text-[0.95cqw]">
+                <span className="text-center text-[10px] font-semibold uppercase leading-tight tracking-wide lg:text-[max(11px,0.95cqw)]">
                   Let&rsquo;s
                   <br />
                   discuss

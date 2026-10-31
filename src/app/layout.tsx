@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Inter_Tight } from "next/font/google";
+import { ScrollProgress } from "@/components/layout/ScrollProgress";
+import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { site } from "@/data/content";
 import "./globals.css";
 
@@ -46,6 +48,8 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <ScrollProgress />
+        <SmoothScroll />
         {children}
       </body>
     </html>

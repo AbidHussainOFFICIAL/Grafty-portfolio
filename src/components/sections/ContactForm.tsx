@@ -8,9 +8,9 @@ type Status = "idle" | "sending" | "success" | "error";
 
 const emptyValues: ContactValues = { name: "", email: "", subject: "", message: "" };
 
-const labelClass = "block text-[13px] font-semibold lg:text-[1.15cqw]";
+const labelClass = "block text-[13px] font-semibold lg:text-[max(13px,1.15cqw)]";
 const controlClass =
-  "block w-full border-b-[1.5px] border-ink bg-transparent pb-1.5 pt-1.5 text-sm outline-none placeholder:text-ink/45 lg:pt-[0.3cqw] lg:text-[1.05cqw]";
+  "block w-full border-b-[1.5px] border-ink bg-transparent pb-1.5 pt-1.5 text-sm outline-none placeholder:text-ink/45 lg:pt-[0.3cqw] lg:text-[max(13px,1.05cqw)]";
 
 interface FieldProps {
   label: string;
@@ -31,7 +31,7 @@ function Field({ label, name, error, className, children }: FieldProps) {
         {children}
       </div>
       {error && (
-        <p id={`contact-${name}-error`} className="mt-1 text-xs text-red-700 lg:text-[1cqw]">
+        <p id={`contact-${name}-error`} className="mt-1 text-xs text-red-700 lg:text-[max(11px,1cqw)]">
           {error}
         </p>
       )}
@@ -154,14 +154,14 @@ export function ContactForm() {
         <Button
           type="submit"
           disabled={status === "sending"}
-          className="h-11 px-8 text-sm lg:h-[3.1cqw] lg:px-[2.4cqw] lg:text-[1.2cqw]"
+          className="h-11 px-8 text-sm lg:h-[3.1cqw] lg:px-[2.4cqw] lg:text-[max(13px,1.2cqw)]"
         >
           {status === "sending" ? "Sending…" : "Send Message"}
         </Button>
         <p
           role="status"
           aria-live="polite"
-          className={`text-sm lg:text-[1.2cqw] ${status === "error" ? "text-red-700" : ""}`}
+          className={`text-sm lg:text-[max(13px,1.2cqw)] ${status === "error" ? "text-red-700" : ""}`}
         >
           {feedback}
         </p>

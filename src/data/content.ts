@@ -102,6 +102,8 @@ export interface Project {
   readonly id: string;
   readonly title: string;
   readonly href: string;
+  /** Colour of the panel beside the image on desktop. */
+  readonly tone: "light" | "dark" | "violet" | "accent";
   readonly image: { readonly src: string; readonly alt: string };
 }
 
@@ -111,6 +113,7 @@ export const projects: readonly Project[] = [
     id: "mockup",
     title: "Mockup Design",
     href: "#work",
+    tone: "light",
     image: {
       src: "/images/work-mockup.webp",
       alt: "Laptop showing an orange wallpaper on a concrete surface",
@@ -120,6 +123,7 @@ export const projects: readonly Project[] = [
     id: "book",
     title: "Book Cover",
     href: "#work",
+    tone: "dark",
     image: {
       src: "/images/work-book.webp",
       alt: "Stack of white hardcover books against a blue wall",
@@ -129,6 +133,7 @@ export const projects: readonly Project[] = [
     id: "font",
     title: "Font Design",
     href: "#work",
+    tone: "violet",
     image: {
       src: "/images/work-font.webp",
       alt: "Roll of patterned tape on a red and orange background",
@@ -138,6 +143,7 @@ export const projects: readonly Project[] = [
     id: "application",
     title: "Application",
     href: "#work",
+    tone: "accent",
     image: {
       src: "/images/work-app.webp",
       alt: "Smartphone showing a purple app screen on dark woven fabric",

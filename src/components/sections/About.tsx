@@ -2,8 +2,9 @@ import Image from "next/image";
 import { about, site } from "@/data/content";
 import { CircularBadge } from "@/components/ui/CircularBadge";
 import { ArrowDownIcon, Stars } from "@/components/ui/Icons";
+import { CountUp } from "@/components/ui/CountUp";
 import { Reveal } from "@/components/ui/Reveal";
-import { withAmpersands } from "@/lib/text";
+import { ScrollWords } from "@/components/ui/ScrollWords";
 
 interface StatProps {
   value: string;
@@ -25,7 +26,7 @@ function Stat({ value, label, align = "left", stars = false }: StatProps) {
           </span>
         )}
         <p className="font-numeral text-[clamp(2.5rem,13vw,4.75rem)] leading-none lg:text-[7.2cqw]">
-          {value}
+          <CountUp value={value} />
         </p>
       </div>
       <p className="mt-1 text-sm md:mt-2 md:text-base lg:mt-[1cqw] lg:text-[1.65cqw]">{label}</p>
@@ -42,17 +43,20 @@ export function About() {
       aria-labelledby="about-title"
       className="mt-20 px-5 md:mt-28 md:px-8 lg:mt-[10.4cqw] lg:px-[5.08%]"
     >
-      <Reveal className="text-center">
-        <h2
-          id="about-title"
-          className="inline-block rounded-full bg-white px-4 py-1.5 text-[10px] font-medium uppercase leading-none tracking-wide lg:px-[2.2cqw] lg:py-[0.9cqw] lg:text-[0.95cqw]"
-        >
-          About me
-        </h2>
-        <p className="font-statement mx-auto mt-5 max-w-[26ch] text-[clamp(1.75rem,7.4vw,3.25rem)] uppercase leading-[1.02] md:max-w-[30ch] lg:mt-[3cqw] lg:max-w-[81cqw] lg:text-[4.8cqw] lg:leading-[1.06]">
-          {withAmpersands(statement)}
-        </p>
-      </Reveal>
+      <div className="text-center">
+        <Reveal>
+          <h2
+            id="about-title"
+            className="inline-block rounded-full bg-white px-4 py-1.5 text-[10px] font-medium uppercase leading-none tracking-wide lg:px-[2.2cqw] lg:py-[0.9cqw] lg:text-[max(11px,0.95cqw)]"
+          >
+            About me
+          </h2>
+        </Reveal>
+        <ScrollWords
+          text={statement}
+          className="font-statement mx-auto mt-5 max-w-[26ch] text-[clamp(1.75rem,7.4vw,3.25rem)] uppercase leading-[1.02] md:max-w-[30ch] lg:mt-[3cqw] lg:max-w-[81cqw] lg:text-[4.8cqw] lg:leading-[1.06]"
+        />
+      </div>
 
       <div className="mb-12 mt-10 grid grid-cols-2 gap-x-6 md:mt-14 lg:mb-[6.5cqw] lg:mt-[3.7cqw] lg:grid-cols-[1fr_auto_1fr] lg:gap-x-0">
         <Reveal className="relative order-first col-span-2 mx-auto mb-10 w-[min(72vw,20rem)] lg:order-none lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:mb-0 lg:w-[37.4cqw]">
@@ -71,7 +75,7 @@ export function About() {
             className="absolute left-1/2 top-full -translate-x-1/2 -translate-y-1/2 transition duration-300 hover:scale-105"
           >
             <CircularBadge tone="light" className="h-[104px] w-[104px] lg:h-[14cqw] lg:w-[14cqw]">
-              <span className="text-center text-[9px] font-semibold uppercase leading-tight tracking-wide lg:text-[1.05cqw]">
+              <span className="text-center text-[9px] font-semibold uppercase leading-tight tracking-wide lg:text-[max(11px,1.05cqw)]">
                 Download
                 <br />
                 my CV

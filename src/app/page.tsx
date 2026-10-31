@@ -16,9 +16,10 @@ export default function HomePage() {
       {/*
         The container-type makes `cqw` units in the section styles resolve against
         the page width (capped at 1440px), which is how the desktop layout scales
-        proportionally with the original design.
+        proportionally with the original design. overflow-x-clip stops slide-in
+        animations that start off-screen from adding a sideways scrollbar.
       */}
-      <div className="mx-auto max-w-[1440px] [container-type:inline-size]">
+      <div className="mx-auto max-w-[1440px] overflow-x-clip [container-type:inline-size]">
         <main id="main">
           <Hero />
           <Services />

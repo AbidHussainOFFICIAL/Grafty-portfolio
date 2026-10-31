@@ -2,6 +2,7 @@ import { footerLinks, site, socials } from "@/data/content";
 import { wordmark } from "@/data/artwork";
 import { GhostHeading } from "@/components/ui/GhostHeading";
 import { SocialIcon } from "@/components/ui/Icons";
+import { ScrollShift } from "@/components/ui/ScrollShift";
 import { VectorArt } from "@/components/ui/VectorArt";
 
 export function Footer() {
@@ -37,7 +38,7 @@ export function Footer() {
 
           <nav
             aria-label="Footer"
-            className="flex items-center gap-3 text-sm lg:col-start-3 lg:row-start-2 lg:justify-self-end lg:text-[1.2cqw]"
+            className="flex items-center gap-3 text-sm lg:col-start-3 lg:row-start-2 lg:justify-self-end lg:text-[max(13px,1.2cqw)]"
           >
             {footerLinks.map((link, index) => (
               <span key={link.href} className="flex items-center gap-3">
@@ -49,7 +50,7 @@ export function Footer() {
             ))}
           </nav>
 
-          <p className="text-center text-sm lg:col-start-1 lg:row-start-2 lg:justify-self-start lg:text-left lg:text-[1.2cqw]">
+          <p className="text-center text-sm lg:col-start-1 lg:row-start-2 lg:justify-self-start lg:text-left lg:text-[max(13px,1.2cqw)]">
             <strong className="font-semibold">
               &copy;{year} {site.brand} Inc.
             </strong>{" "}
@@ -58,12 +59,9 @@ export function Footer() {
         </div>
       </div>
 
-      <GhostHeading
-        text="JESSY LINDA"
-        ratio={7.3}
-        visible={0.49}
-        className="mx-auto mt-10 w-[92%] lg:mt-[5cqw] lg:w-[87%]"
-      />
+      <ScrollShift x={["-6vw", "0vw"]} settle="end" className="mx-auto mt-10 w-[92%] lg:mt-[5cqw] lg:w-[87%]">
+        <GhostHeading text="JESSY LINDA" ratio={7.3} visible={0.49} className="w-full" />
+      </ScrollShift>
     </footer>
   );
 }

@@ -1,6 +1,7 @@
 import { clients } from "@/data/content";
 import { clientLogoArt } from "@/data/artwork";
 import { VectorArt } from "@/components/ui/VectorArt";
+import { VelocityMarquee } from "@/components/ui/VelocityMarquee";
 
 /** Width of a logo tile in the design, in the same units as the traced artwork. */
 const TILE_WIDTH = 177;
@@ -22,10 +23,11 @@ export function Clients() {
 
   return (
     <section
+      id="clients"
       aria-labelledby="clients-title"
       className="mt-20 px-5 md:mt-28 md:px-8 lg:mt-[12.6cqw] lg:px-[5.08%]"
     >
-      <div className="font-cond flex items-baseline justify-between text-xs uppercase lg:text-[1.3cqw]">
+      <div className="font-cond flex items-baseline justify-between text-xs uppercase lg:text-[max(13px,1.3cqw)]">
         <h2 id="clients-title">Some of my clients</h2>
         <span>100+ Client</span>
       </div>
@@ -44,13 +46,13 @@ export function Clients() {
         ))}
       </ul>
 
-      {/* Phones: a slow, endless strip */}
-      <div aria-hidden="true" className="mt-3 overflow-hidden md:hidden">
-        <div className="animate-marquee flex w-max gap-2">
-          {[...clients, ...clients].map((client, index) => (
-            <LogoTile key={`${client.id}-${index}`} id={client.id} className="h-32 w-36 shrink-0" />
+      {/* Phones: an endless strip that speeds up while scrolling */}
+      <div aria-hidden="true" className="md:hidden">
+        <VelocityMarquee className="mt-3">
+          {clients.map((client) => (
+            <LogoTile key={client.id} id={client.id} className="h-32 w-36 shrink-0" />
           ))}
-        </div>
+        </VelocityMarquee>
       </div>
     </section>
   );

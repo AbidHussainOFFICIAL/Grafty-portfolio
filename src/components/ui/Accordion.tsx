@@ -35,7 +35,7 @@ const styles = {
     title:
       "font-cond text-lg uppercase leading-tight md:text-2xl lg:text-[2.25cqw] lg:leading-none",
     icon: "h-4 w-4 shrink-0 md:h-5 md:w-5 lg:h-[1.6cqw] lg:w-[1.6cqw]",
-    body: "pt-3 text-sm leading-relaxed md:text-base lg:max-w-[88cqw] lg:pt-[1cqw] lg:text-[1.4cqw] lg:leading-[1.65]",
+    body: "pt-3 text-sm leading-relaxed md:text-base lg:max-w-[88cqw] lg:pt-[1cqw] lg:text-[max(14px,1.4cqw)] lg:leading-[1.65]",
   },
 } as const;
 
