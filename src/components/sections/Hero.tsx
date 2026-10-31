@@ -168,7 +168,7 @@ export function Hero() {
             >
               <span className="sr-only">{site.name}: </span>
               {hero.headline.map((line, index) => (
-                <span key={line} className="-my-[0.06em] block overflow-hidden py-[0.06em]">
+                <span key={line} className="-my-[0.14em] block overflow-hidden py-[0.14em]">
                   <motion.span
                     className="block"
                     initial={reduceMotion ? false : { y: "115%" }}

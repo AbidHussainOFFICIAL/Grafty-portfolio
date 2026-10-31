@@ -1,62 +1,52 @@
 import { footerLinks, navLinks, site, socials } from "@/data/content";
 import { wordmark } from "@/data/artwork";
 import { GhostHeading } from "@/components/ui/GhostHeading";
-import { CopyEmail } from "@/components/ui/CopyEmail";
+import { ContactStrip } from "@/components/ui/ContactStrip";
 import { ArrowUpIcon, SocialIcon } from "@/components/ui/Icons";
 import { ScrollShift } from "@/components/ui/ScrollShift";
 import { VectorArt } from "@/components/ui/VectorArt";
+
+/** The mobile footer has no "Home" row: the logo and the back-to-top button already go there. */
+const mobileLinks = navLinks.filter((link) => link.href !== "#home");
 
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer className="mt-24 lg:mt-[10.4cqw]">
-      {/* Phones and tablets: a purpose-built footer. */}
+      {/* Phones and tablets: a purpose-built footer. Every row spans the same width. */}
       <div className="px-5 md:px-8 lg:hidden">
-        <a href="#home" aria-label={`${site.brand} home`} className="inline-block">
-          <VectorArt art={wordmark} className="h-7 w-auto text-ink" />
-        </a>
+        <div className="mx-auto max-w-xl">
+          <div className="flex items-center justify-between">
+            <a href="#home" aria-label={`${site.brand} home`}>
+              <VectorArt art={wordmark} className="h-7 w-auto text-ink" />
+            </a>
+            <a
+              href="#home"
+              aria-label="Back to top"
+              className="grid h-11 w-11 place-items-center rounded-full bg-ink text-white transition duration-300 hover:bg-violet"
+            >
+              <ArrowUpIcon className="h-5 w-5" />
+            </a>
+          </div>
 
-        <nav aria-label="Footer" className="mt-6">
-          <ul className="grid grid-cols-2 gap-x-6 border-t border-ink/15">
-            {navLinks.map((link) => (
-              <li key={link.href} className="border-b border-ink/15">
-                <a href={link.href} className="flex min-h-12 items-center text-base transition hover:text-violet">
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          <nav aria-label="Footer" className="mt-6">
+            <ul className="grid grid-cols-2 gap-x-6 border-t border-ink/15">
+              {mobileLinks.map((link) => (
+                <li key={link.href} className="border-b border-ink/15">
+                  <a href={link.href} className="flex min-h-12 items-center text-base transition hover:text-violet">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-x-4 gap-y-4">
-          <ul className="flex items-center gap-2">
-            {socials.map((social) => (
-              <li key={social.id}>
-                <a
-                  href={social.href}
-                  aria-label={social.label}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="grid h-11 w-11 place-items-center rounded-full bg-white text-ink transition duration-300 hover:bg-ink hover:text-white"
-                >
-                  <SocialIcon id={social.id} className="h-[18px] w-[18px]" />
-                </a>
-              </li>
-            ))}
-          </ul>
-          <a
-            href="#home"
-            className="flex h-11 items-center gap-2 whitespace-nowrap rounded-full bg-ink px-5 text-sm text-white transition duration-300 hover:bg-violet"
-          >
-            Back to top
-            <ArrowUpIcon className="h-4 w-4" />
-          </a>
-        </div>
+          <div className="mt-6">
+            <ContactStrip />
+          </div>
 
-        <div className="mt-8 text-sm">
-          <CopyEmail />
-          <p className="mt-4 text-ink/80">
+          <p className="mt-6 text-sm text-ink/80">
             <strong className="font-semibold">
               &copy;{year} {site.brand} Inc.
             </strong>{" "}

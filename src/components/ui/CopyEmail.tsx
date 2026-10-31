@@ -6,7 +6,14 @@ import { cn } from "@/lib/cn";
 import { CheckIcon, CopyIcon } from "./Icons";
 
 /** The email address as a link, with a button that copies it. */
-export function CopyEmail({ className }: { className?: string }) {
+export function CopyEmail({
+  className,
+  variant = "plain",
+}: {
+  className?: string;
+  /** "pill" is a full-width white bar with the copy button at the right end. */
+  variant?: "plain" | "pill";
+}) {
   const [copied, setCopied] = useState(false);
   const timer = useRef<number | undefined>(undefined);
 
@@ -24,15 +31,24 @@ export function CopyEmail({ className }: { className?: string }) {
   }
 
   return (
-    <span className={cn("flex items-center gap-3", className)}>
-      <a href={`mailto:${site.email}`} className="underline underline-offset-4">
+    <span
+      className={cn(
+        "flex items-center gap-3",
+        variant === "pill" && "h-12 justify-between rounded-full bg-white py-1 pl-5 pr-1",
+        className,
+      )}
+    >
+      <a href={`mailto:${site.email}`} className="text-sm underline underline-offset-4">
         {site.email}
       </a>
       <button
         type="button"
         onClick={copy}
         aria-label="Copy email address"
-        className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-ink transition duration-300 hover:bg-ink hover:text-white"
+        className={cn(
+          "grid h-10 w-10 shrink-0 place-items-center rounded-full text-ink transition duration-300 hover:bg-ink hover:text-white",
+          variant === "pill" ? "bg-surface" : "bg-white",
+        )}
       >
         {copied ? <CheckIcon className="h-4 w-4" /> : <CopyIcon className="h-4 w-4" />}
       </button>

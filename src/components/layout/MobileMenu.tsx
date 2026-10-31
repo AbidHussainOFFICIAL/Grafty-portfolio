@@ -2,11 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { navLinks, socials } from "@/data/content";
+import { navLinks } from "@/data/content";
 import { wordmark } from "@/data/artwork";
 import { ContactLink } from "@/components/contact/ContactLink";
-import { CopyEmail } from "@/components/ui/CopyEmail";
-import { CloseIcon, SocialIcon } from "@/components/ui/Icons";
+import { ContactStrip } from "@/components/ui/ContactStrip";
+import { ArrowUpRightIcon, CloseIcon } from "@/components/ui/Icons";
 import { VectorArt } from "@/components/ui/VectorArt";
 import { useDialog } from "@/lib/useDialog";
 
@@ -62,7 +62,7 @@ export function MobileMenu({ activeSection, onClose }: MobileMenuProps) {
 
         <nav aria-label="Mobile" className="mt-3 min-h-0 flex-1">
           <ul className="flex h-full flex-col border-t border-ink/15">
-            {navLinks.map((link, index) => {
+            {navLinks.map((link) => {
               const current = activeSection === link.href.slice(1);
               return (
                 <li key={link.href} className="min-h-0 flex-1 border-b border-ink/15">
@@ -72,12 +72,10 @@ export function MobileMenu({ activeSection, onClose }: MobileMenuProps) {
                     aria-current={current ? "location" : undefined}
                     className="flex h-full items-center gap-4 transition hover:text-violet aria-[current=location]:text-violet"
                   >
-                    <span aria-hidden="true" className="w-6 text-xs tabular-nums text-ink/60">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="font-cond text-[clamp(1.75rem,5.6svh,3.25rem)] uppercase leading-none">
+                    <span className="font-cond flex-1 text-[clamp(1.75rem,5.6svh,3.25rem)] uppercase leading-none">
                       {link.label}
                     </span>
+                    <ArrowUpRightIcon className="h-5 w-5 shrink-0 opacity-40" />
                   </a>
                 </li>
               );
@@ -85,26 +83,11 @@ export function MobileMenu({ activeSection, onClose }: MobileMenuProps) {
           </ul>
         </nav>
 
-        <div className="mt-4 flex shrink-0 flex-col items-start gap-4 text-sm">
-          <ContactLink onNavigate={onClose} className="h-12 px-8 text-base">
+        <div className="mt-4 flex shrink-0 flex-col gap-3">
+          <ContactLink onNavigate={onClose} className="h-12 w-full px-8 text-base">
             Start a project
           </ContactLink>
-          <CopyEmail />
-          <ul className="flex items-center gap-2.5">
-            {socials.map((social) => (
-              <li key={social.id}>
-                <a
-                  href={social.href}
-                  aria-label={social.label}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={circleLink}
-                >
-                  <SocialIcon id={social.id} className="h-[18px] w-[18px]" />
-                </a>
-              </li>
-            ))}
-          </ul>
+          <ContactStrip />
         </div>
       </div>
     </motion.div>
