@@ -7,7 +7,7 @@ export function Portfolio() {
     <section
       id="work"
       aria-labelledby="work-title"
-      className="mt-20 px-5 md:mt-28 md:px-8 lg:mt-[20cqw] lg:px-[5.08%]"
+      className="mt-section px-5 md:px-8 lg:px-[5.08%]"
     >
       <h2 id="work-title" className="sr-only">
         Latest portfolio

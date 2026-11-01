@@ -101,7 +101,7 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 aria-current={activeSection === link.href.slice(1) ? "location" : undefined}
-                className="relative transition hover:text-violet after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:after:scale-x-100 aria-[current=location]:text-violet aria-[current=location]:after:scale-x-100"
+                className="relative transition hover:text-violet-deep after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:after:scale-x-100 aria-[current=location]:text-violet-deep aria-[current=location]:after:scale-x-100"
               >
                 {link.label}
               </a>

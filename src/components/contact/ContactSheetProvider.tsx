@@ -1,12 +1,12 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { contact } from "@/data/content";
-import { CloseIcon } from "@/components/ui/Icons";
-import { CopyEmail } from "@/components/ui/CopyEmail";
-import { ContactForm } from "@/components/sections/ContactForm";
-import { useDialog } from "@/lib/useDialog";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import dynamic from "next/dynamic";
+import { AnimatePresence } from "framer-motion";
+
+// Not part of the first download: fetched after the page settles, or on the first tap.
+const loadSheet = () => import("./ContactSheet").then((module) => module.ContactSheet);
+const ContactSheet = dynamic(loadSheet);
 
 interface ContactSheetApi {
   open: () => void;
@@ -14,77 +14,10 @@ interface ContactSheetApi {
 
 const ContactSheetContext = createContext<ContactSheetApi | null>(null);
 
-/** Phones and small tablets get the full-screen sheet; larger screens use the form in the page. */
-export const SHEET_QUERY = "(max-width: 767px)";
-
 export function useContactSheet(): ContactSheetApi {
   const api = useContext(ContactSheetContext);
   if (!api) throw new Error("useContactSheet must be used inside ContactSheetProvider");
   return api;
-}
-
-function Sheet({ onClose }: { onClose: () => void }) {
-  const panelRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
-  useDialog(panelRef, onClose);
-
-  // Leaving the phone layout (rotating a tablet, resizing) closes the sheet.
-  useEffect(() => {
-    const list = window.matchMedia(SHEET_QUERY);
-    const onChange = (event: MediaQueryListEvent) => {
-      if (!event.matches) onClose();
-    };
-    list.addEventListener("change", onChange);
-    return () => list.removeEventListener("change", onChange);
-  }, [onClose]);
-
-  return (
-    <motion.div
-      ref={panelRef}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="contact-sheet-title"
-      tabIndex={-1}
-      data-lenis-prevent
-      className="fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-surface outline-none"
-      initial={reduceMotion ? { opacity: 0 } : { y: "100%" }}
-      animate={reduceMotion ? { opacity: 1 } : { y: "0%" }}
-      exit={reduceMotion ? { opacity: 0 } : { y: "100%" }}
-      transition={{ duration: reduceMotion ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="mx-auto flex min-h-full max-w-xl flex-col px-5 pb-8 pt-5">
-        <div className="flex justify-end">
-          <button
-            type="button"
-            aria-label="Close contact form"
-            onClick={onClose}
-            className="grid h-11 w-11 place-items-center rounded-full bg-white text-ink transition duration-300 hover:bg-ink hover:text-white"
-          >
-            <CloseIcon className="h-5 w-5" />
-          </button>
-        </div>
-
-        <h2
-          id="contact-sheet-title"
-          className="font-cond mt-6 text-[clamp(3rem,16vw,4.5rem)] uppercase leading-[0.95]"
-        >
-          {contact.title}
-        </h2>
-        <p className="mt-3 text-base leading-snug">
-          Tell me about your project and I will get back to you.
-        </p>
-
-        <div className="mt-8 rounded-2xl bg-white p-5">
-          <ContactForm />
-        </div>
-
-        <div className="mt-8 text-sm">
-          <p className="text-ink/70">Prefer email?</p>
-          <CopyEmail className="mt-2" />
-        </div>
-      </div>
-    </motion.div>
-  );
 }
 
 /** Holds the open/closed state of the phone contact sheet and renders it above everything. */
@@ -94,10 +27,16 @@ export function ContactSheetProvider({ children }: { children: ReactNode }) {
   const close = useCallback(() => setIsOpen(false), []);
   const api = useMemo(() => ({ open }), [open]);
 
+  // Warm the sheet's code once the browser is idle, so the first tap opens it instantly.
+  useEffect(() => {
+    const idle = window.requestIdleCallback ?? ((callback: () => void) => window.setTimeout(callback, 2000));
+    idle(() => void loadSheet());
+  }, []);
+
   return (
     <ContactSheetContext.Provider value={api}>
       {children}
-      <AnimatePresence>{isOpen && <Sheet key="sheet" onClose={close} />}</AnimatePresence>
+      <AnimatePresence>{isOpen && <ContactSheet key="sheet" onClose={close} />}</AnimatePresence>
     </ContactSheetContext.Provider>
   );
 }

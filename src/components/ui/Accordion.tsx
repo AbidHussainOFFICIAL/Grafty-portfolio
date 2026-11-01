@@ -26,7 +26,7 @@ interface AccordionProps {
 const styles = {
   card: {
     list: "flex flex-col gap-2.5 lg:gap-[0.98cqw]",
-    item: "overflow-hidden rounded-xl bg-white lg:rounded-[1.4cqw]",
+    item: "overflow-hidden rounded-card bg-white shadow-card",
     button:
       "gap-4 px-5 py-5 hover:bg-ink/[0.03] aria-expanded:pb-3 md:px-8 md:py-7 md:aria-expanded:pb-4 lg:px-[3.9cqw] lg:py-[4.1cqw] lg:aria-expanded:pb-[2.8cqw]",
     title:

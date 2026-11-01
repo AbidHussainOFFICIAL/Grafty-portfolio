@@ -6,6 +6,7 @@ import { motion, useInView, useReducedMotion, useScroll, useTransform } from "fr
 import { hero, site } from "@/data/content";
 import { signature } from "@/data/artwork";
 import { useContactClick } from "@/components/contact/ContactLink";
+import { useIntroReady } from "@/components/layout/Intro";
 import { CircularBadge } from "@/components/ui/CircularBadge";
 import { GhostHeading } from "@/components/ui/GhostHeading";
 import { ArrowRightLongIcon } from "@/components/ui/Icons";
@@ -24,6 +25,7 @@ interface TagProps {
 /** Black rotated pill that floats gently beside the portrait. */
 function Tag({ label, rotate, className, delay }: TagProps) {
   const reduceMotion = useReducedMotion();
+  const ready = useIntroReady();
   return (
     <div className={`absolute z-30 -translate-x-1/2 -translate-y-1/2 ${className}`}>
       <motion.span
@@ -31,7 +33,7 @@ function Tag({ label, rotate, className, delay }: TagProps) {
         style={{ rotate }}
         initial={reduceMotion ? false : { opacity: 0, scale: 0.6 }}
         animate={
-          reduceMotion
+          reduceMotion || !ready
             ? undefined
             : {
                 opacity: 1,
@@ -57,11 +59,13 @@ export function Hero() {
   const introRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const onContactClick = useContactClick();
+  // On a first visit the entrance animations wait until the loader's curtain lifts.
+  const ready = useIntroReady();
 
   // The text and the card sit below the first screen on desktop and the card does on phones,
   // so they play their entrance when they scroll into view rather than on load.
-  const introInView = useInView(introRef, { once: true, margin: "0px 0px -12% 0px" });
-  const cardInView = useInView(cardRef, { once: true, margin: "0px 0px -12% 0px" });
+  const introInView = useInView(introRef, { once: true, margin: "0px 0px -12% 0px" }) && ready;
+  const cardInView = useInView(cardRef, { once: true, margin: "0px 0px -12% 0px" }) && ready;
 
   // As the hero scrolls away its layers part ways: the ghost word and portrait lag behind
   // the page while the signature drifts up. These only move the wrappers, so they never
@@ -111,7 +115,7 @@ export function Hero() {
               <motion.div
                 className="h-full"
                 initial={reduceMotion ? false : { opacity: 0, scale: 0.94, y: 24 }}
-                animate={reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
+                animate={reduceMotion || !ready ? undefined : { opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.9, ease: EASE }}
               >
                 <Image
@@ -132,7 +136,7 @@ export function Hero() {
             >
               <motion.div
                 initial={reduceMotion ? false : { clipPath: "inset(0 100% 0 0)" }}
-                animate={reduceMotion ? undefined : { clipPath: "inset(0 0% 0 0)" }}
+                animate={reduceMotion || !ready ? undefined : { clipPath: "inset(0 0% 0 0)" }}
                 transition={{ duration: 1.4, delay: 0.5, ease: "easeInOut" }}
               >
                 <VectorArt art={signature} className="block h-auto w-full" />
@@ -185,7 +189,7 @@ export function Hero() {
 
         <motion.div
           ref={cardRef}
-          className="relative z-30 rounded-2xl bg-white p-6 md:ml-auto md:max-w-md lg:absolute lg:left-[63.7%] lg:top-[calc(var(--fold)+6cqw)] lg:w-[31.1%] lg:max-w-none lg:rounded-[1.6cqw] lg:p-[2.8cqw]"
+          className="relative z-30 rounded-card bg-white p-6 shadow-card md:ml-auto md:max-w-md lg:absolute lg:left-[63.7%] lg:top-[calc(var(--fold)+6cqw)] lg:w-[31.1%] lg:max-w-none lg:p-[2.8cqw]"
           {...rise(cardInView, 0.1)}
         >
           <p className="max-w-[16rem] text-lg leading-snug lg:max-w-[24.6cqw] lg:text-[1.9cqw] lg:leading-[1.43]">

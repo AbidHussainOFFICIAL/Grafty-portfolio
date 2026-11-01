@@ -25,7 +25,13 @@ Requires Node 20.9 or newer.
 | Phone contact sheet (full-screen form) | `src/components/contact/` |
 | Which links the desktop bar shows | `inBar` on each entry of `navLinks` in `content.ts` |
 | Portfolio card colours | `tone` on each project in `src/data/content.ts` |
-| Images | `public/images/` (WebP, referenced from `content.ts`) |
+| Images | `public/images/` (WebP, referenced from `content.ts`). Each has a blurred preview in `src/data/blur.ts`. |
+| Page title, description, site address, share text | `site` in `src/data/content.ts` |
+| Share image (Open Graph and Twitter card) | `src/app/opengraph-image.png` (1200×630) and its alt text in `opengraph-image.alt.txt` |
+| Favicon, Apple icon, app icons | `src/app/favicon.ico`, `src/app/icon.svg`, `src/app/apple-icon.png`, `public/icon-*.png` |
+| Structured data (Person, ProfessionalService, WebSite, FAQ) | `src/components/seo/JsonLd.tsx` (built from `content.ts`) |
+| First-visit loader | `src/components/layout/Intro.tsx` and the `.intro-*` rules at the end of `globals.css` |
+| Vertical spacing, corner radius, card shadow | `mt-section`, `mt-block`, `rounded-card` and `--shadow-card` in `globals.css` |
 
 ## Before you publish
 
@@ -33,7 +39,11 @@ Requires Node 20.9 or newer.
 2. **CV button.** Put your CV at `public/jessy-linda-cv.pdf` (or change `site.cvUrl`).
 3. **Social links and project links** in `content.ts` currently point at generic sites and `#work`.
 4. **Images.** The photos were cropped from design screenshots, so they are soft on large screens. Replace the files in `public/images/` with full-resolution exports, keeping the same names (or update `content.ts`).
-5. **Logos.** The signature, Grafty wordmark and client logos in `src/data/artwork.ts` are vector traces of the screenshots. Swap in the official SVGs when you have them. The client logos are third-party trademarks; make sure you have the right to show them.
+5. **Site address.** The canonical link, sitemap, share image and structured data use `https://grafty-portfolio.vercel.app`. When you move to your own domain, set `NEXT_PUBLIC_SITE_URL` in Vercel (see `.env.example`).
+6. **Share image and icons.** They were generated from the hero portrait and the Grafty mark. Replace `opengraph-image.png` (1200×630) and the icon files with final artwork when you have it.
+7. **Social links.** The structured data lists your profiles (`sameAs`) only once the links in `content.ts` point at real profiles instead of site home pages.
+8. **Search Console.** Submit `/sitemap.xml` once the site is live, and run Lighthouse on the deployed site (targets: LCP under 2.5 s, CLS under 0.1, INP under 200 ms).
+9. **Logos.** The signature, Grafty wordmark and client logos in `src/data/artwork.ts` are vector traces of the screenshots. Swap in the official SVGs when you have them. The client logos are third-party trademarks; make sure you have the right to show them.
 
 ## Responsive behaviour
 
@@ -59,3 +69,18 @@ Requires Node 20.9 or newer.
 Every effect animates only `transform` and `opacity`. With `prefers-reduced-motion` the site scrolls normally, nothing moves on scroll, cards do not pin, counters show their final values and the navbar stays put.
 
 To change the stack, edit `--stack-top` and `--stack-step` (where the cards pin and how far each peeks out) in `ProjectStack.tsx`, and the shrink and dim amounts in `StackCard`.
+
+## First-visit loader
+
+A short loader plays on a visitor's first visit: the wordmark draws in, a counter runs to 100, and the panel lifts away like a curtain. The hero animation (portrait, signature, tags, headline, card) starts as the curtain clears. It never runs with reduced motion, and a browser remembers it has played (localStorage key `grafty-intro-seen`). Open the site with `?intro` in the address (for example `/?intro`) to see it again. It lasts about two seconds and never more than three, whatever the connection.
+
+## Search and sharing
+
+The page has a title and description, a canonical link, Open Graph and Twitter card tags (with the share image), a sitemap, a robots file, a web manifest, a theme colour and structured data. Review markup is left out on purpose: Google does not show stars for reviews a business publishes about itself, and the testimonials are placeholders. FAQ markup is included, but Google now shows FAQ rich results only for government and health sites.
+
+## Spacing, images and accessibility
+
+- Every section is separated by the same gap (`mt-section`) and every heading from its content by `mt-block`. Cards share one radius and one soft shadow.
+- Photos load lazily with a blurred preview, apart from the hero portrait, which loads first.
+- Every informative image has a descriptive alt text in `content.ts`; decorative artwork is hidden from screen readers.
+- Text and background pairings pass WCAG AA (4.5:1 for normal text). Violet text uses `violet-deep`; white text is never placed on the orange panel.

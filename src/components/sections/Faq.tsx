@@ -10,7 +10,7 @@ export function Faq() {
     <section
       id="faq"
       aria-labelledby="faq-title"
-      className="mt-20 px-5 md:mt-28 md:px-8 lg:mt-[9.3cqw] lg:px-[5.08%]"
+      className="mt-section px-5 md:px-8 lg:px-[5.08%]"
     >
       <h2
         id="faq-title"
@@ -18,7 +18,7 @@ export function Faq() {
       >
         {withAmpersands("Question & Answers")}
       </h2>
-      <Reveal className="mt-8 lg:mt-[5cqw]">
+      <Reveal className="mt-block">
         <Accordion items={items} variant="line" defaultOpenId="contact" />
       </Reveal>
     </section>

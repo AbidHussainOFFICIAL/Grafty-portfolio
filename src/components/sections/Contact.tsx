@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Photo } from "@/components/ui/Photo";
 import { contact } from "@/data/content";
 import { ContactLink } from "@/components/contact/ContactLink";
 import { CopyEmail } from "@/components/ui/CopyEmail";
@@ -14,7 +14,7 @@ export function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-title"
-      className="mt-20 px-5 md:mt-28 md:px-8 lg:mt-[13.4cqw] lg:px-[5.08%]"
+      className="mt-section px-5 md:px-8 lg:px-[5.08%]"
     >
       <h2 id="contact-title" className="sr-only">
         Contact
@@ -23,7 +23,7 @@ export function Contact() {
         <GhostHeading text="CONTACT" ratio={6.6} className="mx-auto w-[96.5%]" />
       </ScrollShift>
 
-      <Reveal className="relative mt-2 overflow-hidden rounded-2xl bg-white lg:mt-[3cqw] lg:grid lg:h-[44.4cqw] lg:grid-cols-[40.6%_1fr] lg:rounded-[1.76cqw]">
+      <Reveal className="relative mt-block overflow-hidden rounded-card bg-white shadow-card lg:grid lg:h-[44.4cqw] lg:grid-cols-[40.6%_1fr]">
         {/* Phones: a compact card; the form itself opens full screen from the button. */}
         <div className="p-6 md:hidden">
           <h3 className="font-cond text-[clamp(2.5rem,12vw,3.5rem)] uppercase leading-none">
@@ -39,7 +39,7 @@ export function Contact() {
         <div className="relative hidden h-80 overflow-hidden md:block lg:h-full">
           {/* Taller than its frame so the photo can drift slowly as the page scrolls. */}
           <ScrollShift y={["-6%", "6%"]} className="absolute inset-x-0 -inset-y-[8%]">
-            <Image
+            <Photo
               src={portrait.src}
               alt={portrait.alt}
               width={portrait.width}

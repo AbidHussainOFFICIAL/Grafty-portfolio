@@ -10,6 +10,18 @@ export const site = {
   email: "hello@linda.com",
   /** Place your CV at public/jessy-linda-cv.pdf (or change this path). */
   cvUrl: "/jessy-linda-cv.pdf",
+  /**
+   * The public address, used for the canonical link, sitemap, share image and structured data.
+   * Set NEXT_PUBLIC_SITE_URL when you move to your own domain (no trailing slash).
+   */
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://grafty-portfolio.vercel.app",
+  jobTitle: "Creative designer",
+  title: "Jessy Linda | Branding, Product UI/UX & Design",
+  description:
+    "Jessy Linda is an award-winning creative designer in California, USA, crafting intuitive, user-friendly experiences through branding, wireframing, prototyping and visual design.",
+  /** Shown when the page is shared (Open Graph and Twitter cards). */
+  shareDescription:
+    "Award-winning creative designer specialising in branding, product UI/UX and visual design.",
 } as const;
 
 export interface NavLink {
@@ -127,7 +139,7 @@ export const projects: readonly Project[] = [
     tone: "light",
     image: {
       src: "/images/work-mockup.webp",
-      alt: "Laptop showing an orange wallpaper on a concrete surface",
+      alt: "Mockup Design project: a laptop showing an orange wallpaper on a concrete surface",
     },
   },
   {
@@ -137,7 +149,7 @@ export const projects: readonly Project[] = [
     tone: "dark",
     image: {
       src: "/images/work-book.webp",
-      alt: "Stack of white hardcover books against a blue wall",
+      alt: "Book Cover project: a stack of white hardcover books against a blue wall",
     },
   },
   {
@@ -147,7 +159,7 @@ export const projects: readonly Project[] = [
     tone: "violet",
     image: {
       src: "/images/work-font.webp",
-      alt: "Roll of patterned tape on a red and orange background",
+      alt: "Font Design project: a roll of patterned tape on a red and orange background",
     },
   },
   {
@@ -157,7 +169,7 @@ export const projects: readonly Project[] = [
     tone: "accent",
     image: {
       src: "/images/work-app.webp",
-      alt: "Smartphone showing a purple app screen on dark woven fabric",
+      alt: "Application project: a smartphone showing a purple app screen on dark woven fabric",
     },
   },
 ];
@@ -178,7 +190,7 @@ export const testimonials: readonly Testimonial[] = [
     quote: "Extraordinary performance! Quick solutions. Highly recommended.",
     name: "Hugo Messy",
     role: "CEO & Head of Sky Tech Inc.",
-    image: { src: "/images/client-1.webp", alt: "Hugo Messy" },
+    image: { src: "/images/client-1.webp", alt: "Black and white portrait of Hugo Messy, a bearded man in a cap and hooded sweatshirt" },
   },
   {
     id: "rashed",
@@ -187,7 +199,7 @@ export const testimonials: readonly Testimonial[] = [
       "Get quick solutions with great quality—a recommendation that’s unequivocal.",
     name: "Rashed Kabir",
     role: "CEO & Head of Sky Tech Inc.",
-    image: { src: "/images/client-2.webp", alt: "Rashed Kabir" },
+    image: { src: "/images/client-2.webp", alt: "Black and white portrait of Rashed Kabir, a smiling man with glasses and a grey beard" },
   },
   {
     id: "james",
@@ -195,7 +207,7 @@ export const testimonials: readonly Testimonial[] = [
     quote: "Professional, creative, & truly results-driven!",
     name: "James Bond",
     role: "CEO & Head of Sky Tech Inc.",
-    image: { src: "/images/client-3.webp", alt: "James Bond" },
+    image: { src: "/images/client-3.webp", alt: "Black and white portrait of James Bond, a woman with short curly hair" },
   },
 ];
 

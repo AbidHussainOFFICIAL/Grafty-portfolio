@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
+import { Photo } from "@/components/ui/Photo";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { testimonials, type Testimonial } from "@/data/content";
 import { ContactLink } from "@/components/contact/ContactLink";
@@ -39,7 +39,7 @@ function TestimonialRow({ testimonial }: { testimonial: Testimonial }) {
           </div>
           <div className="flex items-center gap-3">
             {/* Phones: a small avatar sits beside the name; larger screens show the big portrait instead. */}
-            <Image
+            <Photo
               src={image.src}
               alt={image.alt}
               width={96}
@@ -58,7 +58,7 @@ function TestimonialRow({ testimonial }: { testimonial: Testimonial }) {
           className="hidden shrink-0 md:block"
           style={reduceMotion ? undefined : { y: portraitY }}
         >
-          <Image
+          <Photo
             src={image.src}
             alt={image.alt}
             width={474}
@@ -77,7 +77,7 @@ export function Testimonials() {
     <section
       id="feedback"
       aria-labelledby="feedback-title"
-      className="mt-20 px-5 md:mt-28 md:px-8 lg:mt-[10.8cqw] lg:px-[5.08%]"
+      className="mt-section px-5 md:px-8 lg:px-[5.08%]"
     >
       <div className="flex items-center justify-between gap-4">
         <SectionLabel bar="before" id="feedback-title">
@@ -88,7 +88,7 @@ export function Testimonials() {
         </ContactLink>
       </div>
 
-      <div className="mt-5 lg:mt-[2.8cqw]">
+      <div className="mt-block">
         {testimonials.map((testimonial) => (
           <TestimonialRow key={testimonial.id} testimonial={testimonial} />
         ))}

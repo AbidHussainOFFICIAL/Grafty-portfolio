@@ -13,7 +13,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-24 lg:mt-[10.4cqw]">
+    <footer className="mt-section">
       {/* Phones and tablets: a purpose-built footer. Every row spans the same width. */}
       <div className="px-5 md:px-8 lg:hidden">
         <div className="mx-auto max-w-xl">
@@ -34,7 +34,7 @@ export function Footer() {
             <ul className="grid grid-cols-2 gap-x-6 border-t border-ink/15">
               {mobileLinks.map((link) => (
                 <li key={link.href} className="border-b border-ink/15">
-                  <a href={link.href} className="flex min-h-12 items-center text-base transition hover:text-violet">
+                  <a href={link.href} className="flex min-h-12 items-center text-base transition hover:text-violet-deep">
                     {link.label}
                   </a>
                 </li>
@@ -89,7 +89,7 @@ export function Footer() {
             {footerLinks.map((link, index) => (
               <span key={link.href} className="flex items-center gap-3">
                 {index > 0 && <span aria-hidden="true">.</span>}
-                <a href={link.href} className="transition hover:text-violet">
+                <a href={link.href} className="transition hover:text-violet-deep">
                   {link.label}
                 </a>
               </span>

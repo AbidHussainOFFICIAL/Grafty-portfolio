@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Photo } from "@/components/ui/Photo";
 import { about, site } from "@/data/content";
 import { CircularBadge } from "@/components/ui/CircularBadge";
 import { ArrowDownIcon, Stars } from "@/components/ui/Icons";
@@ -41,7 +41,7 @@ export function About() {
     <section
       id="about"
       aria-labelledby="about-title"
-      className="mt-20 px-5 md:mt-28 md:px-8 lg:mt-[10.4cqw] lg:px-[5.08%]"
+      className="mt-section px-5 md:px-8 lg:px-[5.08%]"
     >
       <div className="text-center">
         <Reveal>
@@ -60,7 +60,7 @@ export function About() {
 
       <div className="mb-12 mt-10 grid grid-cols-2 gap-x-6 md:mt-14 lg:mb-[6.5cqw] lg:mt-[3.7cqw] lg:grid-cols-[1fr_auto_1fr] lg:gap-x-0">
         <Reveal className="relative order-first col-span-2 mx-auto mb-10 w-[min(72vw,20rem)] lg:order-none lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:mb-0 lg:w-[37.4cqw]">
-          <Image
+          <Photo
             src={portrait.src}
             alt={portrait.alt}
             width={portrait.width}

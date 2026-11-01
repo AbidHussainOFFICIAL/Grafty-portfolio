@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Inter_Tight } from "next/font/google";
+import { IntroProvider } from "@/components/layout/Intro";
 import { ContactSheetProvider } from "@/components/contact/ContactSheetProvider";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { site } from "@/data/content";
 import "./globals.css";
 
@@ -20,14 +22,27 @@ const interTight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
-  title: `${site.name} | Branding, Product UI/UX & Design`,
-  description:
-    "Jessy Linda is an award-winning creative designer in California, USA, crafting intuitive, user-friendly experiences through branding, wireframing, prototyping and visual design.",
+  metadataBase: new URL(site.url),
+  title: { default: site.title, template: `%s | ${site.name}` },
+  description: site.description,
+  applicationName: site.brand,
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
+  // The share image comes from app/opengraph-image.png, which Next.js wires up automatically.
   openGraph: {
-    title: `${site.name} | Branding, Product UI/UX & Design`,
-    description:
-      "Award-winning creative designer specialising in branding, product UI/UX and visual design.",
     type: "website",
+    url: "/",
+    siteName: site.brand,
+    locale: "en_US",
+    title: site.title,
+    description: site.shareDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: site.title,
+    description: site.shareDescription,
   },
 };
 
@@ -37,11 +52,21 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+/**
+ * Runs before the first paint: decides whether the first-visit loader shows. It does on a first
+ * visit (nothing in localStorage yet) or with ?intro in the URL, never with reduced motion.
+ * Keep the storage key in step with INTRO_STORAGE_KEY in components/layout/Intro.tsx.
+ */
+const introScript = `try{var d=document.documentElement;if(!matchMedia("(prefers-reduced-motion: reduce)").matches&&(/[?&]intro(=|&|$)/.test(location.search)||!localStorage.getItem("grafty-intro-seen")))d.dataset.intro="show"}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${interTight.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${interTight.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
+      </head>
       <body>
         <a
           href="#main"
@@ -49,9 +74,12 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <JsonLd />
         <ScrollProgress />
         <SmoothScroll />
-        <ContactSheetProvider>{children}</ContactSheetProvider>
+        <IntroProvider>
+          <ContactSheetProvider>{children}</ContactSheetProvider>
+        </IntroProvider>
       </body>
     </html>
   );

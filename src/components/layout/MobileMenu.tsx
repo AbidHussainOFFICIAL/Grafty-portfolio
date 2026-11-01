@@ -70,7 +70,7 @@ export function MobileMenu({ activeSection, onClose }: MobileMenuProps) {
                     href={link.href}
                     onClick={onClose}
                     aria-current={current ? "location" : undefined}
-                    className="flex h-full items-center gap-4 transition hover:text-violet aria-[current=location]:text-violet"
+                    className="flex h-full items-center gap-4 transition hover:text-violet-deep aria-[current=location]:text-violet-deep"
                   >
                     <span className="font-cond flex-1 text-[clamp(1.75rem,5.6svh,3.25rem)] uppercase leading-none">
                       {link.label}

@@ -10,7 +10,7 @@ export function Services() {
     <section
       id="services"
       aria-labelledby="services-title"
-      className="relative mt-16 px-5 md:mt-20 md:px-8 lg:-mt-[3.4cqw] lg:px-[5.08%]"
+      className="mt-section relative px-5 md:px-8 lg:-mt-[3.4cqw] lg:px-[5.08%]"
     >
       <div className="flex items-end justify-between gap-4">
         <ScrollShift x={["-6vw", "0vw"]} className="w-[54%]">
@@ -21,7 +21,7 @@ export function Services() {
         </SectionLabel>
       </div>
 
-      <Reveal className="mt-3 lg:mt-[2.9cqw]">
+      <Reveal className="mt-block">
         <Accordion items={services} variant="card" defaultOpenId="design" />
       </Reveal>
     </section>

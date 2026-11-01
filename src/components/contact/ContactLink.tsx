@@ -2,7 +2,8 @@
 
 import type { MouseEvent, ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
-import { SHEET_QUERY, useContactSheet } from "./ContactSheetProvider";
+import { useContactSheet } from "./ContactSheetProvider";
+import { SHEET_QUERY } from "./sheetQuery";
 
 /**
  * Click handler for any "#contact" link: on phones it opens the full-screen contact sheet

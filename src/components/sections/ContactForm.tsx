@@ -11,7 +11,7 @@ const emptyValues: ContactValues = { name: "", email: "", subject: "", message: 
 const labelClass = "block text-[13px] font-semibold lg:text-[max(13px,1.15cqw)]";
 // 16px on phones: anything smaller makes iOS zoom the page when a field is focused.
 const controlClass =
-  "block w-full border-b-[1.5px] border-ink bg-transparent pb-2 pt-2 text-base outline-none placeholder:text-ink/45 md:pb-1.5 md:pt-1.5 md:text-sm lg:pt-[0.3cqw] lg:text-[max(13px,1.05cqw)]";
+  "block w-full border-b-[1.5px] border-ink bg-transparent pb-2 pt-2 text-base outline-none placeholder:text-ink/60 md:pb-1.5 md:pt-1.5 md:text-sm lg:pt-[0.3cqw] lg:text-[max(13px,1.05cqw)]";
 
 /** Field ids are prefixed per form instance so two forms on one page never share ids. */
 const FormIdContext = createContext("contact");

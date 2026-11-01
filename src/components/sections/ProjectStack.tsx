@@ -1,7 +1,7 @@
 "use client";
 
 import { createRef, useMemo, type RefObject } from "react";
-import Image from "next/image";
+import { Photo } from "@/components/ui/Photo";
 import {
   motion,
   useMotionTemplate,
@@ -76,7 +76,7 @@ function ImageTilt({ project, tilt }: ImageTiltProps) {
         className="h-full w-full"
         style={tilt ? { rotateX, rotateY, scale, transformStyle: "preserve-3d" } : undefined}
       >
-        <Image
+        <Photo
           src={project.image.src}
           alt={project.image.alt}
           width={888}
@@ -127,7 +127,7 @@ function StackCard({ project, index, total, ownRef, nextRef }: StackCardProps) {
       style={{ top: `calc(var(--stack-top) + ${index} * var(--stack-step))` }}
     >
       <motion.div
-        className="relative h-full origin-top overflow-hidden rounded-2xl lg:rounded-[2cqw]"
+        className="relative h-full origin-top overflow-hidden rounded-card shadow-card"
         style={stacked ? { scale } : undefined}
       >
         <a
@@ -185,7 +185,7 @@ export function ProjectStack() {
   const refs = useMemo(() => projects.map(() => createRef<HTMLLIElement>()), []);
 
   return (
-    <ul className="mt-3 [--stack-step:0.75rem] [--stack-top:1rem] md:[--stack-step:1rem] md:[--stack-top:1.5rem] lg:mt-[1.8cqw] lg:[--stack-step:1.25rem] lg:[--stack-top:5.5rem]">
+    <ul className="mt-block [--stack-step:0.75rem] [--stack-top:1rem] md:[--stack-step:1rem] md:[--stack-top:1.5rem] lg:[--stack-step:1.25rem] lg:[--stack-top:5.5rem]">
       {projects.map((project, index) => (
         <StackCard
           key={project.id}
