@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { hero, site } from "@/data/content";
@@ -61,6 +61,15 @@ export function Hero() {
   const onContactClick = useContactClick();
   // On a first visit the entrance animations wait until the loader's curtain lifts.
   const ready = useIntroReady();
+  // Whatever is already on screen when the page opens waits for the artwork to finish (ghost word,
+  // portrait, signature, tags). Anything scrolled into view later plays straight away.
+  const [settled, setSettled] = useState(false);
+  useEffect(() => {
+    if (!ready) return;
+    const timer = window.setTimeout(() => setSettled(true), 2800);
+    return () => window.clearTimeout(timer);
+  }, [ready]);
+  const wait = settled ? 0 : 1.5;
 
   // The text and the card sit below the first screen on desktop and the card does on phones,
   // so they play their entrance when they scroll into view rather than on load.
@@ -94,18 +103,25 @@ export function Hero() {
         Phones and tablets: the first screen holds the artwork and the greeting + headline;
         the card follows below.
       */}
-      <div className="relative px-5 md:px-8 lg:h-[calc(var(--fold)+37cqw)] lg:px-0 lg:[--art-h:clamp(37.7cqw,calc(100svh-var(--header-h)-2cqw),54cqw)] lg:[--fold:max(var(--art-h),calc(100svh-var(--header-h)))] lg:[--header-h:calc(2*clamp(1.1rem,2.2vw,2rem)+clamp(32px,3.35vw,48px))]">
-        <div className="flex min-h-[calc(100svh-5.25rem)] flex-col justify-start gap-2 pb-4 pt-6 md:justify-center md:gap-8 md:py-6 lg:contents">
+      <div className="relative px-5 md:px-8 lg:h-[calc(var(--fold)+37cqw)] lg:px-0 lg:[--art-h:clamp(37.7cqw,calc(100svh-var(--header-h)-2cqw),54cqw)] lg:[--fold:max(var(--art-h),calc(100svh-var(--header-h)))] lg:[--header-h:calc(2*clamp(0.8rem,1.3vw,1.2rem)+clamp(34px,2.9vw,42px))]">
+        <div className="flex min-h-[calc(100svh-4rem)] flex-col justify-start gap-2 pb-4 pt-6 md:justify-center md:gap-8 md:py-6 lg:contents">
           {/* Artwork: ghost word, arch portrait, signature and floating tags */}
           <div
             ref={artRef}
             className="relative mx-auto aspect-[1/0.94] w-full max-w-[760px] md:aspect-[1/0.72] md:max-w-none lg:aspect-auto lg:h-[var(--art-h)]"
           >
             <motion.div
-              className="absolute left-0 top-[15%] w-full md:top-[10%] lg:left-[5.08%] lg:top-[7.33cqw] lg:w-[89.84%]"
+              className="absolute left-0 top-0 w-full md:top-[10%] lg:left-[5.08%] lg:top-[7.33cqw] lg:w-[89.84%]"
               style={layer(ghostY)}
             >
-              <GhostHeading text={hero.ghost} ratio={5.26} className="w-full" />
+              {/* The ghost word comes first: it slides in, then the portrait, signature and tags follow. */}
+              <motion.div
+                initial={reduceMotion ? false : { opacity: 0, x: "-6vw" }}
+                animate={reduceMotion || !ready ? undefined : { opacity: 1, x: 0 }}
+                transition={{ duration: 1.1, ease: EASE }}
+              >
+                <GhostHeading text={hero.ghost} ratio={5.26} className="w-full" />
+              </motion.div>
             </motion.div>
 
             <motion.div
@@ -116,7 +132,7 @@ export function Hero() {
                 className="h-full"
                 initial={reduceMotion ? false : { opacity: 0, scale: 0.94, y: 24 }}
                 animate={reduceMotion || !ready ? undefined : { opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.9, ease: EASE }}
+                transition={{ duration: 0.9, delay: 0.55, ease: EASE }}
               >
                 <Image
                   src={hero.portrait.src}
@@ -137,7 +153,7 @@ export function Hero() {
               <motion.div
                 initial={reduceMotion ? false : { clipPath: "inset(0 100% 0 0)" }}
                 animate={reduceMotion || !ready ? undefined : { clipPath: "inset(0 0% 0 0)" }}
-                transition={{ duration: 1.4, delay: 0.5, ease: "easeInOut" }}
+                transition={{ duration: 1.4, delay: 1.1, ease: "easeInOut" }}
               >
                 {/* Phones: the two words are pulled apart towards the edges so they leave the face clear. */}
                 <div className="relative md:hidden">
@@ -157,14 +173,14 @@ export function Hero() {
             <Tag
               label={hero.tags[0]}
               rotate={-9}
-              delay={0.9}
-              className="left-[19%] top-[31%] md:left-[15%] md:top-[47%] lg:left-[29.5%] lg:top-[18cqw]"
+              delay={1.5}
+              className="left-[15%] top-[38%] md:left-[15%] md:top-[47%] lg:left-[29.5%] lg:top-[18cqw]"
             />
             <Tag
               label={hero.tags[1]}
               rotate={17}
-              delay={1.05}
-              className="left-[77%] top-[3%] md:left-[84%] md:top-[9%] lg:left-[68.2%] lg:top-[9.5cqw]"
+              delay={1.65}
+              className="left-[80%] top-[12%] md:left-[84%] md:top-[9%] lg:left-[68.2%] lg:top-[9.5cqw]"
             />
           </div>
 
@@ -173,7 +189,7 @@ export function Hero() {
             ref={introRef}
             className="relative z-30 lg:absolute lg:left-[5.27%] lg:top-[calc(var(--fold)+3cqw)]"
           >
-            <motion.p className="text-base md:text-lg lg:text-[max(14px,1.5cqw)]" {...rise(introInView, 0.1)}>
+            <motion.p className="text-base md:text-lg lg:text-[max(14px,1.5cqw)]" {...rise(introInView, wait + 0.1)}>
               {hero.greeting} <span aria-hidden="true">👋</span> I&rsquo;m{" "}
               <span className="font-medium">{hero.name}</span>
             </motion.p>
@@ -188,7 +204,7 @@ export function Hero() {
                     className="block"
                     initial={reduceMotion ? false : { y: "115%" }}
                     animate={reduceMotion ? undefined : { y: introInView ? 0 : "115%" }}
-                    transition={{ duration: 0.9, delay: 0.15 + index * 0.12, ease: EASE }}
+                    transition={{ duration: 0.9, delay: wait + 0.15 + index * 0.12, ease: EASE }}
                   >
                     {withAmpersands(line)}
                   </motion.span>
@@ -201,7 +217,7 @@ export function Hero() {
         <motion.div
           ref={cardRef}
           className="relative z-30 rounded-card bg-white p-6 shadow-card md:ml-auto md:max-w-md lg:absolute lg:left-[63.7%] lg:top-[calc(var(--fold)+6cqw)] lg:w-[31.1%] lg:max-w-none lg:p-[2.8cqw]"
-          {...rise(cardInView, 0.1)}
+          {...rise(cardInView, wait + 0.1)}
         >
           <p className="max-w-[16rem] text-lg leading-snug lg:max-w-[24.6cqw] lg:text-[1.9cqw] lg:leading-[1.43]">
             {hero.intro}

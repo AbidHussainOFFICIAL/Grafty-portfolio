@@ -17,27 +17,26 @@ interface CategoryFilterProps {
 }
 
 /**
- * The category pills. The bar pins under the header while the list scrolls, and follows the header
- * up when it tucks away. Phones scroll it sideways (with soft edges that show there is more);
- * from tablet up all five pills fit. The black pill slides to the chosen category. The labels are
- * white drawn with "difference", so they read black on a white pill and white on the black one at
- * every moment of the slide.
+ * The category pills in a frosted capsule. The bar pins under the header (with a gap) while the
+ * list scrolls, and follows the header up when it tucks away. On phones the capsule is as wide
+ * as the page and the pills scroll sideways inside it, fading out at whichever edge has more;
+ * from tablet up the capsule hugs the five pills. The black pill slides to the chosen category.
+ * The labels are white drawn with "difference", so they read black on a white pill and white on
+ * the black one at every moment of the slide.
  */
 export function CategoryFilter({ value, counts, onChange, barRef }: CategoryFilterProps) {
   const reduceMotion = useReducedMotion();
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const fadeLeft = useRef<HTMLSpanElement>(null);
-  const fadeRight = useRef<HTMLSpanElement>(null);
 
-  // Soft edges appear only on the side that has more pills hidden. Written straight to the
-  // elements, so scrolling never re-renders anything.
+  // Soft edges (a mask on the scroller) appear only on the side that has more pills hidden.
+  // Written straight to the element, so scrolling never re-renders anything.
   useEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
     const update = () => {
       const max = scroller.scrollWidth - scroller.clientWidth;
-      if (fadeLeft.current) fadeLeft.current.style.opacity = scroller.scrollLeft > 2 ? "1" : "0";
-      if (fadeRight.current) fadeRight.current.style.opacity = scroller.scrollLeft < max - 2 ? "1" : "0";
+      scroller.style.setProperty("--fade-left", scroller.scrollLeft > 2 ? "28px" : "0px");
+      scroller.style.setProperty("--fade-right", scroller.scrollLeft < max - 2 ? "28px" : "0px");
     };
     update();
     scroller.addEventListener("scroll", update, { passive: true });
@@ -61,14 +60,14 @@ export function CategoryFilter({ value, counts, onChange, barRef }: CategoryFilt
   return (
     <div
       ref={barRef}
-      className="sticky top-[var(--bar-top)] z-30 -mx-3 rounded-full bg-surface/80 backdrop-blur-md transition-[top] duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+      className="pointer-events-none sticky top-[var(--bar-top)] z-30 transition-[top] duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
     >
-      <div className="relative">
+      <div className="pointer-events-auto max-w-full overflow-hidden rounded-full bg-surface/80 shadow-card ring-1 ring-ink/10 backdrop-blur-md md:mx-auto md:w-fit">
         <div
           ref={scrollerRef}
           role="group"
           aria-label="Filter projects by category"
-          className="relative isolate flex snap-x gap-2 overflow-x-auto px-3 py-3 [scrollbar-width:none] md:gap-3 [&::-webkit-scrollbar]:hidden"
+          className="isolate flex snap-x gap-2 overflow-x-auto p-2 [mask-image:linear-gradient(to_right,transparent,#000_var(--fade-left,0px),#000_calc(100%_-_var(--fade-right,0px)),transparent)] [scrollbar-width:none] md:gap-3 md:[mask-image:none] [&::-webkit-scrollbar]:hidden"
         >
           {options.map((option) => {
             const active = option.id === value;
@@ -78,7 +77,7 @@ export function CategoryFilter({ value, counts, onChange, barRef }: CategoryFilt
                 type="button"
                 aria-pressed={active}
                 onClick={() => onChange(option.id)}
-                className="relative inline-flex h-11 shrink-0 snap-center select-none items-center gap-2 rounded-full bg-white px-5 text-sm font-medium shadow-card transition duration-300 hover:bg-ink active:scale-[0.97] md:h-12 md:gap-2.5 md:px-6 md:text-base"
+                className="relative inline-flex h-11 shrink-0 snap-center select-none items-center gap-2 rounded-full bg-white px-5 text-sm font-medium transition duration-300 hover:bg-ink active:scale-[0.97] md:h-12 md:gap-2.5 md:px-6 md:text-base"
               >
                 {active && (
                   <motion.span
@@ -96,16 +95,6 @@ export function CategoryFilter({ value, counts, onChange, barRef }: CategoryFilt
             );
           })}
         </div>
-        <span
-          ref={fadeLeft}
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 w-10 rounded-l-full bg-linear-to-r from-surface to-transparent opacity-0 transition-opacity duration-200 md:hidden"
-        />
-        <span
-          ref={fadeRight}
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 w-10 rounded-r-full bg-linear-to-l from-surface to-transparent opacity-0 transition-opacity duration-200 md:hidden"
-        />
       </div>
     </div>
   );

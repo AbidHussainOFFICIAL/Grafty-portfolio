@@ -30,12 +30,12 @@ const REVEAL_DISTANCE = 140;
 const REVEAL_DELAY = 400;
 
 const circleLink =
-  "grid h-11 w-11 place-items-center rounded-full bg-white text-ink transition duration-300 hover:bg-ink hover:text-white active:scale-95 lg:h-[clamp(30px,3.1vw,44px)] lg:w-[clamp(30px,3.1vw,44px)]";
+  "grid h-10 w-10 place-items-center rounded-full bg-white text-ink transition duration-300 hover:bg-ink hover:text-white active:scale-95 lg:h-[clamp(34px,2.9vw,42px)] lg:w-[clamp(34px,2.9vw,42px)]";
 
 function Logo({ className }: { className?: string }) {
   return (
     <SiteLink href="#home" aria-label={`${site.brand} home`} className={className}>
-      <VectorArt art={wordmark} className="h-7 w-auto text-ink lg:h-[clamp(20px,2.2vw,32px)]" />
+      <VectorArt art={wordmark} className="h-6 w-auto text-ink lg:h-[clamp(18px,1.9vw,28px)]" />
     </SiteLink>
   );
 }
@@ -155,7 +155,7 @@ export function Navbar() {
           aria-hidden="true"
           className={`pointer-events-none absolute inset-0 border-b border-ink/10 bg-surface/80 backdrop-blur-md transition-opacity duration-300 ${scrolled ? "opacity-100" : "opacity-0"}`}
         />
-        <div className="relative mx-auto flex w-full max-w-[1440px] items-center justify-between px-5 py-5 md:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-[5.08%] lg:py-[clamp(1.1rem,2.2vw,2rem)]">
+        <div className="relative mx-auto flex w-full max-w-[1440px] items-center justify-between px-5 py-3 md:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-[5.08%] lg:py-[clamp(0.8rem,1.3vw,1.2rem)]">
           <nav
             aria-label="Primary"
             className="hidden items-center gap-[clamp(1.1rem,2.6vw,2.5rem)] text-[clamp(11px,1.05vw,15px)] lg:flex"
@@ -193,7 +193,7 @@ export function Navbar() {
                 </li>
               ))}
             </ul>
-            <ContactLink className="ml-1 h-11 px-6 text-[15px] lg:h-[clamp(32px,3.35vw,48px)] lg:px-[clamp(1.4rem,2.5vw,2.25rem)] lg:text-[clamp(11px,1.05vw,15px)]">
+            <ContactLink className="ml-1 h-10 px-5 text-[15px] lg:h-[clamp(34px,2.9vw,42px)] lg:px-[clamp(1.2rem,2.1vw,1.9rem)] lg:text-[clamp(11px,1.05vw,15px)]">
               Hire Me!
             </ContactLink>
             <button

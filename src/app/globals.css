@@ -20,17 +20,17 @@
  * --header-h and data-header; the bar follows it up when the header tucks away.
  */
 :root {
-  --bar-top: var(--header-h, 5.25rem);
-  --bar-h: 4.25rem;
+  --bar-top: calc(var(--header-h, 4rem) + 0.75rem);
+  --bar-h: 3.75rem;
 }
 
 html[data-header="hidden"] {
-  --bar-top: 0.5rem;
+  --bar-top: 0.75rem;
 }
 
 @media (min-width: 48rem) {
   :root {
-    --bar-h: 4.5rem;
+    --bar-h: 4rem;
   }
 }
 

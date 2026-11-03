@@ -127,23 +127,10 @@ function ProjectImage({
 }
 
 /**
- * The folded part of a card: an optional summary and client line, then Problem / Role / Result as
- * three thin-ruled rows. Labels sit above the text on phones, beside it on desktop. On phones it
+ * The folded part of a card: Problem / Role / Result as three thin-ruled rows. Labels sit above the text on phones, beside it on desktop. On phones it
  * stays folded away until "See more" is pressed; from tablet up it is always shown.
  */
-function Details({
-  project,
-  line,
-  id,
-  open,
-  featured,
-}: {
-  project: Project;
-  line: CaseLine;
-  id: string;
-  open: boolean;
-  featured: boolean;
-}) {
+function Details({ line, id, open }: { line: CaseLine; id: string; open: boolean }) {
   const rows = [
     ["Problem", line.problem],
     ["Role", line.role],
@@ -157,14 +144,6 @@ function Details({
       className="grid grid-rows-[0fr] transition-[grid-template-rows,margin] duration-300 ease-out motion-reduce:transition-none max-md:-mt-3 max-md:data-open:mt-0 data-open:grid-rows-[1fr] md:grid-rows-[1fr]"
     >
       <div className="min-h-0 overflow-hidden">
-        {featured && (
-          <p className="mb-2 text-sm leading-snug md:text-base lg:mb-[1cqw] lg:text-[max(14px,1.4cqw)]">
-            {project.summary}{" "}
-            <span className="whitespace-nowrap opacity-75">
-              {project.client} &middot; {project.year}
-            </span>
-          </p>
-        )}
         <dl>
           {rows.map(([label, text]) => (
             <div
@@ -185,6 +164,23 @@ function Details({
   );
 }
 
+/** The project's categories as small outlined pills. */
+function Chips({ project, className }: { project: Project; className?: string }) {
+  return (
+    <p className={`flex items-center gap-1.5 lg:gap-[0.6cqw] ${className ?? ""}`}>
+      <span className="sr-only">Categories: </span>
+      {project.categories.map((id) => (
+        <span
+          key={id}
+          className="whitespace-nowrap rounded-full border border-current/40 px-2.5 py-1 text-[10px] font-semibold uppercase leading-none tracking-wide lg:px-[1cqw] lg:py-[0.45cqw] lg:text-[max(10px,0.85cqw)]"
+        >
+          {categoryLabel[id]}
+        </span>
+      ))}
+    </p>
+  );
+}
+
 export interface ProjectCardProps {
   project: Project;
   /** The number shown on the card, starting at 1. */
@@ -193,8 +189,6 @@ export interface ProjectCardProps {
   total: number;
   /** Shows the category chips and year (the Work page does, Home does not). */
   meta?: boolean;
-  /** The large card at the top of the Work page: also shows the summary and client. */
-  featured?: boolean;
   /** Set by the stack: how far the next card has covered this one. */
   scale?: MotionValue<number>;
   dim?: MotionValue<number>;
@@ -205,7 +199,7 @@ export interface ProjectCardProps {
  * The whole card is the link (the title's ::after stretches over it). It fills its parent's
  * height, so the stack and the featured block decide how tall it is.
  */
-export function ProjectCard({ project, number, total, meta = false, featured = false, scale, dim }: ProjectCardProps) {
+export function ProjectCard({ project, number, total, meta = false, scale, dim }: ProjectCardProps) {
   const reduceMotion = useReducedMotion();
   const desktop = useMediaQuery("(min-width: 1024px)");
   const tilting = !reduceMotion && desktop;
@@ -226,10 +220,6 @@ export function ProjectCard({ project, number, total, meta = false, featured = f
     return () => window.removeEventListener("scroll", onScroll);
   }, [expanded]);
 
-  const titleSize = featured
-    ? "lg:text-[min(8.2cqw,calc((100svh_-_9rem)*0.17))]"
-    : "lg:text-[min(7.4cqw,calc((100svh_-_11rem)*0.16))]";
-
   return (
     <motion.div
       className="group relative h-full origin-top overflow-hidden rounded-card shadow-card has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-violet"
@@ -243,20 +233,30 @@ export function ProjectCard({ project, number, total, meta = false, featured = f
         <div
           className={`flex min-w-0 flex-1 flex-col justify-between gap-3 p-4 md:gap-6 md:p-6 lg:gap-0 lg:p-[3cqw] ${tone.panel}`}
         >
-          <div className="flex min-h-6 items-center justify-between gap-3">
+          <div className="flex min-h-6 items-center gap-3 lg:gap-[1.2cqw]">
             <p className="font-numeral text-sm lg:text-[max(14px,1.4cqw)]" aria-hidden="true">
               {pad(number)} / {pad(total)}
             </p>
-            {project.caseLine && (
-              <span className="rounded-full bg-accent px-3 py-1 text-[10px] font-semibold uppercase leading-none tracking-wide text-ink lg:px-[1.2cqw] lg:py-[0.5cqw] lg:text-[max(10px,0.9cqw)]">
-                Featured
-              </span>
-            )}
+            {/* On desktop the chips sit beside the number, which keeps the panel's height free for the text. */}
+            {meta && <Chips project={project} className="max-lg:hidden" />}
+            <span className="ml-auto flex items-center">
+              {project.caseLine ? (
+                <span className="rounded-full bg-accent px-3 py-1 text-[10px] font-semibold uppercase leading-none tracking-wide text-ink lg:px-[1.2cqw] lg:py-[0.5cqw] lg:text-[max(10px,0.9cqw)]">
+                  Featured
+                </span>
+              ) : (
+                meta && (
+                  <span className="font-numeral text-xs opacity-75 max-lg:hidden lg:text-[max(12px,1.1cqw)]">
+                    {project.year}
+                  </span>
+                )
+              )}
+            </span>
           </div>
 
           <div className="min-w-0">
             <h3
-              className={`font-cond min-h-[1.76em] text-[clamp(2rem,9vw,3.5rem)] uppercase leading-[0.88] ${titleSize}`}
+              className="font-cond min-h-[1.76em] text-[clamp(2rem,9vw,3.5rem)] uppercase leading-[0.88] lg:text-[min(7.4cqw,calc((100svh_-_11rem)*0.16))]"
             >
               {/* The title is the card's link; its ::after stretches over the whole card. */}
               <SiteLink
@@ -273,27 +273,15 @@ export function ProjectCard({ project, number, total, meta = false, featured = f
             </h3>
 
             {meta && (
-              <p className="mt-2 flex items-center gap-1.5 lg:mt-[1cqw] lg:gap-[0.6cqw]">
-                <span className="sr-only">Categories: </span>
-                {project.categories.map((id) => (
-                  <span
-                    key={id}
-                    className="rounded-full border border-current/40 px-2.5 py-1 text-[10px] font-semibold uppercase leading-none tracking-wide lg:px-[1cqw] lg:py-[0.45cqw] lg:text-[max(10px,0.85cqw)]"
-                  >
-                    {categoryLabel[id]}
-                  </span>
-                ))}
-                {!featured && (
-                  <span className="font-numeral ml-auto text-xs opacity-75 lg:text-[max(12px,1.1cqw)]">
-                    {project.year}
-                  </span>
-                )}
-              </p>
+              <div className="mt-2 flex items-center justify-between gap-2 lg:hidden">
+                <Chips project={project} />
+                {!project.caseLine && <span className="font-numeral text-xs opacity-75">{project.year}</span>}
+              </div>
             )}
           </div>
 
           {project.caseLine && (
-            <Details project={project} line={project.caseLine} id={rowsId} open={expanded} featured={featured} />
+            <Details line={project.caseLine} id={rowsId} open={expanded} />
           )}
 
           <div className="flex items-center justify-between gap-3">

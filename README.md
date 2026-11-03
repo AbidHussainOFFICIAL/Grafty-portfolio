@@ -64,7 +64,7 @@ Requires Node 20.9 or newer.
 | Ghost words slide in; footer and contact photo drift | `ui/ScrollShift.tsx` | |
 | About statement lights up word by word; stats count up | `ui/ScrollWords.tsx`, `ui/CountUp.tsx` | |
 | Portfolio: cards pin and stack, with 3D tilt on the image | `sections/ProjectStack.tsx`, `sections/ProjectCard.tsx` | The tilt is desktop with a mouse only; the stacking works at every size. The stack is shared by Home and Work. |
-| Work page: filter pills (All, Branding, UI/UX, Marketing, Code), featured card, stacked list | `sections/WorkBrowser.tsx`, `CategoryFilter.tsx`, `WorkHeader.tsx`, `lib/useCategoryParam.ts` | The filter lives in the address (`/work?category=branding`). Categories and projects are in `content.ts`. |
+| Work page: filter pills (All, Branding, UI/UX, Marketing, Code) and the stacked list | `sections/WorkBrowser.tsx`, `CategoryFilter.tsx`, `WorkHeader.tsx`, `lib/useCategoryParam.ts` | The filter lives in the address (`/work?category=branding`). Categories and projects are in `content.ts`. |
 | Testimonials fade in and out of focus | `sections/Testimonials.tsx` | |
 | Client strip on phones speeds up while scrolling | `ui/VelocityMarquee.tsx` | |
 

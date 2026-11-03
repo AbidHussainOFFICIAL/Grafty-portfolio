@@ -12,15 +12,13 @@ const MAX_STEPS = 3;
 interface StackCardProps {
   project: Project;
   index: number;
-  number: number;
-  total: number;
   count: number;
   meta: boolean;
   ownRef: RefObject<HTMLLIElement | null>;
   nextRef: RefObject<HTMLLIElement | null> | undefined;
 }
 
-function StackCard({ project, index, number, total, count, meta, ownRef, nextRef }: StackCardProps) {
+function StackCard({ project, index, count, meta, ownRef, nextRef }: StackCardProps) {
   const reduceMotion = useReducedMotion();
   const stacked = !reduceMotion;
   // How many cards come after this one, capped so a long list never shrinks cards to nothing.
@@ -43,8 +41,8 @@ function StackCard({ project, index, number, total, count, meta, ownRef, nextRef
     >
       <ProjectCard
         project={project}
-        number={number}
-        total={total}
+        number={index + 1}
+        total={count}
         meta={meta}
         scale={stacked ? scale : undefined}
         dim={stacked && nextRef ? dim : undefined}
@@ -55,10 +53,6 @@ function StackCard({ project, index, number, total, count, meta, ownRef, nextRef
 
 interface ProjectStackProps {
   projects: readonly Project[];
-  /** Cards that come before this list but share its numbering (the Work page's featured card). */
-  numberOffset?: number;
-  /** The total shown on each card. Defaults to the list length plus the offset. */
-  total?: number;
   /** Shows each card's categories and year. */
   meta?: boolean;
   /** Pins the cards below the Work page's sticky filter bar instead of near the top of the screen. */
@@ -71,9 +65,8 @@ interface ProjectStackProps {
  * next one slides over the last, which shrinks and darkens beneath it. Phones use compact
  * cards of equal height so a whole card fits on screen; with reduced motion they simply scroll past.
  */
-export function ProjectStack({ projects, numberOffset = 0, total, meta = false, pinBelowBar = false, className }: ProjectStackProps) {
+export function ProjectStack({ projects, meta = false, pinBelowBar = false, className }: ProjectStackProps) {
   const refs = useMemo(() => projects.map(() => createRef<HTMLLIElement>()), [projects]);
-  const shownTotal = total ?? projects.length + numberOffset;
 
   return (
     <ul
@@ -90,8 +83,6 @@ export function ProjectStack({ projects, numberOffset = 0, total, meta = false, 
           key={project.id}
           project={project}
           index={index}
-          number={index + 1 + numberOffset}
-          total={shownTotal}
           count={projects.length}
           meta={meta}
           ownRef={refs[index]}

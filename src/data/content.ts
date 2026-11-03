@@ -162,9 +162,6 @@ export interface Project {
   /** One or two of the categories above. */
   readonly categories: readonly CategoryId[];
   readonly year: string;
-  readonly client: string;
-  /** One sentence, shown on the large featured card. */
-  readonly summary: string;
   /** Only the featured project carries one. */
   readonly caseLine?: CaseLine;
   readonly image: { readonly src: string; readonly alt: string };
@@ -181,8 +178,6 @@ export const projects: readonly Project[] = [
     tone: "light",
     categories: ["branding", "marketing"],
     year: "2025",
-    client: "Northfield Studio",
-    summary: "A complete brand identity and visual system for a growing design studio.",
     caseLine: {
       problem: "A growing studio needed a brand that felt as polished as its work.",
       role: "Brand identity, visual system",
@@ -199,8 +194,6 @@ export const projects: readonly Project[] = [
     tone: "dark",
     categories: ["branding"],
     year: "2025",
-    client: "Harbor Press",
-    summary: "Cover artwork and typography for a hardcover series.",
     image: {
       src: "/images/work-book.webp",
       alt: "Book Cover project: a stack of white hardcover books against a blue wall",
@@ -212,8 +205,6 @@ export const projects: readonly Project[] = [
     tone: "violet",
     categories: ["branding", "marketing"],
     year: "2024",
-    client: "Tape & Co.",
-    summary: "A custom display typeface drawn for a packaging brand.",
     image: {
       src: "/images/work-font.webp",
       alt: "Font Design project: a roll of patterned tape on a red and orange background",
@@ -225,8 +216,6 @@ export const projects: readonly Project[] = [
     tone: "accent",
     categories: ["ui-ux", "code"],
     year: "2024",
-    client: "Loop Labs",
-    summary: "A mobile app designed in Figma and built front to back.",
     image: {
       src: "/images/work-app.webp",
       alt: "Application project: a smartphone showing a purple app screen on dark woven fabric",
@@ -238,8 +227,6 @@ export const projects: readonly Project[] = [
     tone: "dark",
     categories: ["ui-ux", "code"],
     year: "2024",
-    client: "Pulse Metrics",
-    summary: "A clear, fast dashboard for a data product.",
     image: {
       src: "/images/work-app.webp",
       alt: "Analytics Dashboard project: a smartphone showing a purple app screen on dark woven fabric",
@@ -251,8 +238,6 @@ export const projects: readonly Project[] = [
     tone: "accent",
     categories: ["marketing"],
     year: "2023",
-    client: "Bright Goods",
-    summary: "Social and landing page visuals for a product launch.",
     image: {
       src: "/images/work-font.webp",
       alt: "Launch Campaign project: a roll of patterned tape on a red and orange background",
@@ -264,8 +249,6 @@ export const projects: readonly Project[] = [
     tone: "light",
     categories: ["branding"],
     year: "2023",
-    client: "Oak & Ember",
-    summary: "Logo, labels and packaging for a small-batch brand.",
     image: {
       src: "/images/work-mockup.webp",
       alt: "Packaging Identity project: a laptop showing an orange wallpaper on a concrete surface",
@@ -277,8 +260,6 @@ export const projects: readonly Project[] = [
     tone: "violet",
     categories: ["ui-ux", "marketing"],
     year: "2023",
-    client: "Atlas Cloud",
-    summary: "A responsive marketing site, designed and built in Next.js.",
     image: {
       src: "/images/work-book.webp",
       alt: "Marketing Site project: a stack of white hardcover books against a blue wall",
