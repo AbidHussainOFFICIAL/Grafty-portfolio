@@ -1,11 +1,11 @@
 "use client";
 
 import { useMemo, useRef } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { categories, projects, type CategoryFilterId } from "@/data/content";
-import { useIntroReady } from "@/components/layout/Intro";
 import { Button } from "@/components/ui/Button";
 import { useCategoryParam } from "@/lib/useCategoryParam";
+import { useEntrance } from "@/lib/useEntrance";
 import { CategoryFilter } from "./CategoryFilter";
 import { ProjectStack } from "./ProjectStack";
 
@@ -30,8 +30,7 @@ const labelOf = (id: CategoryFilterId) =>
  */
 export function WorkBrowser() {
   const [category, setCategory] = useCategoryParam();
-  const reduceMotion = useReducedMotion();
-  const ready = useIntroReady();
+  const { reduceMotion, rise } = useEntrance();
   const barRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -56,15 +55,7 @@ export function WorkBrowser() {
   };
 
   return (
-    <motion.div
-      {...(reduceMotion
-        ? {}
-        : {
-            initial: { opacity: 0, y: 24 },
-            animate: ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
-            transition: { duration: 0.8, delay: 0.6, ease: EASE },
-          })}
-    >
+    <motion.div {...rise(0.6)}>
       <CategoryFilter value={category} counts={counts} onChange={select} barRef={barRef} />
 
       <p role="status" className="sr-only">

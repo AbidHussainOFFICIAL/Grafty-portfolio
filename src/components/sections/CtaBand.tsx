@@ -38,7 +38,7 @@ export function CtaBand({ className }: { className?: string }) {
         };
 
   return (
-    <Reveal className={className ?? "mt-block"}>
+    <Reveal className={className}>
       <div
         ref={ref}
         className="relative overflow-hidden rounded-card bg-violet p-6 text-white shadow-card md:p-10 lg:p-[5cqw]"

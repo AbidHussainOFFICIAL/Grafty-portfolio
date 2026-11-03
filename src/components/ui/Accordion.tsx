@@ -15,6 +15,8 @@ export interface AccordionEntry {
 interface AccordionProps {
   items: readonly AccordionEntry[];
   defaultOpenId?: string;
+  /** Shows 01, 02... before each title. */
+  numbered?: boolean;
   /** A last row that is a link, not an accordion item (it ends the list in a dark card). */
   action?: { readonly label: string; readonly href: string };
 }
@@ -37,14 +39,14 @@ const style = {
 } as const;
 
 /** Single-open accordion with keyboard-accessible headers and animated panels. */
-export function Accordion({ items, defaultOpenId, action }: AccordionProps) {
+export function Accordion({ items, defaultOpenId, numbered = false, action }: AccordionProps) {
   const [openId, setOpenId] = useState<string | null>(defaultOpenId ?? null);
   const baseId = useId();
   const reduceMotion = useReducedMotion();
 
   return (
     <ul className={style.list}>
-      {items.map((item) => {
+      {items.map((item, index) => {
         const open = item.id === openId;
         const buttonId = `${baseId}-${item.id}-button`;
         const panelId = `${baseId}-${item.id}-panel`;
@@ -62,7 +64,14 @@ export function Accordion({ items, defaultOpenId, action }: AccordionProps) {
                   style.button,
                 )}
               >
-                <span className={style.title}>{item.title}</span>
+                <span className="flex min-w-0 items-baseline gap-3 lg:gap-[1.6cqw]">
+                  {numbered && (
+                    <span aria-hidden="true" className="font-numeral text-sm opacity-60 md:text-base lg:text-[1.6cqw]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  )}
+                  <span className={style.title}>{item.title}</span>
+                </span>
                 <PlusMinusIcon open={open} className={style.icon} />
               </button>
             </h3>

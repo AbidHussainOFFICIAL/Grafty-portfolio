@@ -92,7 +92,7 @@ The page has a title and description, a canonical link, Open Graph and Twitter c
 Home order: Hero, Services, About, Skills strip, Work (featured first card), Client feedback, Clients, Contact (ghost heading and the "Let's work together" band), Say hello (quick form, tablet and up), Footer.
 
 - Demo content to replace: the featured card's Problem / Role / Result (`caseLine` in `projects`), `skills` and the legal pages.
-- "Coming soon" pages exist so no link is dead: `/work/<project id>`, `/about`, `/services`, `/contact`, `/privacy`, `/terms`. They are `noindex` and not in the sitemap. `/work` is a finished page: it is indexed, in the sitemap, and carries its own collection and breadcrumb data. Replace a page by editing its `page.tsx`; the shell (`PageShell`) is shared.
+- "Coming soon" pages exist so no link is dead: `/about`, `/services`, `/contact`, `/privacy`, `/terms`. They are `noindex` and not in the sitemap. `/work` is a finished page: it is indexed, in the sitemap, and carries its own collection and breadcrumb data. `/work/<project id>` are finished case study pages (see below). Replace a page by editing its `page.tsx`; the shell (`PageShell`) is shared.
 - All internal links go through `SiteLink`: `#section` links scroll on Home and become `/#section` on other pages.
 - The contact form has no Subject field; the email subject is "Portfolio enquiry from <name>". The FAQ answers stay in `content.ts` for the Services and Contact pages.
 
@@ -104,3 +104,11 @@ Double-tap zoom is off (`touch-action: manipulation`), tap highlights and text s
 
 - The header hides as soon as you scroll down and returns only after about 140px of steady upward scrolling plus a 0.4s pause (tune `REVEAL_DISTANCE` and `REVEAL_DELAY` in `Navbar.tsx`). It always shows near the top.
 - On phones the featured card is folded to the same height as the others; "See more" opens Problem / Role / Result and scrolling closes it again. From tablet up the rows are always shown.
+
+## Case study pages (`/work/<project id>`)
+
+One template renders all 8 projects from `projects` in `src/data/content.ts` (`study` holds tagline, overview, client, role, duration, tools, challenge, 4 process steps, 5 gallery shots, 3 results and a quote). Components live in `src/components/case/`: `CaseHeader`, `CaseCover`, `CaseSummary`, `CaseChallenge`, `CaseProcess`, `CaseGallery` (with `ImageViewer`), `CaseOutcome`, `NextProject`. The route is `src/app/work/[slug]/page.tsx`.
+
+- All case study text and images are demo content. Replace the `study` objects and the `galleryArt` images, keeping result values starting with a digit (the counters animate them).
+- `caseStudiesPublished` in `content.ts` is `false`: the pages are `noindex` and not in the sitemap. Set it to `true` when the real content is in.
+- The image viewer supports arrow keys, swipe, Esc, tapping the backdrop, and returns focus to the tile that opened it.

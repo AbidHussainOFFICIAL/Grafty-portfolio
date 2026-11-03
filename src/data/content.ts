@@ -154,6 +154,54 @@ export const categories = [
 export type CategoryId = (typeof categories)[number]["id"];
 export type CategoryFilterId = "all" | CategoryId;
 
+/** The demo pictures the case study galleries are cut from (replace with each project's own shots). */
+export const galleryArt = {
+  mockup: "/images/work-mockup.webp",
+  book: "/images/work-book.webp",
+  font: "/images/work-font.webp",
+  app: "/images/work-app.webp",
+} as const;
+
+export type GalleryArtId = keyof typeof galleryArt;
+
+export interface GalleryShot {
+  readonly art: GalleryArtId;
+  /** Shown in the image viewer; also becomes the picture's alt text, after the project's title. */
+  readonly caption: string;
+  /** CSS object-position, to vary the crop of a reused picture. */
+  readonly focus?: string;
+}
+
+export interface ProcessStep {
+  readonly id: string;
+  readonly title: string;
+  readonly body: string;
+}
+
+export interface CaseResult {
+  /** Starts with a digit so it can count up: "42%", "3x", "1.8s". */
+  readonly value: string;
+  readonly label: string;
+}
+
+/** Everything on a project's own page, beyond what the cards need. Demo text. */
+export interface CaseStudy {
+  readonly tagline: string;
+  readonly overview: string;
+  readonly client: string;
+  readonly role: string;
+  readonly duration: string;
+  readonly tools: readonly string[];
+  readonly challenge: string;
+  /** Four steps, shown as an accordion. */
+  readonly process: readonly ProcessStep[];
+  /** Five pictures: the first is shown large. */
+  readonly gallery: readonly GalleryShot[];
+  /** Three figures. */
+  readonly results: readonly CaseResult[];
+  readonly quote: { readonly text: string; readonly name: string; readonly role: string };
+}
+
 export interface Project {
   /** Also the project's address: /work/<id>. */
   readonly id: string;
@@ -165,7 +213,14 @@ export interface Project {
   /** Only the featured project carries one. */
   readonly caseLine?: CaseLine;
   readonly image: { readonly src: string; readonly alt: string };
+  readonly study: CaseStudy;
 }
+
+/**
+ * Case study pages are kept out of search results (and the sitemap) while they hold demo text.
+ * Set this to true once the real content is in.
+ */
+export const caseStudiesPublished = false;
 
 /**
  * Demo projects. The first is the featured one and carries a `caseLine`. The first four are the
@@ -187,6 +242,40 @@ export const projects: readonly Project[] = [
       src: "/images/work-mockup.webp",
       alt: "Mockup Design project: a laptop showing an orange wallpaper on a concrete surface",
     },
+    study: {
+      tagline: "A complete brand identity and visual system for a growing design studio.",
+      overview:
+        "Northfield Studio had outgrown its first logo. I rebuilt the identity from the ground up: a flexible mark, a colour and type system, and a set of mockups that show the brand working across screens, print and packaging.",
+      client: "Northfield Studio",
+      role: "Brand identity, visual system",
+      duration: "10 weeks",
+      tools: ["Figma", "Illustrator", "Photoshop"],
+      challenge:
+        "A growing studio needed a brand that felt as polished as its work, without losing the warmth that first won its clients.",
+      process: [
+        { id: "research", title: "Research", body: "Interviews with the team and their clients, plus an audit of how the old brand appeared in the wild. Three themes came out of it: craft, warmth and clarity." },
+        { id: "concept", title: "Concept", body: "Three routes were sketched and tested on real touchpoints. The chosen one pairs a simple geometric mark with a bold, confident colour palette." },
+        { id: "design", title: "Design", body: "The mark, colours, type and grid were refined into a system, then applied to the website, stationery, social templates and signage." },
+        { id: "delivery", title: "Delivery", body: "A guidelines document and a full asset library were handed over, with a short workshop so the team could use the system with confidence." },
+      ],
+      gallery: [
+        { art: "mockup", caption: "The brand on a laptop wallpaper", focus: "50% 40%" },
+        { art: "mockup", caption: "Detail of the colour palette in use", focus: "10% 80%" },
+        { art: "font", caption: "Pattern system on packaging tape", focus: "50% 50%" },
+        { art: "book", caption: "Printed guidelines on the studio shelf", focus: "20% 30%" },
+        { art: "app", caption: "The identity on a phone screen", focus: "50% 25%" },
+      ],
+      results: [
+        { value: "42%", label: "More enquiries in the first quarter" },
+        { value: "3x", label: "Faster to produce new marketing pieces" },
+        { value: "100%", label: "Of the team now using the new templates" },
+      ],
+      quote: {
+        text: "Jessy gave us a brand that finally looks like the studio we are. Clients notice it straight away.",
+        name: "Anna Brooks",
+        role: "Founder, Northfield Studio",
+      },
+    },
   },
   {
     id: "book",
@@ -197,6 +286,40 @@ export const projects: readonly Project[] = [
     image: {
       src: "/images/work-book.webp",
       alt: "Book Cover project: a stack of white hardcover books against a blue wall",
+    },
+    study: {
+      tagline: "Cover artwork and typography for a hardcover series.",
+      overview:
+        "Harbor Press was relaunching a literary series and wanted covers that worked as a set but let each title stand out. I designed the grid, the typography and the first six covers.",
+      client: "Harbor Press",
+      role: "Cover design, typography",
+      duration: "6 weeks",
+      tools: ["Illustrator", "Photoshop", "InDesign"],
+      challenge:
+        "Six very different books had to look like one series on a shelf, and still be told apart at thumbnail size online.",
+      process: [
+        { id: "research", title: "Research", body: "I read each manuscript and studied how competing series look on shelves and in online stores, at every size." },
+        { id: "concept", title: "Concept", body: "One strong grid with a single bold shape per title: the same structure every time, with a different colour and form." },
+        { id: "design", title: "Design", body: "Custom lettering for the series name and a restrained typographic system for titles, authors and quotes." },
+        { id: "delivery", title: "Delivery", body: "Print-ready files, a spine and back-cover template, and a short guide for the covers still to come." },
+      ],
+      gallery: [
+        { art: "book", caption: "The full series on a shelf", focus: "50% 50%" },
+        { art: "book", caption: "Spines side by side", focus: "80% 60%" },
+        { art: "mockup", caption: "Cover artwork in digital mockups", focus: "30% 60%" },
+        { art: "font", caption: "Lettering study for the series name", focus: "60% 40%" },
+        { art: "app", caption: "How the covers look as store thumbnails", focus: "50% 70%" },
+      ],
+      results: [
+        { value: "6", label: "Covers delivered for the launch" },
+        { value: "28%", label: "Higher pre-orders than the previous series" },
+        { value: "2", label: "Design awards shortlists" },
+      ],
+      quote: {
+        text: "The covers sold the books before anyone had read a page. A calm, confident piece of work.",
+        name: "Daniel Reed",
+        role: "Art Director, Harbor Press",
+      },
     },
   },
   {
@@ -209,6 +332,40 @@ export const projects: readonly Project[] = [
       src: "/images/work-font.webp",
       alt: "Font Design project: a roll of patterned tape on a red and orange background",
     },
+    study: {
+      tagline: "A custom display typeface drawn for a packaging brand.",
+      overview:
+        "Tape & Co. wanted its packaging to be recognisable from across a room. I drew a custom display typeface with playful details and used it to build a pattern system for tape, boxes and labels.",
+      client: "Tape & Co.",
+      role: "Type design, pattern system",
+      duration: "8 weeks",
+      tools: ["Glyphs", "Illustrator", "Figma"],
+      challenge:
+        "Off-the-shelf fonts made the brand look like everyone else's, and the packaging needed a voice that was friendly but still professional.",
+      process: [
+        { id: "research", title: "Research", body: "A review of the packaging category and of how lettering behaves when it is wrapped, folded and printed on tape." },
+        { id: "concept", title: "Concept", body: "Sketches of letterforms with one signature detail, a looping stroke, that could repeat as a pattern." },
+        { id: "design", title: "Design", body: "A full uppercase set with numerals and punctuation, spaced and kerned, then used to compose the pattern." },
+        { id: "delivery", title: "Delivery", body: "Font files for print and web, usage rules, and ready-made pattern tiles for the packaging team." },
+      ],
+      gallery: [
+        { art: "font", caption: "Patterned tape in the new typeface", focus: "50% 50%" },
+        { art: "font", caption: "Close-up of the looping stroke", focus: "70% 70%" },
+        { art: "mockup", caption: "The pattern on a branded surface", focus: "60% 30%" },
+        { art: "book", caption: "Specimen sheet for the typeface", focus: "40% 70%" },
+        { art: "app", caption: "The type used in a mobile screen", focus: "50% 30%" },
+      ],
+      results: [
+        { value: "26", label: "Letters, numerals and symbols drawn" },
+        { value: "35%", label: "Lift in social engagement on packaging posts" },
+        { value: "4", label: "Product lines now using the pattern" },
+      ],
+      quote: {
+        text: "People recognise our tape from the other side of the warehouse. That was exactly the point.",
+        name: "Maya Collins",
+        role: "Founder, Tape & Co.",
+      },
+    },
   },
   {
     id: "application",
@@ -219,6 +376,40 @@ export const projects: readonly Project[] = [
     image: {
       src: "/images/work-app.webp",
       alt: "Application project: a smartphone showing a purple app screen on dark woven fabric",
+    },
+    study: {
+      tagline: "A mobile app designed in Figma and built front to back.",
+      overview:
+        "Loop Labs had a working idea and a rough prototype. I designed the full experience, from onboarding to settings, and built the front end so that what shipped matched the design pixel for pixel.",
+      client: "Loop Labs",
+      role: "Product design, front-end build",
+      duration: "14 weeks",
+      tools: ["Figma", "React", "TypeScript", "Tailwind CSS"],
+      challenge:
+        "New users abandoned the app within the first minute. The product was powerful, but nothing told people where to begin.",
+      process: [
+        { id: "research", title: "Research", body: "User interviews and a review of session recordings showed exactly where people got lost during the first minute." },
+        { id: "concept", title: "Concept", body: "A shorter onboarding built around a single first action, with everything else introduced only when it was needed." },
+        { id: "design", title: "Design", body: "A component library and a set of high-fidelity screens, tested with prototypes before any code was written." },
+        { id: "delivery", title: "Delivery", body: "A responsive front end in React with the design system built in, handed over with documentation and tests." },
+      ],
+      gallery: [
+        { art: "app", caption: "The home screen on a phone", focus: "50% 40%" },
+        { art: "app", caption: "Onboarding flow, step one", focus: "30% 60%" },
+        { art: "mockup", caption: "The desktop companion view", focus: "50% 50%" },
+        { art: "font", caption: "Colour and illustration language", focus: "40% 40%" },
+        { art: "book", caption: "Settings and account screens", focus: "70% 40%" },
+      ],
+      results: [
+        { value: "58%", label: "Fewer users leaving in the first minute" },
+        { value: "4.8", label: "Average store rating after launch" },
+        { value: "1.2s", label: "Time to first screen" },
+      ],
+      quote: {
+        text: "Design and code came from one person, so nothing got lost in translation. We shipped weeks early.",
+        name: "Sam Patel",
+        role: "CEO, Loop Labs",
+      },
     },
   },
   {
@@ -231,6 +422,40 @@ export const projects: readonly Project[] = [
       src: "/images/work-app.webp",
       alt: "Analytics Dashboard project: a smartphone showing a purple app screen on dark woven fabric",
     },
+    study: {
+      tagline: "A clear, fast dashboard for a data product.",
+      overview:
+        "Pulse Metrics had hundreds of charts and no hierarchy. I redesigned the dashboard around the three questions customers actually ask, and built it to stay fast with large amounts of data.",
+      client: "Pulse Metrics",
+      role: "Product design, front-end build",
+      duration: "12 weeks",
+      tools: ["Figma", "Next.js", "TypeScript"],
+      challenge:
+        "Customers could see everything and understand nothing. The dashboard needed a hierarchy that put the answers first.",
+      process: [
+        { id: "research", title: "Research", body: "Support tickets and customer calls were sorted into the questions people asked most often." },
+        { id: "concept", title: "Concept", body: "A layout with one headline figure per question, with the detail one click behind it." },
+        { id: "design", title: "Design", body: "A chart kit with consistent colours, labels and empty states, tested with real customer data." },
+        { id: "delivery", title: "Delivery", body: "A fast, accessible front end with loading states, keyboard support and a short design-system handbook." },
+      ],
+      gallery: [
+        { art: "app", caption: "The overview screen", focus: "50% 50%" },
+        { art: "app", caption: "A report in detail", focus: "50% 80%" },
+        { art: "mockup", caption: "The dashboard on desktop", focus: "40% 40%" },
+        { art: "font", caption: "Chart colour palette", focus: "50% 60%" },
+        { art: "book", caption: "Printable report layout", focus: "30% 50%" },
+      ],
+      results: [
+        { value: "45%", label: "Less time to find a key figure" },
+        { value: "70%", label: "Drop in dashboard support tickets" },
+        { value: "0.8s", label: "Load time on large accounts" },
+      ],
+      quote: {
+        text: "Our customers stopped asking where things are. The dashboard just answers the question now.",
+        name: "Elena Novak",
+        role: "Head of Product, Pulse Metrics",
+      },
+    },
   },
   {
     id: "campaign",
@@ -241,6 +466,40 @@ export const projects: readonly Project[] = [
     image: {
       src: "/images/work-font.webp",
       alt: "Launch Campaign project: a roll of patterned tape on a red and orange background",
+    },
+    study: {
+      tagline: "Social and landing page visuals for a product launch.",
+      overview:
+        "Bright Goods was launching a new product line with a small budget and a short deadline. I created a campaign look that worked across social posts, ads and a landing page.",
+      client: "Bright Goods",
+      role: "Campaign design, landing page",
+      duration: "5 weeks",
+      tools: ["Figma", "Photoshop", "Webflow"],
+      challenge:
+        "The launch had one chance to get noticed, a small budget, and a feed full of louder competitors.",
+      process: [
+        { id: "research", title: "Research", body: "A look at what the audience already saved and shared, and which visuals the competitors were not using." },
+        { id: "concept", title: "Concept", body: "One bold colour, one big idea per post, and a consistent frame so the campaign was recognisable in a second." },
+        { id: "design", title: "Design", body: "A set of social templates, ad sizes and a landing page, all built from the same few elements." },
+        { id: "delivery", title: "Delivery", body: "Editable templates for the in-house team, so the campaign could keep going after launch week." },
+      ],
+      gallery: [
+        { art: "font", caption: "The hero visual for the launch", focus: "50% 50%" },
+        { art: "font", caption: "Social post series", focus: "20% 60%" },
+        { art: "app", caption: "The landing page on mobile", focus: "50% 20%" },
+        { art: "mockup", caption: "Display ad variations", focus: "70% 50%" },
+        { art: "book", caption: "Printed in-store material", focus: "50% 80%" },
+      ],
+      results: [
+        { value: "2.4x", label: "Return on ad spend" },
+        { value: "18k", label: "Visits to the landing page in week one" },
+        { value: "9%", label: "Landing page conversion rate" },
+      ],
+      quote: {
+        text: "A small budget, a big result. The campaign looked far more expensive than it was.",
+        name: "Chloe Martin",
+        role: "Marketing Lead, Bright Goods",
+      },
     },
   },
   {
@@ -253,6 +512,40 @@ export const projects: readonly Project[] = [
       src: "/images/work-mockup.webp",
       alt: "Packaging Identity project: a laptop showing an orange wallpaper on a concrete surface",
     },
+    study: {
+      tagline: "Logo, labels and packaging for a small-batch brand.",
+      overview:
+        "Oak & Ember makes small-batch goods by hand. I designed a mark, a label system and packaging that feel crafted and honest, and still look good on a shelf next to bigger brands.",
+      client: "Oak & Ember",
+      role: "Identity, packaging design",
+      duration: "9 weeks",
+      tools: ["Illustrator", "Photoshop", "Figma"],
+      challenge:
+        "The products were handmade and beautiful, but the packaging looked generic and made the brand feel bigger and colder than it is.",
+      process: [
+        { id: "research", title: "Research", body: "A visit to the workshop, and a study of shelf displays in the shops that stock the products." },
+        { id: "concept", title: "Concept", body: "A simple stamp-like mark and a warm palette that echo the materials and the way the goods are made." },
+        { id: "design", title: "Design", body: "A label system flexible enough for twenty products, with tested print finishes and materials." },
+        { id: "delivery", title: "Delivery", body: "Print-ready artwork, a supplier brief and a guide for adding new products without a designer." },
+      ],
+      gallery: [
+        { art: "mockup", caption: "Packaging family together", focus: "50% 50%" },
+        { art: "mockup", caption: "Label detail", focus: "20% 70%" },
+        { art: "book", caption: "Printed card and inserts", focus: "60% 40%" },
+        { art: "font", caption: "Pattern for tissue and tape", focus: "40% 60%" },
+        { art: "app", caption: "The brand on the online shop", focus: "50% 30%" },
+      ],
+      results: [
+        { value: "20", label: "Products launched in the new packaging" },
+        { value: "31%", label: "Increase in sales from stockists" },
+        { value: "5", label: "New shops now carrying the range" },
+      ],
+      quote: {
+        text: "It finally looks like what we make: careful, warm and honest. Our stockists noticed immediately.",
+        name: "Tom Ellis",
+        role: "Co-founder, Oak & Ember",
+      },
+    },
   },
   {
     id: "marketing-site",
@@ -263,6 +556,40 @@ export const projects: readonly Project[] = [
     image: {
       src: "/images/work-book.webp",
       alt: "Marketing Site project: a stack of white hardcover books against a blue wall",
+    },
+    study: {
+      tagline: "A responsive marketing site, designed and built in Next.js.",
+      overview:
+        "Atlas Cloud needed a site that explained a complicated product in plain language. I designed the pages, wrote the structure with the team, and built a fast, accessible site in Next.js.",
+      client: "Atlas Cloud",
+      role: "Web design, front-end build",
+      duration: "11 weeks",
+      tools: ["Figma", "Next.js", "TypeScript", "Tailwind CSS"],
+      challenge:
+        "The product was hard to explain, and the old site buried the one thing every visitor wanted to know.",
+      process: [
+        { id: "research", title: "Research", body: "Sales calls and search data showed the five questions visitors asked before they signed up." },
+        { id: "concept", title: "Concept", body: "A page structure that answers those questions in order, with one clear next step on every screen." },
+        { id: "design", title: "Design", body: "A light, confident visual language, a component library and responsive layouts for every page." },
+        { id: "delivery", title: "Delivery", body: "A static, fast and accessible build in Next.js, with analytics events and a clear content guide." },
+      ],
+      gallery: [
+        { art: "book", caption: "The home page", focus: "50% 50%" },
+        { art: "book", caption: "Product page detail", focus: "70% 30%" },
+        { art: "app", caption: "The site on mobile", focus: "50% 40%" },
+        { art: "mockup", caption: "Pricing page on desktop", focus: "40% 60%" },
+        { art: "font", caption: "Illustration and icon style", focus: "50% 50%" },
+      ],
+      results: [
+        { value: "64%", label: "More sign-ups from the home page" },
+        { value: "98", label: "Lighthouse performance score" },
+        { value: "2x", label: "Time visitors spend on product pages" },
+      ],
+      quote: {
+        text: "The site explains in ten seconds what used to take a sales call. Exactly what we needed.",
+        name: "Priya Shah",
+        role: "VP Marketing, Atlas Cloud",
+      },
     },
   },
 ];

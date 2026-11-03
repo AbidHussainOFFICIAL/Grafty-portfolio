@@ -1,12 +1,10 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { projects } from "@/data/content";
-import { useIntroReady } from "@/components/layout/Intro";
 import { GhostHeading } from "@/components/ui/GhostHeading";
 import { SectionLabel } from "@/components/ui/SectionLabel";
-
-const EASE = [0.22, 1, 0.36, 1] as const;
+import { useEntrance } from "@/lib/useEntrance";
 
 /**
  * The Work page's title row: the ghost word on the left, the label and project count on the right,
@@ -15,17 +13,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
  * list, in WorkBrowser, come last). On a first visit it waits for the loader's curtain to lift.
  */
 export function WorkHeader() {
-  const reduceMotion = useReducedMotion();
-  const ready = useIntroReady();
-
-  const rise = (delay: number) =>
-    reduceMotion
-      ? {}
-      : {
-          initial: { opacity: 0, y: 20 },
-          animate: ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 },
-          transition: { duration: 0.8, delay, ease: EASE },
-        };
+  const { rise, slide } = useEntrance();
 
   return (
     <section aria-labelledby="work-title" className="px-5 pt-4 md:px-8 md:pt-14 lg:px-[5.08%] lg:pt-[5cqw]">
@@ -34,16 +22,7 @@ export function WorkHeader() {
       </h1>
 
       <div className="flex items-end justify-between gap-4">
-        <motion.div
-          className="w-[58%] md:w-[60%]"
-          {...(reduceMotion
-            ? {}
-            : {
-                initial: { opacity: 0, x: "-6vw" },
-                animate: ready ? { opacity: 1, x: 0 } : { opacity: 0, x: "-6vw" },
-                transition: { duration: 1.1, ease: EASE },
-              })}
-        >
+        <motion.div className="w-[58%] md:w-[60%]" {...slide}>
           <GhostHeading text="WORK" ratio={4.6} className="w-full" />
         </motion.div>
 

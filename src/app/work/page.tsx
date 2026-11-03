@@ -42,7 +42,7 @@ export default function WorkPage() {
       </section>
 
       <section aria-label="Start a project" className="mt-section px-5 md:px-8 lg:px-[5.08%]">
-        <CtaBand className="" />
+        <CtaBand />
       </section>
     </PageShell>
   );

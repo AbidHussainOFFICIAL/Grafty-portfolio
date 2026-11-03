@@ -20,7 +20,7 @@ export function Contact() {
         <GhostHeading text="CONTACT" ratio={6.6} className="mx-auto w-[96.5%]" />
       </ScrollShift>
 
-      <CtaBand />
+      <CtaBand className="mt-block" />
     </section>
   );
 }
