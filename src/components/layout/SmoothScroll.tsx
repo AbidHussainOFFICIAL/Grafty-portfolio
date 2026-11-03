@@ -50,7 +50,8 @@ export function SmoothScroll() {
         event.preventDefault();
         // "Home" means the very top of the page, above the header, not the top of the hero.
         lenis.scrollTo(hash === "#home" ? 0 : target);
-        window.history.pushState(null, "", hash);
+        // Tapping the same link again must not stack up identical history entries (Back would seem stuck).
+        if (window.location.hash !== hash) window.history.pushState(null, "", hash);
         if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
         target.focus({ preventScroll: true });
       };

@@ -29,8 +29,9 @@ interface ContactLinkProps {
 
 /** The black pill button that leads to the contact form. */
 export function ContactLink({ children, className, onNavigate }: ContactLinkProps) {
+  const onClick = useContactClick(onNavigate);
   return (
-    <Button href="#contact" onClick={useContactClick(onNavigate)} className={className}>
+    <Button href="#contact" onClick={onClick} className={className}>
       {children}
     </Button>
   );

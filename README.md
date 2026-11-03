@@ -9,6 +9,7 @@ npm install
 npm run dev        # http://localhost:3000
 npm run build && npm start
 npm run typecheck
+npm run lint       # ESLint 9 (flat config, eslint.config.mjs) with the Next.js core-web-vitals + TypeScript rules
 ```
 
 Requires Node 20.9 or newer.
@@ -29,7 +30,7 @@ Requires Node 20.9 or newer.
 | Page title, description, site address, share text | `site` in `src/data/content.ts` |
 | Share image (Open Graph and Twitter card) | `src/app/opengraph-image.png` (1200×630) and its alt text in `opengraph-image.alt.txt` |
 | Favicon, Apple icon, app icons | `src/app/favicon.ico`, `src/app/icon.svg`, `src/app/apple-icon.png`, `public/icon-*.png` |
-| Structured data (Person, ProfessionalService, WebSite, FAQ) | `src/components/seo/JsonLd.tsx` (built from `content.ts`) |
+| Structured data (Person, ProfessionalService, WebSite) | `src/components/seo/JsonLd.tsx` (built from `content.ts`) |
 | First-visit loader | `src/components/layout/Intro.tsx` and the `.intro-*` rules at the end of `globals.css` |
 | Vertical spacing, corner radius, card shadow | `mt-section`, `mt-block`, `rounded-card` and `--shadow-card` in `globals.css` |
 
@@ -37,7 +38,7 @@ Requires Node 20.9 or newer.
 
 1. **Contact form.** Copy `.env.example` to `.env.local` and fill in a [Resend](https://resend.com) API key and a verified sender. Until then the form shows a polite "not set up yet" message.
 2. **CV button.** Put your CV at `public/jessy-linda-cv.pdf` (or change `site.cvUrl`).
-3. **Social links and project links** in `content.ts` currently point at generic sites and `#work`.
+3. **Social links and project links** in `content.ts` currently point at generic sites and `/work`.
 4. **Images.** The photos were cropped from design screenshots, so they are soft on large screens. Replace the files in `public/images/` with full-resolution exports, keeping the same names (or update `content.ts`).
 5. **Site address.** The canonical link, sitemap, share image and structured data use `https://grafty-portfolio.vercel.app`. When you move to your own domain, set `NEXT_PUBLIC_SITE_URL` in Vercel (see `.env.example`).
 6. **Share image and icons.** They were generated from the hero portrait and the Grafty mark. Replace `opengraph-image.png` (1200×630) and the icon files with final artwork when you have it.
@@ -62,7 +63,8 @@ Requires Node 20.9 or newer.
 | Hero layers drift apart as the hero scrolls away | `sections/Hero.tsx` | The intro animation is unchanged and plays first. |
 | Ghost words slide in; footer and contact photo drift | `ui/ScrollShift.tsx` | |
 | About statement lights up word by word; stats count up | `ui/ScrollWords.tsx`, `ui/CountUp.tsx` | |
-| Portfolio: cards pin and stack, with 3D tilt on the image | `sections/ProjectStack.tsx` | The tilt is desktop with a mouse only; the stacking works at every size. |
+| Portfolio: cards pin and stack, with 3D tilt on the image | `sections/ProjectStack.tsx`, `sections/ProjectCard.tsx` | The tilt is desktop with a mouse only; the stacking works at every size. The stack is shared by Home and Work. |
+| Work page: filter pills (All, Branding, UI/UX, Marketing, Code), featured card, stacked list | `sections/WorkBrowser.tsx`, `CategoryFilter.tsx`, `WorkHeader.tsx`, `lib/useCategoryParam.ts` | The filter lives in the address (`/work?category=branding`). Categories and projects are in `content.ts`. |
 | Testimonials fade in and out of focus | `sections/Testimonials.tsx` | |
 | Client strip on phones speeds up while scrolling | `ui/VelocityMarquee.tsx` | |
 
@@ -76,7 +78,7 @@ A short loader plays on a visitor's first visit: the wordmark draws in, a counte
 
 ## Search and sharing
 
-The page has a title and description, a canonical link, Open Graph and Twitter card tags (with the share image), a sitemap, a robots file, a web manifest, a theme colour and structured data. Review markup is left out on purpose: Google does not show stars for reviews a business publishes about itself, and the testimonials are placeholders. FAQ markup is included, but Google now shows FAQ rich results only for government and health sites.
+The page has a title and description, a canonical link, Open Graph and Twitter card tags (with the share image), a sitemap, a robots file, a web manifest, a theme colour and structured data. Review markup is left out on purpose: Google does not show stars for reviews a business publishes about itself, and the testimonials are placeholders. FAQ markup is left out for now: markup must match questions visible on the same page, and Home no longer shows the FAQ. It returns with the FAQ on the Services page.
 
 ## Spacing, images and accessibility
 
@@ -84,3 +86,21 @@ The page has a title and description, a canonical link, Open Graph and Twitter c
 - Photos load lazily with a blurred preview, apart from the hero portrait, which loads first.
 - Every informative image has a descriptive alt text in `content.ts`; decorative artwork is hidden from screen readers.
 - Text and background pairings pass WCAG AA (4.5:1 for normal text). Violet text uses `violet-deep`; white text is never placed on the orange panel.
+
+## Home sections and pages
+
+Home order: Hero, Services, About, Skills strip, Work (featured first card), Client feedback, Clients, Contact (ghost heading and the "Let's work together" band), Say hello (quick form, tablet and up), Footer.
+
+- Demo content to replace: the featured card's Problem / Role / Result (`caseLine` in `projects`), `skills` and the legal pages.
+- "Coming soon" pages exist so no link is dead: `/work/<project id>`, `/about`, `/services`, `/contact`, `/privacy`, `/terms`. They are `noindex` and not in the sitemap. `/work` is a finished page: it is indexed, in the sitemap, and carries its own collection and breadcrumb data. Replace a page by editing its `page.tsx`; the shell (`PageShell`) is shared.
+- All internal links go through `SiteLink`: `#section` links scroll on Home and become `/#section` on other pages.
+- The contact form has no Subject field; the email subject is "Portfolio enquiry from <name>". The FAQ answers stay in `content.ts` for the Services and Contact pages.
+
+## Fast taps on phones
+
+Double-tap zoom is off (`touch-action: manipulation`), tap highlights and text selection on controls are off on touch screens, pull-to-refresh is contained, repeated taps on the same in-page link add one history entry at most, accordion toggles and form submits cannot double-fire, and a closing menu or sheet no longer swallows taps meant for the page behind it. If a phone still seems to "reload" while you edit code, check that `next dev` is not Fast-Refreshing over your network; test with `npm run build && npm start`.
+
+## Header and featured card
+
+- The header hides as soon as you scroll down and returns only after about 140px of steady upward scrolling plus a 0.4s pause (tune `REVEAL_DISTANCE` and `REVEAL_DELAY` in `Navbar.tsx`). It always shows near the top.
+- On phones the featured card is folded to the same height as the others; "See more" opens Problem / Role / Result and scrolling closes it again. From tablet up the rows are always shown.

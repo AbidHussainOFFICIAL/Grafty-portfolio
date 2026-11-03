@@ -67,7 +67,7 @@ function IntroLoader({ onLeave }: { onLeave: () => void }) {
   useEffect(() => {
     const root = document.documentElement;
     if (root.dataset.intro !== "show") {
-      setPhase("gone");
+      // No loader this time (repeat visit or reduced motion): the panel stays hidden by CSS.
       onLeaveRef.current();
       return;
     }
@@ -78,7 +78,8 @@ function IntroLoader({ onLeave }: { onLeave: () => void }) {
       // Private mode: the loader will simply show again next time.
     }
 
-    setPhase("playing");
+    // Starts the wordmark animation on the next frame (not synchronously inside the effect).
+    const begin = requestAnimationFrame(() => setPhase("playing"));
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -121,6 +122,7 @@ function IntroLoader({ onLeave }: { onLeave: () => void }) {
     frame = requestAnimationFrame(tick);
 
     return () => {
+      cancelAnimationFrame(begin);
       cancelAnimationFrame(frame);
       window.clearTimeout(fallback);
       window.clearTimeout(beat);

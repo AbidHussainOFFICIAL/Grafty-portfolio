@@ -95,21 +95,21 @@ export function Hero() {
         the card follows below.
       */}
       <div className="relative px-5 md:px-8 lg:h-[calc(var(--fold)+37cqw)] lg:px-0 lg:[--art-h:clamp(37.7cqw,calc(100svh-var(--header-h)-2cqw),54cqw)] lg:[--fold:max(var(--art-h),calc(100svh-var(--header-h)))] lg:[--header-h:calc(2*clamp(1.1rem,2.2vw,2rem)+clamp(32px,3.35vw,48px))]">
-        <div className="flex min-h-[calc(100svh-5.25rem)] flex-col justify-center gap-8 py-6 lg:contents">
+        <div className="flex min-h-[calc(100svh-5.25rem)] flex-col justify-start gap-2 pb-4 pt-6 md:justify-center md:gap-8 md:py-6 lg:contents">
           {/* Artwork: ghost word, arch portrait, signature and floating tags */}
           <div
             ref={artRef}
-            className="relative mx-auto aspect-[1/0.86] w-full max-w-[760px] md:aspect-[1/0.72] md:max-w-none lg:aspect-auto lg:h-[var(--art-h)]"
+            className="relative mx-auto aspect-[1/0.94] w-full max-w-[760px] md:aspect-[1/0.72] md:max-w-none lg:aspect-auto lg:h-[var(--art-h)]"
           >
             <motion.div
-              className="absolute left-0 top-[10%] w-full lg:left-[5.08%] lg:top-[7.33cqw] lg:w-[89.84%]"
+              className="absolute left-0 top-[15%] w-full md:top-[10%] lg:left-[5.08%] lg:top-[7.33cqw] lg:w-[89.84%]"
               style={layer(ghostY)}
             >
               <GhostHeading text={hero.ghost} ratio={5.26} className="w-full" />
             </motion.div>
 
             <motion.div
-              className="absolute left-[10%] top-0 z-10 w-[80%] lg:bottom-0 lg:left-[30.57%] lg:top-[1.3cqw] lg:w-[38.87%]"
+              className="absolute left-[5%] top-[1%] z-10 w-[90%] md:left-[10%] md:top-0 md:w-[80%] lg:bottom-0 lg:left-[30.57%] lg:top-[1.3cqw] lg:w-[38.87%]"
               style={layer(portraitY)}
             >
               <motion.div
@@ -131,7 +131,7 @@ export function Hero() {
             </motion.div>
 
             <motion.div
-              className="pointer-events-none absolute left-0 top-[25%] z-20 w-full text-violet lg:left-[6.35%] lg:top-[21.9cqw] lg:w-[87.9%]"
+              className="pointer-events-none absolute -left-[3%] top-[55%] z-20 w-[106%] text-violet md:left-0 md:top-[25%] md:w-full lg:left-[6.35%] lg:top-[21.9cqw] lg:w-[87.9%]"
               style={layer(signatureY)}
             >
               <motion.div
@@ -139,7 +139,18 @@ export function Hero() {
                 animate={reduceMotion || !ready ? undefined : { clipPath: "inset(0 0% 0 0)" }}
                 transition={{ duration: 1.4, delay: 0.5, ease: "easeInOut" }}
               >
-                <VectorArt art={signature} className="block h-auto w-full" />
+                {/* Phones: the two words are pulled apart towards the edges so they leave the face clear. */}
+                <div className="relative md:hidden">
+                  <VectorArt
+                    art={signature}
+                    className="block h-auto w-full origin-left scale-[0.86] [clip-path:inset(0_50%_0_0)]"
+                  />
+                  <VectorArt
+                    art={signature}
+                    className="absolute inset-0 block h-auto w-full origin-right scale-[0.86] [clip-path:inset(0_0_0_50%)]"
+                  />
+                </div>
+                <VectorArt art={signature} className="hidden h-auto w-full md:block" />
               </motion.div>
             </motion.div>
 
@@ -147,13 +158,13 @@ export function Hero() {
               label={hero.tags[0]}
               rotate={-9}
               delay={0.9}
-              className="left-[15%] top-[47%] lg:left-[29.5%] lg:top-[18cqw]"
+              className="left-[19%] top-[31%] md:left-[15%] md:top-[47%] lg:left-[29.5%] lg:top-[18cqw]"
             />
             <Tag
               label={hero.tags[1]}
               rotate={17}
               delay={1.05}
-              className="left-[84%] top-[9%] lg:left-[68.2%] lg:top-[9.5cqw]"
+              className="left-[77%] top-[3%] md:left-[84%] md:top-[9%] lg:left-[68.2%] lg:top-[9.5cqw]"
             />
           </div>
 
@@ -168,7 +179,7 @@ export function Hero() {
             </motion.p>
             <h1
               id="hero-title"
-              className="font-cond mt-2 text-[clamp(2.75rem,14vw,6rem)] uppercase leading-[0.85] md:mt-3 lg:mt-[1cqw] lg:text-[7.8cqw] lg:leading-[0.83]"
+              className="font-cond mt-1.5 text-[clamp(2.75rem,14vw,6rem)] uppercase leading-[0.85] md:mt-3 lg:mt-[1cqw] lg:text-[7.8cqw] lg:leading-[0.83]"
             >
               <span className="sr-only">{site.name}: </span>
               {hero.headline.map((line, index) => (

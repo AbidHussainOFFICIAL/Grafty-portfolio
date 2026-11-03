@@ -1,4 +1,4 @@
-import { services } from "@/data/content";
+import { routes, services } from "@/data/content";
 import { Accordion } from "@/components/ui/Accordion";
 import { GhostHeading } from "@/components/ui/GhostHeading";
 import { Reveal } from "@/components/ui/Reveal";
@@ -22,7 +22,7 @@ export function Services() {
       </div>
 
       <Reveal className="mt-block">
-        <Accordion items={services} variant="card" defaultOpenId="design" />
+        <Accordion items={services} defaultOpenId="design" action={{ label: "See how I work", href: routes.servicesProcess }} />
       </Reveal>
     </section>
   );

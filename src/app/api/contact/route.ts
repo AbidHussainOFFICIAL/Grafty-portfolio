@@ -16,7 +16,6 @@ function toPayload(body: unknown): ContactPayload | null {
   return {
     name: read("name"),
     email: read("email"),
-    subject: read("subject"),
     message: read("message"),
     company: read("company"),
   };
@@ -65,7 +64,7 @@ export async function POST(request: Request) {
       from,
       to: [to],
       reply_to: payload.email.trim(),
-      subject: `Portfolio enquiry: ${payload.subject.trim()}`,
+      subject: `Portfolio enquiry from ${payload.name.trim()}`,
       text: `From: ${payload.name.trim()} <${payload.email.trim()}>\n\n${payload.message.trim()}`,
     }),
   });

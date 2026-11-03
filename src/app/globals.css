@@ -16,6 +16,25 @@
 }
 
 /*
+ * Where a sticky bar under the header pins (the Work page's filter). The header (Navbar.tsx) sets
+ * --header-h and data-header; the bar follows it up when the header tucks away.
+ */
+:root {
+  --bar-top: var(--header-h, 5.25rem);
+  --bar-h: 4.25rem;
+}
+
+html[data-header="hidden"] {
+  --bar-top: 0.5rem;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --bar-h: 4.5rem;
+  }
+}
+
+/*
  * One vertical rhythm for the whole page. Sections are separated by `mt-section`; a heading
  * and the content under it by `mt-block`. Desktop sizes are measured against the page width.
  */
@@ -78,6 +97,27 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    /* Fast repeated taps must never zoom the page or flash a highlight. */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    /* A flick at the top of the page must not pull-to-refresh the site. */
+    overscroll-behavior-y: contain;
+    /* Keeps the scrollbar's space reserved, so nothing shifts when the loader or a dialog locks scrolling. */
+    scrollbar-gutter: stable;
+  }
+
+  /* Button labels are never selectable. On touch screens, links are not either (the email address stays selectable). */
+  button {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  @media (hover: none) {
+    a:not([href^="mailto:"]) {
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
   }
 
   /* Lenis (smooth wheel scrolling) adds these classes to <html> while it is active. */

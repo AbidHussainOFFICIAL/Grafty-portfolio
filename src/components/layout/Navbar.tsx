@@ -8,32 +8,42 @@ import {
   useReducedMotion,
   useScroll,
 } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { navLinks, site, socials } from "@/data/content";
 import { wordmark } from "@/data/artwork";
 import { ContactLink } from "@/components/contact/ContactLink";
 import { MenuIcon, SocialIcon } from "@/components/ui/Icons";
+import { SiteLink } from "@/components/ui/SiteLink";
 import { VectorArt } from "@/components/ui/VectorArt";
+import { currentState } from "@/lib/nav";
 import { MobileMenu } from "./MobileMenu";
 
 const headerSocials = socials.filter((social) => social.inHeader);
 const barLinks = navLinks.filter((link) => link.inBar);
 
-/** Scrolling down past this many pixels is what lets the bar tuck away. */
+/** Scrolling down past this many pixels is what lets the bar tuck away. Above the page's first stretch it always shows. */
 const HIDE_AFTER = 160;
+const ALWAYS_SHOWN_ABOVE = 80;
+/** The bar returns only after this many pixels of steady upward scrolling... */
+const REVEAL_DISTANCE = 140;
+/** ...and then only after this short pause (milliseconds), never the instant you scroll up. */
+const REVEAL_DELAY = 400;
 
 const circleLink =
-  "grid h-11 w-11 place-items-center rounded-full bg-white text-ink transition duration-300 hover:bg-ink hover:text-white lg:h-[clamp(30px,3.1vw,44px)] lg:w-[clamp(30px,3.1vw,44px)]";
+  "grid h-11 w-11 place-items-center rounded-full bg-white text-ink transition duration-300 hover:bg-ink hover:text-white active:scale-95 lg:h-[clamp(30px,3.1vw,44px)] lg:w-[clamp(30px,3.1vw,44px)]";
 
 function Logo({ className }: { className?: string }) {
   return (
-    <a href="#home" aria-label={`${site.brand} home`} className={className}>
+    <SiteLink href="#home" aria-label={`${site.brand} home`} className={className}>
       <VectorArt art={wordmark} className="h-7 w-auto text-ink lg:h-[clamp(20px,2.2vw,32px)]" />
-    </a>
+    </SiteLink>
   );
 }
 
 export function Navbar() {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
@@ -41,17 +51,46 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const focusInside = useRef(false);
 
-  // The bar tucks away while reading downwards and returns the moment you scroll up.
+  // The bar tucks away as soon as you scroll down and stays away. It comes back only after a clear
+  // stretch of upward scrolling plus a short pause, so a flick or a bounce never brings it back.
   // It stays put for keyboard users, the open menu and visitors who prefer less motion.
+  const lastY = useRef(0);
+  const upwards = useRef(0);
+  const revealTimer = useRef<number | undefined>(undefined);
+
+  const cancelReveal = () => {
+    window.clearTimeout(revealTimer.current);
+    revealTimer.current = undefined;
+  };
+
+  useEffect(() => () => window.clearTimeout(revealTimer.current), []);
+
   useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = scrollY.getPrevious() ?? 0;
+    const delta = latest - lastY.current;
+    lastY.current = latest;
     setScrolled(latest > 24);
-    if (reduceMotion || menuOpen || focusInside.current) {
+
+    if (reduceMotion || menuOpen || focusInside.current || latest <= ALWAYS_SHOWN_ABOVE) {
+      cancelReveal();
+      upwards.current = 0;
       setHidden(false);
-    } else if (latest > previous && latest > HIDE_AFTER) {
-      setHidden(true);
-    } else if (latest < previous) {
-      setHidden(false);
+      return;
+    }
+    if (Math.abs(delta) < 0.5) return;
+
+    if (delta > 0) {
+      upwards.current = 0;
+      cancelReveal();
+      if (latest > HIDE_AFTER) setHidden(true);
+      return;
+    }
+
+    upwards.current -= delta;
+    if (upwards.current >= REVEAL_DISTANCE && revealTimer.current === undefined) {
+      revealTimer.current = window.setTimeout(() => {
+        revealTimer.current = undefined;
+        setHidden(false);
+      }, REVEAL_DELAY);
     }
   });
 
@@ -70,11 +109,36 @@ export function Navbar() {
     return () => observer.disconnect();
   }, []);
 
+  // Tells the rest of the page where the header is, so sticky bars (the Work filter) can follow it:
+  // --header-h is its height, data-header says whether it is tucked away.
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const root = document.documentElement;
+    const measure = () => root.style.setProperty("--header-h", `${header.offsetHeight}px`);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(header);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("--header-h");
+    };
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.header = hidden ? "hidden" : "shown";
+    return () => {
+      delete root.dataset.header;
+    };
+  }, [hidden]);
+
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   return (
     <>
       <motion.header
+        ref={headerRef}
         className="sticky top-0 z-40 w-full"
         animate={{ y: hidden ? "-100%" : "0%" }}
         transition={{ duration: reduceMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
@@ -97,14 +161,14 @@ export function Navbar() {
             className="hidden items-center gap-[clamp(1.1rem,2.6vw,2.5rem)] text-[clamp(11px,1.05vw,15px)] lg:flex"
           >
             {barLinks.map((link) => (
-              <a
+              <SiteLink
                 key={link.href}
                 href={link.href}
-                aria-current={activeSection === link.href.slice(1) ? "location" : undefined}
-                className="relative transition hover:text-violet-deep after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:after:scale-x-100 aria-[current=location]:text-violet-deep aria-[current=location]:after:scale-x-100"
+                aria-current={currentState(link, pathname, activeSection)}
+                className="relative transition hover:text-violet-deep after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:after:scale-x-100 aria-[current]:text-violet-deep aria-[current]:after:scale-x-100"
               >
                 {link.label}
-              </a>
+              </SiteLink>
             ))}
           </nav>
 

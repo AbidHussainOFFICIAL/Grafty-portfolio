@@ -6,7 +6,7 @@ import { validateContact, type ContactErrors, type ContactValues } from "@/lib/v
 
 type Status = "idle" | "sending" | "success" | "error";
 
-const emptyValues: ContactValues = { name: "", email: "", subject: "", message: "" };
+const emptyValues: ContactValues = { name: "", email: "", message: "" };
 
 const labelClass = "block text-[13px] font-semibold lg:text-[max(13px,1.15cqw)]";
 // 16px on phones: anything smaller makes iOS zoom the page when a field is focused.
@@ -57,6 +57,8 @@ export function ContactForm({ onSent }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [feedback, setFeedback] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
+  // A ref, not state: two taps in the same frame both see the old state, but never the old ref.
+  const sendingRef = useRef(false);
 
   const update =
     (field: keyof ContactValues) =>
@@ -79,7 +81,7 @@ export function ContactForm({ onSent }: ContactFormProps) {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (status === "sending") return;
+    if (sendingRef.current) return;
 
     const found = validateContact(values);
     setErrors(found);
@@ -89,6 +91,7 @@ export function ContactForm({ onSent }: ContactFormProps) {
       return;
     }
 
+    sendingRef.current = true;
     setStatus("sending");
     setFeedback("");
     try {
@@ -114,6 +117,8 @@ export function ContactForm({ onSent }: ContactFormProps) {
     } catch {
       setStatus("error");
       setFeedback("Could not reach the server. Please check your connection and try again.");
+    } finally {
+      sendingRef.current = false;
     }
   }
 
@@ -135,9 +140,6 @@ export function ContactForm({ onSent }: ContactFormProps) {
           placeholder="Email Address"
           {...fieldProps("email")}
         />
-      </Field>
-      <Field label="Subject" name="subject" error={errors.subject} className="sm:col-span-2">
-        <input type="text" placeholder="Write Subject line" {...fieldProps("subject")} />
       </Field>
       <Field label="Message" name="message" error={errors.message} className="sm:col-span-2">
         <textarea

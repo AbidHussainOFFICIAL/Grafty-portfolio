@@ -26,7 +26,10 @@ export const site = {
 
 export interface NavLink {
   readonly label: string;
+  /** "#id" scrolls on the Home page; "/path" is a page of its own. */
   readonly href: string;
+  /** For a page link: the Home section it stands for, so it is highlighted there too. */
+  readonly section?: string;
   /** Shown in the desktop bar. Every link appears in the mobile menu and footer. */
   readonly inBar: boolean;
 }
@@ -35,11 +38,23 @@ export const navLinks: readonly NavLink[] = [
   { label: "Home", href: "#home", inBar: true },
   { label: "Services", href: "#services", inBar: true },
   { label: "About", href: "#about", inBar: true },
-  { label: "Work", href: "#work", inBar: true },
+  { label: "Work", href: "/work", section: "work", inBar: true },
   { label: "Reviews", href: "#feedback", inBar: false },
-  { label: "FAQ", href: "#faq", inBar: false },
   { label: "Contact", href: "#contact", inBar: true },
 ];
+
+/** Pages that exist as "coming soon" placeholders until each one is designed. */
+export const routes = {
+  work: "/work",
+  about: "/about",
+  aboutAwards: "/about#awards",
+  services: "/services",
+  servicesProcess: "/services#process",
+  contact: "/contact",
+  contactBook: "/contact#book",
+  privacy: "/privacy",
+  terms: "/terms",
+} as const;
 
 export type SocialId = "dribbble" | "linkedin" | "x" | "behance";
 
@@ -121,22 +136,58 @@ export const about = {
   },
 } as const;
 
+/** The three short lines shown on the featured card. Demo text. */
+export interface CaseLine {
+  readonly problem: string;
+  readonly role: string;
+  readonly result: string;
+}
+
+/** The filter categories on the Work page. Same four disciplines as the Services section. */
+export const categories = [
+  { id: "branding", label: "Branding" },
+  { id: "ui-ux", label: "UI/UX" },
+  { id: "marketing", label: "Marketing" },
+  { id: "code", label: "Code" },
+] as const;
+
+export type CategoryId = (typeof categories)[number]["id"];
+export type CategoryFilterId = "all" | CategoryId;
+
 export interface Project {
+  /** Also the project's address: /work/<id>. */
   readonly id: string;
   readonly title: string;
-  readonly href: string;
-  /** Colour of the panel beside the image on desktop. */
   readonly tone: "light" | "dark" | "violet" | "accent";
+  /** One or two of the categories above. */
+  readonly categories: readonly CategoryId[];
+  readonly year: string;
+  readonly client: string;
+  /** One sentence, shown on the large featured card. */
+  readonly summary: string;
+  /** Only the featured project carries one. */
+  readonly caseLine?: CaseLine;
   readonly image: { readonly src: string; readonly alt: string };
 }
 
-/** Point each href at the project's own page or case study when you have one. */
+/**
+ * Demo projects. The first is the featured one and carries a `caseLine`. The first four are the
+ * "Latest portfolio" cards on Home; the rest only appear on the Work page.
+ */
 export const projects: readonly Project[] = [
   {
     id: "mockup",
     title: "Mockup Design",
-    href: "#work",
     tone: "light",
+    categories: ["branding", "marketing"],
+    year: "2025",
+    client: "Northfield Studio",
+    summary: "A complete brand identity and visual system for a growing design studio.",
+    caseLine: {
+      problem: "A growing studio needed a brand that felt as polished as its work.",
+      role: "Brand identity, visual system",
+      result: "+42% enquiries in the first quarter",
+    },
     image: {
       src: "/images/work-mockup.webp",
       alt: "Mockup Design project: a laptop showing an orange wallpaper on a concrete surface",
@@ -145,8 +196,11 @@ export const projects: readonly Project[] = [
   {
     id: "book",
     title: "Book Cover",
-    href: "#work",
     tone: "dark",
+    categories: ["branding"],
+    year: "2025",
+    client: "Harbor Press",
+    summary: "Cover artwork and typography for a hardcover series.",
     image: {
       src: "/images/work-book.webp",
       alt: "Book Cover project: a stack of white hardcover books against a blue wall",
@@ -155,8 +209,11 @@ export const projects: readonly Project[] = [
   {
     id: "font",
     title: "Font Design",
-    href: "#work",
     tone: "violet",
+    categories: ["branding", "marketing"],
+    year: "2024",
+    client: "Tape & Co.",
+    summary: "A custom display typeface drawn for a packaging brand.",
     image: {
       src: "/images/work-font.webp",
       alt: "Font Design project: a roll of patterned tape on a red and orange background",
@@ -165,13 +222,87 @@ export const projects: readonly Project[] = [
   {
     id: "application",
     title: "Application",
-    href: "#work",
     tone: "accent",
+    categories: ["ui-ux", "code"],
+    year: "2024",
+    client: "Loop Labs",
+    summary: "A mobile app designed in Figma and built front to back.",
     image: {
       src: "/images/work-app.webp",
       alt: "Application project: a smartphone showing a purple app screen on dark woven fabric",
     },
   },
+  {
+    id: "dashboard",
+    title: "Analytics Dashboard",
+    tone: "dark",
+    categories: ["ui-ux", "code"],
+    year: "2024",
+    client: "Pulse Metrics",
+    summary: "A clear, fast dashboard for a data product.",
+    image: {
+      src: "/images/work-app.webp",
+      alt: "Analytics Dashboard project: a smartphone showing a purple app screen on dark woven fabric",
+    },
+  },
+  {
+    id: "campaign",
+    title: "Launch Campaign",
+    tone: "accent",
+    categories: ["marketing"],
+    year: "2023",
+    client: "Bright Goods",
+    summary: "Social and landing page visuals for a product launch.",
+    image: {
+      src: "/images/work-font.webp",
+      alt: "Launch Campaign project: a roll of patterned tape on a red and orange background",
+    },
+  },
+  {
+    id: "packaging",
+    title: "Packaging Identity",
+    tone: "light",
+    categories: ["branding"],
+    year: "2023",
+    client: "Oak & Ember",
+    summary: "Logo, labels and packaging for a small-batch brand.",
+    image: {
+      src: "/images/work-mockup.webp",
+      alt: "Packaging Identity project: a laptop showing an orange wallpaper on a concrete surface",
+    },
+  },
+  {
+    id: "marketing-site",
+    title: "Marketing Site",
+    tone: "violet",
+    categories: ["ui-ux", "marketing"],
+    year: "2023",
+    client: "Atlas Cloud",
+    summary: "A responsive marketing site, designed and built in Next.js.",
+    image: {
+      src: "/images/work-book.webp",
+      alt: "Marketing Site project: a stack of white hardcover books against a blue wall",
+    },
+  },
+];
+
+/** The four projects shown as "Latest portfolio" on Home. */
+export const latestProjects: readonly Project[] = projects.slice(0, 4);
+
+/** Demo tools for the "Tools I work with" strip. */
+export const skills: readonly string[] = [
+  "Figma",
+  "Framer",
+  "Webflow",
+  "Illustrator",
+  "Photoshop",
+  "After Effects",
+  "Next.js",
+  "React",
+  "TypeScript",
+  "Tailwind CSS",
+  "Spline",
+  "Notion",
 ];
 
 export interface Testimonial {
@@ -224,6 +355,7 @@ export const clients: readonly Client[] = [
   { id: "sass", name: "Sass" },
 ];
 
+/** Not shown on Home any more. Kept for the Services and Contact pages. */
 export interface Faq {
   readonly id: string;
   readonly question: string;
@@ -240,7 +372,7 @@ export const faqs: readonly Faq[] = [
   {
     id: "contact",
     question: "How can I contact you?",
-    answer: `The quickest way is email at ${site.email}, or send a message through the form below.`,
+    answer: `The quickest way is email at ${site.email}, or send a message through the contact form.`,
   },
   {
     id: "cost",
@@ -252,12 +384,19 @@ export const faqs: readonly Faq[] = [
     id: "services",
     question: "Which services do you provide?",
     answer:
-      "Branding, UI/UX design, marketing design and front-end code. See the Services section above for details.",
+      "Branding, UI/UX design, marketing design and front-end code. See the Services page for details.",
   },
 ];
 
 export const contact = {
   title: "Let’s talk",
+  band: {
+    eyebrow: "Have a project in mind?",
+    headline: ["Let’s work", "together."],
+    primary: "Start a project",
+    secondary: "Book a call",
+  },
+  quickNote: "Prefer a quick note? Send it here.",
   portrait: {
     src: "/images/contact-portrait.webp",
     width: 744,
@@ -268,6 +407,11 @@ export const contact = {
 
 export const footerLinks = [
   { label: "About", href: "#about" },
-  { label: "Work Gallery", href: "#work" },
+  { label: "Work Gallery", href: "/work" },
   { label: "Services", href: "#services" },
+] as const;
+
+export const legalLinks = [
+  { label: "Privacy", href: routes.privacy },
+  { label: "Terms", href: routes.terms },
 ] as const;

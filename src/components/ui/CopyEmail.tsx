@@ -34,7 +34,7 @@ export function CopyEmail({
     <span
       className={cn(
         "flex items-center gap-3",
-        variant === "pill" && "h-12 justify-between rounded-full bg-white py-1 pl-5 pr-1",
+        variant === "pill" && "h-12 justify-between text-ink rounded-full bg-white py-1 pl-5 pr-1",
         className,
       )}
     >
