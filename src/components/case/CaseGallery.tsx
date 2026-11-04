@@ -58,7 +58,7 @@ export function CaseGallery({ project }: { project: Project }) {
       </div>
 
       <ul
-        className="mt-block -mx-5 flex snap-x snap-mandatory scroll-pl-5 gap-3 overflow-x-auto overscroll-x-contain px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-4 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-6 lg:auto-rows-[12cqw] lg:gap-[1.4cqw]"
+        className="mt-block -mx-5 -mb-5 flex snap-x snap-mandatory scroll-pl-5 gap-3 overflow-x-auto overscroll-x-contain px-5 pb-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:mb-0 md:grid md:snap-none md:grid-cols-2 md:gap-4 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-6 lg:auto-rows-[12cqw] lg:gap-[1.4cqw]"
       >
         {shots.map((shot, index) => (
           <li key={`${shot.src}-${index}`} className={`relative aspect-[4/5] w-[78%] shrink-0 snap-start md:w-auto md:shrink ${placement[index] ?? placement[2]}`}>

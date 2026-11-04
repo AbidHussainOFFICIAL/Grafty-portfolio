@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { services, showPrices } from "@/data/content";
+import { showPrices } from "@/data/content";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { GhostHeading } from "@/components/ui/GhostHeading";
 import { SectionLabel } from "@/components/ui/SectionLabel";
@@ -10,7 +10,7 @@ import { ContactButton } from "./ContactActions";
 
 /**
  * The Services page's title row, built like the Work page's: the ghost word slides in first,
- * then the label and count, the intro line and the two actions follow it. Timed rather than
+ * then the label, the intro line and the two actions follow it. Timed rather than
  * scroll-driven because it is already on screen when the page opens (and on a first visit it
  * waits for the loader's curtain to lift).
  */
@@ -24,17 +24,14 @@ export function ServicesHeader() {
       </h1>
 
       <div className="flex items-end justify-between gap-4">
-        <motion.div className="w-[66%] md:w-[60%]" {...slide}>
+        <motion.div className="w-full md:w-[60%]" {...slide}>
           <GhostHeading text="SERVICES" ratio={6.2} className="w-full" />
         </motion.div>
 
-        <motion.div className="text-right md:mb-2 lg:mb-[2.4cqw]" {...rise(0.3)}>
+        <motion.div className="hidden text-right md:mb-2 md:block lg:mb-[2.4cqw]" {...rise(0.3)}>
           <SectionLabel as="p" bar="after">
             What I do
           </SectionLabel>
-          <p className="font-numeral mt-2 text-sm lg:mt-[0.8cqw] lg:text-[max(14px,1.4cqw)]">
-            {String(services.length).padStart(2, "0")} Disciplines
-          </p>
         </motion.div>
       </div>
 
@@ -51,9 +48,11 @@ export function ServicesHeader() {
         {...rise(0.6)}
       >
         <ContactButton>Start a project</ContactButton>
-        <ArrowLink href="#packages" inPage>
-          {showPrices ? "See packages" : "How to hire me"}
-        </ArrowLink>
+        <div className="hidden md:block">
+          <ArrowLink href="#packages" inPage>
+            {showPrices ? "See packages" : "How to hire me"}
+          </ArrowLink>
+        </div>
       </motion.div>
     </section>
   );

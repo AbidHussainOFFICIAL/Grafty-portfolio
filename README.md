@@ -115,7 +115,7 @@ One template renders all 8 projects from `projects` in `src/data/content.ts` (`s
 
 ## Services page (`/services`)
 
-Sections, top to bottom: header, the four services (the Home accordion with longer text, deliverables, timeline, price and a quote link in each panel), "How I work" (five steps that light up as you scroll, like the About statement), packages, questions, and the closing call-to-action band. Components are in `src/components/services/`; the route is `src/app/services/page.tsx`.
+Sections, top to bottom: header, the four services (open cards on tablets and desktops; on phones the Home accordion, with longer text, deliverables, timeline, price and a quote link in each panel), "How I work" (five steps that light up as you scroll, like the About statement), packages (a swipeable row below desktop width, with the middle package centred and dots underneath), questions, and the closing call-to-action band. Components are in `src/components/services/`; the route is `src/app/services/page.tsx`.
 
 - All text, prices and questions are demo content in `src/data/content.ts`: `services` (detail, deliverables, timeline, from), `workflow`, `packages`, `hireGuide` and `faqs` (the `page: "services"` ones are shown here; the `contact` and `about` ones wait for those pages).
 - `showPrices` in `content.ts`: `true` shows "from" prices and the packages; `false` hides every price, replaces the packages with "How to hire me", and the service panels show "On request" and "Get a quote". Prices are demo amounts in US dollars.

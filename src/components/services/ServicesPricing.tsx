@@ -5,18 +5,21 @@ import { Reveal } from "@/components/ui/Reveal";
 import { ScrollShift } from "@/components/ui/ScrollShift";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { cn } from "@/lib/cn";
+import { SwipeRow } from "./SwipeRow";
 import { ContactArrowLink, ContactButton } from "./ContactActions";
 
 const rowLabel = "text-[10px] font-semibold uppercase leading-none tracking-wide opacity-75 lg:text-[max(10px,0.9cqw)]";
 const cardTitle = "font-cond text-[clamp(1.75rem,8vw,2.5rem)] uppercase leading-none lg:text-[3.2cqw]";
-const listText = "text-base leading-snug lg:text-[max(14px,1.5cqw)]";
+/** A tile in the swipe row (phones and tablets); in the three-column grid it simply fills its column. */
+const slide = "w-[70vw] shrink-0 snap-center md:w-[40vw] lg:w-auto lg:shrink";
+const listText = "text-sm leading-snug md:text-base lg:text-[max(14px,1.5cqw)]";
 
 function PackageCard({ pack }: { pack: Package }) {
   const dark = pack.featured === true;
   return (
     <article
       className={cn(
-        "relative flex h-full flex-col rounded-card p-5 shadow-card md:p-8 lg:p-[2.6cqw]",
+        "relative flex h-full flex-col rounded-card p-4 shadow-card md:p-6 lg:p-[2.6cqw]",
         dark ? "bg-ink text-white" : "bg-white",
       )}
     >
@@ -26,16 +29,16 @@ function PackageCard({ pack }: { pack: Package }) {
         </span>
       )}
       <h3 className={cardTitle}>{pack.name}</h3>
-      <p className={cn("mt-3 lg:mt-[1cqw]", listText, dark && "text-white/80")}>{pack.audience}</p>
+      <p className={cn("mt-2 md:mt-3 lg:mt-[1cqw]", listText, dark && "text-white/80")}>{pack.audience}</p>
 
-      <p className="mt-6 lg:mt-[2.4cqw]">
+      <p className="mt-4 max-md:order-1 md:mt-6 lg:mt-[2.4cqw]">
         <span className={rowLabel}>From</span>
-        <span className="font-numeral mt-2 block text-[clamp(2.5rem,13vw,4.5rem)] leading-none lg:mt-[0.8cqw] lg:text-[6cqw]">
+        <span className="font-numeral mt-2 block text-[clamp(2rem,9.5vw,3rem)] leading-none md:text-5xl lg:mt-[0.8cqw] lg:text-[6cqw]">
           {pack.from}
         </span>
       </p>
 
-      <ul className="mt-6 flex flex-col gap-3 lg:mt-[2.4cqw] lg:gap-[1.1cqw]">
+      <ul className="mt-4 flex flex-col gap-2 max-md:order-3 md:mt-6 md:gap-3 lg:mt-[2.4cqw] lg:gap-[1.1cqw]">
         {pack.includes.map((item) => (
           <li key={item} className={cn("flex items-start gap-3 lg:gap-[1cqw]", listText)}>
             <CheckIcon
@@ -48,16 +51,16 @@ function PackageCard({ pack }: { pack: Package }) {
 
       <div
         className={cn(
-          "mt-6 border-t pt-5 lg:mt-[2.4cqw] lg:pt-[2cqw]",
+          "mt-6 border-t pt-5 max-md:order-2 max-md:mt-2 max-md:flex max-md:items-baseline max-md:gap-2 max-md:border-0 max-md:pt-0 lg:mt-[2.4cqw] lg:pt-[2cqw]",
           dark ? "border-white/20" : "border-ink/15",
         )}
       >
         <p className={rowLabel}>Typical timeline</p>
-        <p className="font-numeral mt-2 text-lg md:text-xl lg:mt-[0.8cqw] lg:text-[2cqw]">{pack.timeline}</p>
+        <p className="font-numeral text-sm max-md:mt-0 md:mt-2 md:text-xl lg:mt-[0.8cqw] lg:text-[2cqw]">{pack.timeline}</p>
       </div>
 
-      <div className="mt-auto pt-6 lg:pt-[2.4cqw]">
-        <ContactButton onDark={dark} full>{`Start with ${pack.name}`}</ContactButton>
+      <div className="mt-auto pt-4 max-md:order-4 md:pt-6 lg:pt-[2.4cqw]">
+        <ContactButton onDark={dark} full>Get started</ContactButton>
       </div>
     </article>
   );
@@ -102,23 +105,27 @@ export function ServicesPricing() {
         </ScrollShift>
       </div>
 
-      <ul className="mt-block grid gap-3 md:gap-4 lg:grid-cols-3 lg:gap-[1.4cqw]">
+      <SwipeRow
+        label={title}
+        labels={showPrices ? packages.map((pack) => pack.name) : columns.map((column) => column.title)}
+        initialIndex={showPrices ? Math.max(0, packages.findIndex((pack) => pack.featured)) : 1}
+      >
         {showPrices
           ? packages.map((pack, index) => (
-              <li key={pack.id}>
+              <li key={pack.id} className={slide}>
                 <Reveal delay={index * 0.08} className="h-full">
                   <PackageCard pack={pack} />
                 </Reveal>
               </li>
             ))
           : columns.map((column, index) => (
-              <li key={column.title}>
+              <li key={column.title} className={slide}>
                 <Reveal delay={index * 0.08} className="h-full">
                   <GuideColumn title={column.title} items={column.items} />
                 </Reveal>
               </li>
             ))}
-      </ul>
+      </SwipeRow>
 
       <Reveal className="mt-block flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-6">
         <p className="max-w-[34rem] text-base leading-snug md:text-lg lg:max-w-[50cqw] lg:text-[max(14px,1.6cqw)]">
@@ -126,7 +133,9 @@ export function ServicesPricing() {
             ? "Every project is scoped individually. These prices are starting points, not fixed costs."
             : "Every project is scoped individually. Send a short brief and I will reply with a fixed quote."}
         </p>
-        <ContactArrowLink>Not sure? Get a quote</ContactArrowLink>
+        <div className="hidden shrink-0 whitespace-nowrap md:block">
+          <ContactArrowLink>Not sure? Get a quote</ContactArrowLink>
+        </div>
       </Reveal>
     </section>
   );

@@ -41,7 +41,11 @@ function ServiceExtra({ service }: { service: Service }) {
   );
 }
 
-/** The four services as the Home accordion, with the longer text and the extra detail in each panel. */
+/**
+ * The four services. Phones get the Home accordion (longer text and the extra detail in each
+ * panel). From tablet up everything is open at once as a grid of cards, so nothing is hidden
+ * and the page doesn't repeat the accordion look that the questions use further down.
+ */
 export function ServiceList() {
   const items = services.map((service) => ({
     id: service.id,
@@ -52,9 +56,32 @@ export function ServiceList() {
 
   return (
     <section id="service-list" aria-label="Services" className="mt-8 px-5 md:mt-10 md:px-8 lg:mt-[3.4cqw] lg:px-[5.08%]">
-      <Reveal>
+      <Reveal className="md:hidden">
         <Accordion items={items} defaultOpenId="design" />
       </Reveal>
+
+      <ul className="hidden gap-4 md:grid md:grid-cols-2 lg:gap-[1.4cqw]">
+        {services.map((service, index) => (
+          <li key={service.id}>
+            <Reveal delay={(index % 2) * 0.08} className="h-full">
+              <article className="flex h-full flex-col rounded-card bg-white p-8 shadow-card lg:p-[2.6cqw]">
+                <p aria-hidden="true" className="font-numeral text-base opacity-60 lg:text-[1.6cqw]">
+                  {String(index + 1).padStart(2, "0")}
+                </p>
+                <h3 className="font-cond mt-2 text-[clamp(2.5rem,6vw,3.5rem)] uppercase leading-[0.9] lg:mt-[0.8cqw] lg:text-[5.6cqw]">
+                  {service.title}
+                </h3>
+                <p className="mt-4 text-lg leading-snug lg:mt-[1.4cqw] lg:text-[1.65cqw] lg:leading-[1.45]">
+                  {service.detail}
+                </p>
+                <div className="mt-auto">
+                  <ServiceExtra service={service} />
+                </div>
+              </article>
+            </Reveal>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
