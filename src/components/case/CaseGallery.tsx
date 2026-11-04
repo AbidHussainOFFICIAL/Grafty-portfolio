@@ -13,7 +13,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 import { ImageViewer } from "./ImageViewer";
 
 /**
- * Where each of the five tiles sits. Phones: one column. Tablet: two columns, the first tile wide.
+ * Where each of the five tiles sits. Phones: one swipeable row. Tablet: two columns, the first tile wide.
  * Desktop: a six-column grid with fixed-height rows: a wide tile and a tall one, then three equal tiles.
  */
 const placement = [
@@ -57,9 +57,11 @@ export function CaseGallery({ project }: { project: Project }) {
         </ScrollShift>
       </div>
 
-      <ul className="mt-block grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-6 lg:auto-rows-[12cqw] lg:gap-[1.4cqw]">
+      <ul
+        className="mt-block -mx-5 flex snap-x snap-mandatory scroll-pl-5 gap-3 overflow-x-auto overscroll-x-contain px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-4 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-6 lg:auto-rows-[12cqw] lg:gap-[1.4cqw]"
+      >
         {shots.map((shot, index) => (
-          <li key={`${shot.src}-${index}`} className={`relative aspect-[4/3] ${placement[index] ?? placement[2]}`}>
+          <li key={`${shot.src}-${index}`} className={`relative aspect-[4/5] w-[78%] shrink-0 snap-start md:w-auto md:shrink ${placement[index] ?? placement[2]}`}>
             <Reveal delay={Math.min(index, 3) * 0.06} className="absolute inset-0">
               <button
                 type="button"

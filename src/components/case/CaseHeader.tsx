@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
 import { categories, routes, type Project } from "@/data/content";
 import { ArrowLink } from "@/components/ui/ArrowLink";
@@ -9,6 +10,14 @@ import { useEntrance } from "@/lib/useEntrance";
 import { withAmpersands } from "@/lib/text";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * On desktop the title stays on one line. Its size is the Hero-style 9.6cqw for short titles and
+ * shrinks for long ones so the whole line always fits inside the page margins.
+ */
+const TITLE_MAX = 9.6;
+const TITLE_FIT = 84;
+const CHAR_WIDTH = 0.45;
 
 const categoryLabel = Object.fromEntries(categories.map((category) => [category.id, category.label]));
 
@@ -27,6 +36,7 @@ interface CaseHeaderProps {
 export function CaseHeader({ project, number, total }: CaseHeaderProps) {
   const { reduceMotion, ready, rise, slide } = useEntrance();
   const lines = project.title.split(" ");
+  const titleSize = Math.min(TITLE_MAX, TITLE_FIT / (project.title.length * CHAR_WIDTH)).toFixed(2);
 
   return (
     <section aria-labelledby="case-title" className="px-5 pt-4 md:px-8 md:pt-10 lg:px-[5.08%] lg:pt-[3.4cqw]">
@@ -52,7 +62,8 @@ export function CaseHeader({ project, number, total }: CaseHeaderProps) {
 
       <h1
         id="case-title"
-        className="font-cond mt-5 text-[clamp(2.75rem,14vw,6rem)] uppercase leading-[0.85] lg:mt-[2.4cqw] lg:text-[9.6cqw] lg:leading-[0.83]"
+        style={{ "--title-size": `${titleSize}cqw` } as CSSProperties}
+        className="font-cond mt-5 text-[clamp(2.75rem,14vw,6rem)] uppercase leading-[0.85] lg:mt-[2.4cqw] lg:flex lg:gap-x-[0.12em] lg:whitespace-nowrap lg:text-[length:var(--title-size)] lg:leading-[0.83]"
       >
         {lines.map((line, index) => (
           <span key={line} className="-my-[0.14em] block overflow-hidden py-[0.14em]">

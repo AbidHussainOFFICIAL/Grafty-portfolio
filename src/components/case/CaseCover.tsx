@@ -17,11 +17,11 @@ export function CaseCover({ project }: { project: Project }) {
   const scale = useTransform(scrollYProgress, [0, 1], [1.1, 1]);
 
   return (
-    <section aria-label="Cover" className="mt-block px-5 md:px-8 lg:px-[5.08%]">
+    <section aria-label="Cover" className="mt-8 px-5 md:mt-10 md:px-8 lg:mt-[3.4cqw] lg:px-[5.08%]">
       <motion.div {...rise(0.9)}>
         <div
           ref={ref}
-          className="relative aspect-[4/3] overflow-hidden rounded-card shadow-card md:aspect-[16/9]"
+          className="relative aspect-[4/3] overflow-hidden rounded-card shadow-card md:aspect-[16/9] lg:aspect-auto lg:h-[min(40cqw,calc(100svh-7rem))]"
         >
           <motion.div className="absolute inset-0" style={reduceMotion ? undefined : { scale }}>
             <Photo

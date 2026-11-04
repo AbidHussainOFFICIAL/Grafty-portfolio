@@ -33,7 +33,7 @@ export function CaseOutcome({ project }: { project: Project }) {
         </div>
       </Reveal>
 
-      <Reveal className="mt-block">
+      <Reveal className="mt-3 md:mt-4 lg:mt-[1.4cqw]">
         <figure className="rounded-card bg-white p-6 shadow-card md:p-10 lg:p-[4cqw]">
           <p className="flex items-center gap-1.5 text-xs font-medium lg:gap-[0.5cqw] lg:text-[max(13px,1.2cqw)]">
             <span>5.00</span>

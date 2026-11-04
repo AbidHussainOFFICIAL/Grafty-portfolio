@@ -24,7 +24,7 @@ export function CaseSummary({ project }: { project: Project }) {
           <SectionLabel bar="before" id="case-summary-title">
             Overview
           </SectionLabel>
-          <p className="mt-4 max-w-prose text-lg leading-snug md:text-xl lg:mt-[1.6cqw] lg:max-w-none lg:text-[2.35cqw] lg:leading-[1.4]">
+          <p className="mt-block max-w-prose text-lg leading-snug md:text-xl lg:max-w-none lg:text-[2.35cqw] lg:leading-[1.4]">
             {study.overview}
           </p>
         </Reveal>

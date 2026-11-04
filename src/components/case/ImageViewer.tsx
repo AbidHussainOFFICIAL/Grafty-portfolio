@@ -35,7 +35,7 @@ const pad = (value: number) => String(value).padStart(2, "0");
 
 /**
  * Full-screen image viewer, in the same style as the phone menu: a surface-coloured sheet with
- * round white buttons. The picture is always shown whole. Arrow keys, the buttons and a swipe move
+ * round white buttons. Every picture sits in the same square frame, so they all show at one size. Arrow keys, the buttons and a swipe move
  * between pictures (and wrap round at the ends); Escape, the close button or a tap outside the
  * picture close it. Pressing quickly always lands on the last picture asked for.
  * It must be mounted in a portal (see CaseGallery): the page's layout container would otherwise
@@ -124,16 +124,15 @@ export function ImageViewer({ shots, index, onChange, onClose }: ImageViewerProp
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.25}
             onDragEnd={onDragEnd}
-            className="max-w-full touch-pan-y"
+            className="relative aspect-square w-[min(100%,calc(100svh-11rem),48rem)] touch-pan-y"
           >
             <Photo
               src={shot.src}
               alt={shot.alt}
-              width={888}
-              height={888}
+              fill
               sizes={SIZES}
               draggable={false}
-              className="h-auto max-h-[calc(100svh-11rem)] w-auto max-w-full select-none rounded-card object-contain shadow-card"
+              className="select-none rounded-card object-cover shadow-card"
             />
           </motion.div>
         </AnimatePresence>
