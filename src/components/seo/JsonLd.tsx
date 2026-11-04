@@ -5,8 +5,8 @@ const profiles = socials.map((social) => social.href).filter((href) => new URL(h
 
 /*
  * Structured data for search engines, built from the same content as the page.
- * FAQ markup is left out on purpose: Google only accepts it for questions that are visible on the
- * same page, and Home no longer shows them. It returns with the FAQ on the Services page.
+ * FAQ markup is not here on purpose: Google only accepts it for questions that are visible on the
+ * same page, and Home does not show them. It is rendered by the Services page, next to its FAQ.
  * Reviews are left out on purpose: Google does not show star ratings for reviews a business
  * publishes about itself, and marking up placeholder testimonials as real would be misleading.
  */

@@ -36,7 +36,7 @@ export interface NavLink {
 
 export const navLinks: readonly NavLink[] = [
   { label: "Home", href: "#home", inBar: true },
-  { label: "Services", href: "#services", inBar: true },
+  { label: "Services", href: "/services", section: "services", inBar: true },
   { label: "About", href: "#about", inBar: true },
   { label: "Work", href: "/work", section: "work", inBar: true },
   { label: "Reviews", href: "#feedback", inBar: false },
@@ -93,29 +93,60 @@ export const hero = {
 export interface Service {
   readonly id: string;
   readonly title: string;
+  /** The short text on Home. */
   readonly body: string;
+  /** The longer text on the Services page. */
+  readonly detail: string;
+  /** What the client gets, as short items. */
+  readonly deliverables: readonly string[];
+  readonly timeline: string;
+  /** The lowest price for this service alone, shown as "From ...". */
+  readonly from: string;
 }
+
+/** True shows "from" prices and the packages; false shows "Get a quote" and "How to hire me" instead. Demo prices, in US dollars. */
+export const showPrices = true;
 
 export const services: readonly Service[] = [
   {
     id: "branding",
     title: "Branding",
     body: "Logos, identity systems and brand guidelines that make your business instantly recognisable and consistent everywhere it appears.",
+    detail:
+      "Every brand starts with a clear idea of who you are and who you are talking to. I turn that into a logo, a colour and type system, and guidelines your whole team can follow, so the brand looks the same on a website, a shopfront and a business card.",
+    deliverables: ["Logo suite", "Colour and type system", "Brand guidelines", "Stationery", "Social media kit"],
+    timeline: "3–5 weeks",
+    from: "$1,200",
   },
   {
     id: "design",
     title: "Design",
     body: "Efficient, knowledgeable, & smooth experience. Highly recommended",
+    detail:
+      "Research, wireframes, prototypes and polished interfaces for websites and apps. I design the whole journey, test it with real people where I can, and hand it over with a design system your developers can build from.",
+    deliverables: ["Research summary", "Wireframes", "Interactive prototype", "UI design system", "Developer handoff"],
+    timeline: "4–8 weeks",
+    from: "$2,400",
   },
   {
     id: "marketing",
     title: "Marketing",
     body: "Campaign visuals, social content and landing pages designed to attract the right audience and turn attention into enquiries.",
+    detail:
+      "Visuals that earn attention and lead somewhere. Campaign artwork, social templates, ad creatives and landing pages, all built to match your brand and to turn a click into an enquiry.",
+    deliverables: ["Campaign visuals", "Social templates", "Landing page design", "Ad creatives"],
+    timeline: "2–3 weeks",
+    from: "$900",
   },
   {
     id: "code",
     title: "Code",
     body: "Pixel-accurate, responsive front-end builds, so what gets designed is exactly what ships.",
+    detail:
+      "Designs built exactly as drawn. I build responsive, accessible front ends with clean, reusable components, so what you approved in the design is what your visitors see on every screen.",
+    deliverables: ["Responsive front-end build", "Reusable components", "Animation and polish", "Handover notes"],
+    timeline: "2–6 weeks",
+    from: "$1,800",
   },
 ];
 
@@ -663,38 +694,171 @@ export const clients: readonly Client[] = [
   { id: "sass", name: "Sass" },
 ];
 
-/** Not shown on Home any more. Kept for the Services and Contact pages. */
+/** Which page a question is shown on. Home no longer shows any. */
+export type FaqPage = "services" | "contact" | "about";
+
 export interface Faq {
   readonly id: string;
+  readonly page: FaqPage;
   readonly question: string;
   readonly answer: string;
 }
 
 export const faqs: readonly Faq[] = [
   {
-    id: "about",
-    question: "More about me?",
+    id: "cost",
+    page: "services",
+    question: "How much does it cost?",
     answer:
-      "Creative and award-winning designer with 7+ years of experience crafting innovative digital experiences. Expert in branding, UI/UX and interactive design. Passionate about pushing creative and technical boundaries.",
+      "It depends on the scope. Every project is quoted individually, so you know the full cost before we begin. Send a short brief and I will come back with a fixed quote.",
+  },
+  {
+    id: "included",
+    page: "services",
+    question: "What is included in each service?",
+    answer:
+      "Each service lists its deliverables above. Everything is delivered as editable source files plus ready-to-use exports, and you own the final work once it is paid for.",
+  },
+  {
+    id: "timeline",
+    page: "services",
+    question: "How long does a project take?",
+    answer:
+      "Most projects take between two and eight weeks, depending on the scope. I confirm the timeline in the quote and share a simple schedule before work starts.",
+  },
+  {
+    id: "revisions",
+    page: "services",
+    question: "How many rounds of revisions are included?",
+    answer:
+      "Two rounds of changes are included at each main stage. If a project needs more, we agree on that together before any extra work begins.",
+  },
+  {
+    id: "payment",
+    page: "services",
+    question: "How does payment work?",
+    answer:
+      "A deposit secures your place in my schedule and the balance is due when the work is delivered. Larger projects can be split into stages.",
+  },
+  {
+    id: "start",
+    page: "services",
+    question: "What do you need from me to get started?",
+    answer:
+      "A short brief covering what you do, what you need, your timeline and any examples you like. If you are not sure yet, we can work it out together on a quick call.",
   },
   {
     id: "contact",
+    page: "contact",
     question: "How can I contact you?",
     answer: `The quickest way is email at ${site.email}, or send a message through the contact form.`,
   },
   {
-    id: "cost",
-    question: "How much does it cost?",
+    id: "about",
+    page: "about",
+    question: "More about me?",
     answer:
-      "Every project is scoped individually. Send a short brief through the contact form and I will come back with a tailored quote.",
-  },
-  {
-    id: "services",
-    question: "Which services do you provide?",
-    answer:
-      "Branding, UI/UX design, marketing design and front-end code. See the Services page for details.",
+      "Creative and award-winning designer with 7+ years of experience crafting innovative digital experiences. Expert in branding, UI/UX and interactive design. Passionate about pushing creative and technical boundaries.",
   },
 ];
+
+/** How I work: five steps, shown on the Services page. Demo text. */
+export interface WorkflowStep {
+  readonly id: string;
+  readonly title: string;
+  readonly body: string;
+  /** How long the step usually takes. */
+  readonly time: string;
+}
+
+export const workflow: readonly WorkflowStep[] = [
+  {
+    id: "discover",
+    title: "Discover",
+    body: "We talk through your business, your audience and what success looks like. I review what you already have and what your competitors are doing.",
+    time: "2–3 days",
+  },
+  {
+    id: "define",
+    title: "Define",
+    body: "I turn what we learned into a clear plan: the scope, the schedule and the direction, agreed in writing before any design begins.",
+    time: "2–3 days",
+  },
+  {
+    id: "design",
+    title: "Design",
+    body: "Sketches become polished work. You see progress at each stage and give feedback while it is still easy to change.",
+    time: "1–4 weeks",
+  },
+  {
+    id: "build",
+    title: "Build",
+    body: "The approved design is refined, tested and, where needed, built in code, so it works as well as it looks on every screen.",
+    time: "1–3 weeks",
+  },
+  {
+    id: "deliver",
+    title: "Deliver",
+    body: "You receive organised files, guidelines and a short handover. I stay available afterwards to answer questions and help with the first steps.",
+    time: "2–3 days",
+  },
+];
+
+/** A package: a bundle of services at a "from" price. Demo prices, in US dollars. */
+export interface Package {
+  readonly id: string;
+  readonly name: string;
+  readonly audience: string;
+  readonly from: string;
+  readonly timeline: string;
+  readonly includes: readonly string[];
+  /** Shown as the dark card with a "Most chosen" tag. Only one. */
+  readonly featured?: boolean;
+}
+
+export const packages: readonly Package[] = [
+  {
+    id: "brand-kit",
+    name: "Brand Kit",
+    audience: "For new businesses that need a confident start.",
+    from: "$1,200",
+    timeline: "3–5 weeks",
+    includes: ["Logo suite", "Colour and type system", "Brand guidelines", "Stationery and social kit"],
+  },
+  {
+    id: "product-design",
+    name: "Product Design",
+    audience: "For teams building a website or app.",
+    from: "$3,500",
+    timeline: "4–8 weeks",
+    includes: ["Research and wireframes", "Interactive prototype", "Full UI design system", "Developer handoff"],
+    featured: true,
+  },
+  {
+    id: "complete-launch",
+    name: "Complete Launch",
+    audience: "For a full brand and website, ready to go live.",
+    from: "$6,500",
+    timeline: "8–12 weeks",
+    includes: ["Everything in Brand Kit", "Everything in Product Design", "Responsive front-end build", "Launch campaign visuals"],
+  },
+];
+
+/** Shown instead of the packages when `showPrices` is false. */
+export const hireGuide = {
+  types: {
+    title: "Project types",
+    items: ["Brand identities", "Websites and apps", "Campaigns and social", "Front-end builds"],
+  },
+  timeline: {
+    title: "Typical timeline",
+    items: ["Small projects: 2–3 weeks", "Brand identities: 3–5 weeks", "Websites and apps: 4–8 weeks"],
+  },
+  start: {
+    title: "How to start",
+    items: ["Send a short brief", "We talk it through", "You receive a fixed quote"],
+  },
+} as const;
 
 export const contact = {
   title: "Let’s talk",
@@ -716,7 +880,7 @@ export const contact = {
 export const footerLinks = [
   { label: "About", href: "#about" },
   { label: "Work Gallery", href: "/work" },
-  { label: "Services", href: "#services" },
+  { label: "Services", href: "/services" },
 ] as const;
 
 export const legalLinks = [

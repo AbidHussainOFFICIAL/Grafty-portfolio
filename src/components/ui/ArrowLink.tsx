@@ -1,3 +1,4 @@
+import type { MouseEventHandler } from "react";
 import { cn } from "@/lib/cn";
 import { ArrowRightLongIcon, ArrowUpRightIcon } from "./Icons";
 import { SiteLink } from "./SiteLink";
@@ -7,19 +8,24 @@ interface ArrowLinkProps {
   children: string;
   /** Points backwards (a left arrow that nudges left on hover) for "back" and "previous" links. */
   back?: boolean;
+  /** A "#section" link on a page that is not Home: a plain anchor, which the smooth scroller handles. */
+  inPage?: boolean;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
   className?: string;
 }
 
 /** A 44px black circle with an arrow and a label. On hover the arrow turns (or nudges, for a back link) and the label goes violet. */
-export function ArrowLink({ href, children, back = false, className }: ArrowLinkProps) {
-  return (
-    <SiteLink
-      href={href}
-      className={cn(
-        "group inline-flex min-h-11 select-none items-center gap-3 text-sm transition-colors duration-300 hover:text-violet-deep active:opacity-70 md:text-base lg:gap-[1cqw] lg:text-[max(14px,1.4cqw)]",
-        className,
-      )}
-    >
+export function ArrowLink({ href, children, back = false, inPage = false, onClick, className }: ArrowLinkProps) {
+  const linkProps = {
+    href,
+    onClick,
+    className: cn(
+      "group inline-flex min-h-11 select-none items-center gap-3 text-sm transition-colors duration-300 hover:text-violet-deep active:opacity-70 md:text-base lg:gap-[1cqw] lg:text-[max(14px,1.4cqw)]",
+      className,
+    ),
+  };
+  const content = (
+    <>
       <span
         aria-hidden="true"
         className={cn(
@@ -34,6 +40,8 @@ export function ArrowLink({ href, children, back = false, className }: ArrowLink
         )}
       </span>
       {children}
-    </SiteLink>
+    </>
   );
+
+  return inPage ? <a {...linkProps}>{content}</a> : <SiteLink {...linkProps}>{content}</SiteLink>;
 }

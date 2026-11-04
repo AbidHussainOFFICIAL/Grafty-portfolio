@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { ArrowUpRightIcon, PlusMinusIcon } from "./Icons";
@@ -10,6 +10,8 @@ export interface AccordionEntry {
   readonly id: string;
   readonly title: string;
   readonly body: string;
+  /** More content under the text, e.g. a list and a link (the Services page uses it). */
+  readonly extra?: ReactNode;
 }
 
 interface AccordionProps {
@@ -17,6 +19,8 @@ interface AccordionProps {
   defaultOpenId?: string;
   /** Shows 01, 02... before each title. */
   numbered?: boolean;
+  /** "compact" sets the titles as readable sentences instead of giant words (for questions). */
+  variant?: "default" | "compact";
   /** A last row that is a link, not an accordion item (it ends the list in a dark card). */
   action?: { readonly label: string; readonly href: string };
 }
@@ -26,20 +30,33 @@ interface AccordionProps {
  * item, so the whole header area is clickable and not just the title and the icon.
  * While open, the button's bottom padding shrinks to the gap above the answer.
  */
-const style = {
-  list: "flex flex-col gap-2.5 lg:gap-[0.98cqw]",
-  item: "overflow-hidden rounded-card bg-white shadow-card",
-  button:
-    "gap-4 px-5 py-5 hover:bg-ink/[0.03] aria-expanded:pb-3 md:px-8 md:py-7 md:aria-expanded:pb-4 lg:px-[3.9cqw] lg:py-[4.1cqw] lg:aria-expanded:pb-[2.8cqw]",
-  title:
-    "font-cond translate-y-[0.04em] text-[clamp(2.25rem,11vw,4.5rem)] uppercase leading-[0.9] lg:text-[8.2cqw]",
-  icon: "h-6 w-6 shrink-0 md:h-9 md:w-9 lg:h-[4.3cqw] lg:w-[4.3cqw]",
-  panel: "px-5 pb-5 md:px-8 md:pb-7 lg:px-[3.9cqw] lg:pb-[4.1cqw]",
-  body: "max-w-prose text-base leading-snug md:text-xl lg:max-w-[66cqw] lg:text-[2.35cqw] lg:leading-[1.4]",
+const styles = {
+  default: {
+    list: "flex flex-col gap-2.5 lg:gap-[0.98cqw]",
+    item: "overflow-hidden rounded-card bg-white shadow-card",
+    button:
+      "gap-4 px-5 py-5 hover:bg-ink/[0.03] aria-expanded:pb-3 md:px-8 md:py-7 md:aria-expanded:pb-4 lg:px-[3.9cqw] lg:py-[4.1cqw] lg:aria-expanded:pb-[2.8cqw]",
+    title:
+      "font-cond translate-y-[0.04em] text-[clamp(2.25rem,11vw,4.5rem)] uppercase leading-[0.9] lg:text-[8.2cqw]",
+    icon: "h-6 w-6 shrink-0 md:h-9 md:w-9 lg:h-[4.3cqw] lg:w-[4.3cqw]",
+    panel: "px-5 pb-5 md:px-8 md:pb-7 lg:px-[3.9cqw] lg:pb-[4.1cqw]",
+    body: "max-w-prose text-base leading-snug md:text-xl lg:max-w-[66cqw] lg:text-[2.35cqw] lg:leading-[1.4]",
+  },
+  compact: {
+    list: "flex flex-col gap-2.5 lg:gap-[0.98cqw]",
+    item: "overflow-hidden rounded-card bg-white shadow-card",
+    button:
+      "gap-4 px-5 py-4 hover:bg-ink/[0.03] aria-expanded:pb-2 md:px-8 md:py-6 md:aria-expanded:pb-3 lg:px-[3.9cqw] lg:py-[2.4cqw] lg:aria-expanded:pb-[1.4cqw]",
+    title: "text-lg font-semibold leading-snug md:text-2xl lg:text-[2.4cqw]",
+    icon: "h-5 w-5 shrink-0 md:h-7 md:w-7 lg:h-[3cqw] lg:w-[3cqw]",
+    panel: "px-5 pb-5 md:px-8 md:pb-6 lg:px-[3.9cqw] lg:pb-[2.4cqw]",
+    body: "max-w-prose text-base leading-snug md:text-lg lg:max-w-[66cqw] lg:text-[1.9cqw] lg:leading-[1.45]",
+  },
 } as const;
 
 /** Single-open accordion with keyboard-accessible headers and animated panels. */
-export function Accordion({ items, defaultOpenId, numbered = false, action }: AccordionProps) {
+export function Accordion({ items, defaultOpenId, numbered = false, variant = "default", action }: AccordionProps) {
+  const style = styles[variant];
   const [openId, setOpenId] = useState<string | null>(defaultOpenId ?? null);
   const baseId = useId();
   const reduceMotion = useReducedMotion();
@@ -94,6 +111,7 @@ export function Accordion({ items, defaultOpenId, numbered = false, action }: Ac
                   {/* Padding sits on this inner wrapper: the animated element above must be able to shrink to zero height. */}
                   <div className={style.panel}>
                     <p className={style.body}>{item.body}</p>
+                    {item.extra}
                   </div>
                 </motion.div>
               )}

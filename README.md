@@ -78,7 +78,7 @@ A short loader plays on a visitor's first visit: the wordmark draws in, a counte
 
 ## Search and sharing
 
-The page has a title and description, a canonical link, Open Graph and Twitter card tags (with the share image), a sitemap, a robots file, a web manifest, a theme colour and structured data. Review markup is left out on purpose: Google does not show stars for reviews a business publishes about itself, and the testimonials are placeholders. FAQ markup is left out for now: markup must match questions visible on the same page, and Home no longer shows the FAQ. It returns with the FAQ on the Services page.
+The page has a title and description, a canonical link, Open Graph and Twitter card tags (with the share image), a sitemap, a robots file, a web manifest, a theme colour and structured data. Review markup is left out on purpose: Google does not show stars for reviews a business publishes about itself, and the testimonials are placeholders. FAQ markup is on the Services page only: markup must match questions visible on the same page, and Home does not show the FAQ.
 
 ## Spacing, images and accessibility
 
@@ -92,7 +92,7 @@ The page has a title and description, a canonical link, Open Graph and Twitter c
 Home order: Hero, Services, About, Skills strip, Work (featured first card), Client feedback, Clients, Contact (ghost heading and the "Let's work together" band), Say hello (quick form, tablet and up), Footer.
 
 - Demo content to replace: the featured card's Problem / Role / Result (`caseLine` in `projects`), `skills` and the legal pages.
-- "Coming soon" pages exist so no link is dead: `/about`, `/services`, `/contact`, `/privacy`, `/terms`. They are `noindex` and not in the sitemap. `/work` is a finished page: it is indexed, in the sitemap, and carries its own collection and breadcrumb data. `/work/<project id>` are finished case study pages (see below). Replace a page by editing its `page.tsx`; the shell (`PageShell`) is shared.
+- "Coming soon" pages exist so no link is dead: `/about`, `/contact`, `/privacy`, `/terms`. They are `noindex` and not in the sitemap. `/services` and `/work` are finished pages: they are indexed, in the sitemap, and carry their own structured data. `/work/<project id>` are finished case study pages (see below). Replace a page by editing its `page.tsx`; the shell (`PageShell`) is shared.
 - All internal links go through `SiteLink`: `#section` links scroll on Home and become `/#section` on other pages.
 - The contact form has no Subject field; the email subject is "Portfolio enquiry from <name>". The FAQ answers stay in `content.ts` for the Services and Contact pages.
 
@@ -112,3 +112,12 @@ One template renders all 8 projects from `projects` in `src/data/content.ts` (`s
 - All case study text and images are demo content. Replace the `study` objects and the `galleryArt` images, keeping result values starting with a digit (the counters animate them).
 - `caseStudiesPublished` in `content.ts` is `false`: the pages are `noindex` and not in the sitemap. Set it to `true` when the real content is in.
 - The image viewer supports arrow keys, swipe, Esc, tapping the backdrop, and returns focus to the tile that opened it.
+
+## Services page (`/services`)
+
+Sections, top to bottom: header, the four services (the Home accordion with longer text, deliverables, timeline, price and a quote link in each panel), "How I work" (five steps that light up as you scroll, like the About statement), packages, questions, and the closing call-to-action band. Components are in `src/components/services/`; the route is `src/app/services/page.tsx`.
+
+- All text, prices and questions are demo content in `src/data/content.ts`: `services` (detail, deliverables, timeline, from), `workflow`, `packages`, `hireGuide` and `faqs` (the `page: "services"` ones are shown here; the `contact` and `about` ones wait for those pages).
+- `showPrices` in `content.ts`: `true` shows "from" prices and the packages; `false` hides every price, replaces the packages with "How to hire me", and the service panels show "On request" and "Get a quote". Prices are demo amounts in US dollars.
+- The page is indexed and in the sitemap, and carries FAQPage, Service and breadcrumb data built from the same content as the visible text. Service data has no price markup while the prices are demo.
+- The menu and footer "Services" links go to this page; the Home Services section is unchanged and its last row leads to `#process` here.
