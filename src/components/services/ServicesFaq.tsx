@@ -4,7 +4,7 @@ import { GhostHeading } from "@/components/ui/GhostHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { ScrollShift } from "@/components/ui/ScrollShift";
 import { SectionLabel } from "@/components/ui/SectionLabel";
-import { ContactArrowLink } from "./ContactActions";
+import { ContactArrowLink } from "@/components/contact/ContactActions";
 
 /** The questions shown on this page. The page's structured data (FAQPage) is built from the same list. */
 export const servicesFaqs = faqs.filter((faq) => faq.page === "services");

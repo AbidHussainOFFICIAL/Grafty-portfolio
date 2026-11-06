@@ -6,7 +6,7 @@ import { ScrollShift } from "@/components/ui/ScrollShift";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { cn } from "@/lib/cn";
 import { SwipeRow } from "./SwipeRow";
-import { ContactArrowLink, ContactButton } from "./ContactActions";
+import { ContactArrowLink, ContactButton } from "@/components/contact/ContactActions";
 
 const rowLabel = "text-[10px] font-semibold uppercase leading-none tracking-wide opacity-75 lg:text-[max(10px,0.9cqw)]";
 const cardTitle = "font-cond text-[clamp(1.75rem,8vw,2.5rem)] uppercase leading-none lg:text-[3.2cqw]";

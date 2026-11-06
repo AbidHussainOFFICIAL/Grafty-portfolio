@@ -37,7 +37,7 @@ export interface NavLink {
 export const navLinks: readonly NavLink[] = [
   { label: "Home", href: "#home", inBar: true },
   { label: "Services", href: "/services", section: "services", inBar: true },
-  { label: "About", href: "#about", inBar: true },
+  { label: "About", href: "/about", section: "about", inBar: true },
   { label: "Work", href: "/work", section: "work", inBar: true },
   { label: "Reviews", href: "#feedback", inBar: false },
   { label: "Contact", href: "#contact", inBar: true },
@@ -165,7 +165,67 @@ export const about = {
     rating: { value: "5.00", label: "70 ratings" },
     awards: { value: "03", label: "Awards" },
   },
+  /** The About page. Demo text. */
+  page: {
+    intro: "Designer, builder and storyteller. Here is the longer version.",
+    approachLabel: "My approach",
+    lead: "I design brands and products that feel simple, look confident and work for real people.",
+    storyLabel: "My story",
+    story: [
+      "I am Jessy, a creative designer based in California. I started out sketching logos for friends’ businesses, and I still love the moment a messy idea turns into something clear.",
+      "Over the past seven years I have designed brands, websites and apps for startups, studios and growing teams. I work from first sketch to shipped code, so the thing that gets designed is the thing that gets built.",
+      "I believe good design is quiet: simple to use, easy to remember and honest about what it does. Away from the screen I am usually photographing city streets, collecting typefaces or hunting for the best coffee in town.",
+    ],
+    cv: {
+      label: "Curriculum vitae",
+      headline: "Want the full details?",
+      text: "Download my CV: a one-page PDF with my experience, skills and awards.",
+    },
+  },
 } as const;
+
+/** One line on the experience timeline. Demo text. */
+export interface Role {
+  readonly id: string;
+  readonly years: string;
+  readonly title: string;
+  readonly place: string;
+}
+
+export const experience: readonly Role[] = [
+  { id: "northwind", years: "2024 – Now", title: "Senior Product Designer", place: "Northwind Studio, California" },
+  { id: "pulse", years: "2022 – 2024", title: "UI/UX Designer", place: "Pulse Labs, Remote" },
+  { id: "tape", years: "2020 – 2022", title: "Brand Designer", place: "Tape & Co., Los Angeles" },
+  { id: "alba", years: "2019 – 2020", title: "Junior Designer", place: "Studio Alba, San Diego" },
+  { id: "school", years: "2015 – 2019", title: "BA Visual Communication", place: "California Institute of Arts" },
+];
+
+/** Skills and tools, grouped for the About page. The Home strip shows them all in one run. */
+export interface SkillGroup {
+  readonly id: string;
+  readonly title: string;
+  readonly items: readonly string[];
+}
+
+export const skillGroups: readonly SkillGroup[] = [
+  { id: "design", title: "Design", items: ["Figma", "Illustrator", "Photoshop", "After Effects", "Spline", "Framer"] },
+  { id: "build", title: "Build", items: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Webflow", "GitHub"] },
+  { id: "tools", title: "Tools", items: ["Notion", "Linear", "Slack", "Miro", "Maze", "Loom"] },
+];
+
+/** Awards and recognition. Demo text, with made-up issuers. */
+export interface Award {
+  readonly id: string;
+  readonly year: string;
+  readonly name: string;
+  readonly issuer: string;
+}
+
+export const awards: readonly Award[] = [
+  { id: "excellence", year: "2025", name: "Design Excellence Award", issuer: "Pixel Guild" },
+  { id: "identity", year: "2024", name: "Best Brand Identity", issuer: "Brand Forum Awards" },
+  { id: "rising", year: "2023", name: "Rising Designer of the Year", issuer: "Creative Circle" },
+];
 
 /** The three short lines shown on the featured card. Demo text. */
 export interface CaseLine {
@@ -628,21 +688,8 @@ export const projects: readonly Project[] = [
 /** The four projects shown as "Latest portfolio" on Home. */
 export const latestProjects: readonly Project[] = projects.slice(0, 4);
 
-/** Demo tools for the "Tools I work with" strip. */
-export const skills: readonly string[] = [
-  "Figma",
-  "Framer",
-  "Webflow",
-  "Illustrator",
-  "Photoshop",
-  "After Effects",
-  "Next.js",
-  "React",
-  "TypeScript",
-  "Tailwind CSS",
-  "Spline",
-  "Notion",
-];
+/** Every tool, in one run, for the "Tools I work with" strip on Home. */
+export const skills: readonly string[] = skillGroups.flatMap((group) => group.items);
 
 export interface Testimonial {
   readonly id: string;
@@ -695,7 +742,7 @@ export const clients: readonly Client[] = [
 ];
 
 /** Which page a question is shown on. Home no longer shows any. */
-export type FaqPage = "services" | "contact" | "about";
+export type FaqPage = "services" | "contact";
 
 export interface Faq {
   readonly id: string;
@@ -752,13 +799,6 @@ export const faqs: readonly Faq[] = [
     page: "contact",
     question: "How can I contact you?",
     answer: `The quickest way is email at ${site.email}, or send a message through the contact form.`,
-  },
-  {
-    id: "about",
-    page: "about",
-    question: "More about me?",
-    answer:
-      "Creative and award-winning designer with 7+ years of experience crafting innovative digital experiences. Expert in branding, UI/UX and interactive design. Passionate about pushing creative and technical boundaries.",
   },
 ];
 
@@ -878,7 +918,7 @@ export const contact = {
 } as const;
 
 export const footerLinks = [
-  { label: "About", href: "#about" },
+  { label: "About", href: "/about" },
   { label: "Work Gallery", href: "/work" },
   { label: "Services", href: "/services" },
 ] as const;

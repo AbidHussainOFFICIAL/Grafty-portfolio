@@ -92,9 +92,9 @@ The page has a title and description, a canonical link, Open Graph and Twitter c
 Home order: Hero, Services, About, Skills strip, Work (featured first card), Client feedback, Clients, Contact (ghost heading and the "Let's work together" band), Say hello (quick form, tablet and up), Footer.
 
 - Demo content to replace: the featured card's Problem / Role / Result (`caseLine` in `projects`), `skills` and the legal pages.
-- "Coming soon" pages exist so no link is dead: `/about`, `/contact`, `/privacy`, `/terms`. They are `noindex` and not in the sitemap. `/services` and `/work` are finished pages: they are indexed, in the sitemap, and carry their own structured data. `/work/<project id>` are finished case study pages (see below). Replace a page by editing its `page.tsx`; the shell (`PageShell`) is shared.
+- "Coming soon" pages exist so no link is dead: `/contact`, `/privacy`, `/terms`. They are `noindex` and not in the sitemap. `/about`, `/services` and `/work` are finished pages: they are indexed, in the sitemap, and carry their own structured data. `/work/<project id>` are finished case study pages (see below). Replace a page by editing its `page.tsx`; the shell (`PageShell`) is shared.
 - All internal links go through `SiteLink`: `#section` links scroll on Home and become `/#section` on other pages.
-- The contact form has no Subject field; the email subject is "Portfolio enquiry from <name>". The FAQ answers stay in `content.ts` for the Services and Contact pages.
+- The contact form has no Subject field; the email subject is "Portfolio enquiry from <name>". The Contact page's question stays in `content.ts` (`faqs`, `page: "contact"`) until that page is built.
 
 ## Fast taps on phones
 
@@ -121,3 +121,12 @@ Sections, top to bottom: header, the four services (open cards on tablets and de
 - `showPrices` in `content.ts`: `true` shows "from" prices and the packages; `false` hides every price, replaces the packages with "How to hire me", and the service panels show "On request" and "Get a quote". Prices are demo amounts in US dollars.
 - The page is indexed and in the sitemap, and carries FAQPage, Service and breadcrumb data built from the same content as the visible text. Service data has no price markup while the prices are demo.
 - The menu and footer "Services" links go to this page; the Home Services section is unchanged and its last row leads to `#process` here.
+
+## About page (`/about`)
+
+Sections, top to bottom: header, a lead statement that lights up word by word, the longer story (portrait with the CV badge, three paragraphs, signature and two actions), four counting stats, the experience timeline, skills and tools in three groups, awards, a CV download panel and the closing call-to-action band. Components are in `src/components/about/`; the route is `src/app/about/page.tsx`. The stat figure (`ui/Stat.tsx`) and the CV badge (`ui/CvBadge.tsx`) are shared with the Home About section.
+
+- All text is demo content in `src/data/content.ts`: `about.page` (intro, lead, story, CV panel text), `experience`, `skillGroups`, `awards` and `about.stats`. The Home tools strip reads the same `skillGroups` (as the flat list `skills`). Award issuers and employers are made up.
+- The CV is a one-page placeholder at `public/jessy-linda-cv.pdf` (both the badge and the CV panel link to it through `site.cvUrl`). Replace the file with your own, keeping the name.
+- The page is indexed and in the sitemap. Its structured data (AboutPage, the person's skills, breadcrumbs) leaves out awards and employers while they are placeholder text.
+- The menu and footer "About" links go to this page; the Home About section is unchanged, and its "Awards" stat and "More about me" button lead here.

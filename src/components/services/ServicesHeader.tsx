@@ -6,7 +6,7 @@ import { ArrowLink } from "@/components/ui/ArrowLink";
 import { GhostHeading } from "@/components/ui/GhostHeading";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { useEntrance } from "@/lib/useEntrance";
-import { ContactButton } from "./ContactActions";
+import { ContactButton } from "@/components/contact/ContactActions";
 
 /**
  * The Services page's title row, built like the Work page's: the ghost word slides in first,

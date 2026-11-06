@@ -1,56 +1,10 @@
 import { Photo } from "@/components/ui/Photo";
-import { about, routes, site } from "@/data/content";
+import { about, routes } from "@/data/content";
+import { CvBadge } from "@/components/ui/CvBadge";
 import { PillLink } from "@/components/ui/PillLink";
-import { SiteLink } from "@/components/ui/SiteLink";
-import { CircularBadge } from "@/components/ui/CircularBadge";
-import { ArrowDownIcon, ArrowUpRightIcon, Stars } from "@/components/ui/Icons";
-import { CountUp } from "@/components/ui/CountUp";
 import { Reveal } from "@/components/ui/Reveal";
 import { ScrollWords } from "@/components/ui/ScrollWords";
-
-interface StatProps {
-  value: string;
-  label: string;
-  align?: "left" | "right";
-  stars?: boolean;
-  /** Makes the whole figure a link. */
-  href?: string;
-}
-
-function Stat({ value, label, align = "left", stars = false, href }: StatProps) {
-  const content = (
-    <>
-      <div className="relative">
-        {stars && (
-          <span className="absolute bottom-full right-0">
-            <Stars
-              label="Rated 5 out of 5"
-              className="h-3 w-3 md:h-4 md:w-4 lg:h-[2cqw] lg:w-[2cqw]"
-            />
-          </span>
-        )}
-        <p className="font-numeral text-[clamp(2.5rem,13vw,4.75rem)] leading-none lg:text-[7.2cqw]">
-          <CountUp value={value} />
-        </p>
-      </div>
-      <p className="mt-1 text-sm md:mt-2 md:text-base lg:mt-[1cqw] lg:text-[1.65cqw]">
-        {label}
-        {href && (
-          <ArrowUpRightIcon className="ml-1 inline-block h-[0.8em] w-[0.8em] align-baseline transition duration-300 group-hover:rotate-45" />
-        )}
-      </p>
-    </>
-  );
-  const alignment = align === "right" ? "text-right" : "text-left";
-
-  return href ? (
-    <SiteLink href={href} className={`group block transition-colors duration-300 hover:text-violet-deep active:opacity-70 ${alignment}`}>
-      {content}
-    </SiteLink>
-  ) : (
-    <div className={alignment}>{content}</div>
-  );
-}
+import { Stat } from "@/components/ui/Stat";
 
 export function About() {
   const { statement, portrait, stats } = about;
@@ -89,21 +43,7 @@ export function About() {
             sizes="(min-width: 1440px) 540px, 38vw"
             className="aspect-square h-auto w-full rounded-full object-cover"
           />
-          <a
-            href={site.cvUrl}
-            download
-            aria-label="Download my CV"
-            className="absolute left-1/2 top-full -translate-x-1/2 -translate-y-1/2 transition duration-300 hover:scale-105"
-          >
-            <CircularBadge tone="light" className="h-[104px] w-[104px] lg:h-[14cqw] lg:w-[14cqw]">
-              <span className="text-center text-[9px] font-semibold uppercase leading-tight tracking-wide lg:text-[max(11px,1.05cqw)]">
-                Download
-                <br />
-                my CV
-              </span>
-              <ArrowDownIcon className="mt-1.5 h-5 w-3 lg:mt-[0.9cqw] lg:h-[3.4cqw] lg:w-[2cqw]" />
-            </CircularBadge>
-          </a>
+          <CvBadge />
         </Reveal>
 
         <div className="relative flex flex-col justify-between gap-10 lg:col-start-1 lg:row-start-1 lg:py-[2.2cqw]">
