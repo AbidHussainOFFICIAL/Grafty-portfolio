@@ -5,6 +5,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { ScrollShift } from "@/components/ui/ScrollShift";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { cn } from "@/lib/cn";
+import { contactHref } from "@/lib/contactPrefill";
 import { SwipeRow } from "./SwipeRow";
 import { ContactArrowLink, ContactButton } from "@/components/contact/ContactActions";
 
@@ -60,7 +61,9 @@ function PackageCard({ pack }: { pack: Package }) {
       </div>
 
       <div className="mt-auto pt-4 max-md:order-4 md:pt-6 lg:pt-[2.4cqw]">
-        <ContactButton onDark={dark} full>Get started</ContactButton>
+        <ContactButton href={contactHref({ package: pack.id })} onDark={dark} full>
+          Get started
+        </ContactButton>
       </div>
     </article>
   );

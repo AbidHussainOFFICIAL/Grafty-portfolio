@@ -1,55 +1,16 @@
 "use client";
 
-import { createContext, useContext, useId, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
+import { useId, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
+import { Field, controlClass } from "@/components/ui/Field";
 import { validateContact, type ContactErrors, type ContactValues } from "@/lib/validation";
 
 type Status = "idle" | "sending" | "success" | "error";
 
 const emptyValues: ContactValues = { name: "", email: "", message: "" };
 
-const labelClass = "block text-[13px] font-semibold lg:text-[max(13px,1.15cqw)]";
-// 16px on phones: anything smaller makes iOS zoom the page when a field is focused.
-const controlClass =
-  "block w-full border-b-[1.5px] border-ink bg-transparent pb-2 pt-2 text-base outline-none placeholder:text-ink/60 md:pb-1.5 md:pt-1.5 md:text-sm lg:pt-[0.3cqw] lg:text-[max(13px,1.05cqw)]";
-
-/** Field ids are prefixed per form instance so two forms on one page never share ids. */
-const FormIdContext = createContext("contact");
-
-interface FieldProps {
-  label: string;
-  name: keyof ContactValues;
-  error?: string;
-  className?: string;
-  children: ReactNode;
-}
-
-function Field({ label, name, error, className, children }: FieldProps) {
-  const prefix = useContext(FormIdContext);
-  return (
-    <div className={className}>
-      <label htmlFor={`${prefix}-${name}`} className={labelClass}>
-        {label}
-        <span aria-hidden="true">*</span>
-      </label>
-      <div className="relative after:absolute after:inset-x-0 after:bottom-0 after:h-[2px] after:origin-left after:scale-x-0 after:bg-violet after:transition-transform after:duration-300 focus-within:after:scale-x-100">
-        {children}
-      </div>
-      {error && (
-        <p id={`${prefix}-${name}-error`} className="mt-1 text-xs text-red-700 lg:text-[max(11px,1cqw)]">
-          {error}
-        </p>
-      )}
-    </div>
-  );
-}
-
-interface ContactFormProps {
-  /** Called after a message was sent successfully (the sheet uses it to move focus). */
-  onSent?: () => void;
-}
-
-export function ContactForm({ onSent }: ContactFormProps) {
+/** The short note on the Home page (tablet and up). It sends through /api/contact like the Contact page does. */
+export function ContactForm() {
   const prefix = useId();
   const [values, setValues] = useState<ContactValues>(emptyValues);
   const [honeypot, setHoneypot] = useState("");
@@ -108,7 +69,6 @@ export function ContactForm({ onSent }: ContactFormProps) {
         setValues(emptyValues);
         setStatus("success");
         setFeedback("Thank you. Your message is on its way and I will reply soon.");
-        onSent?.();
         return;
       }
       if (response.status === 422 && data.errors) setErrors(data.errors);
@@ -123,25 +83,19 @@ export function ContactForm({ onSent }: ContactFormProps) {
   }
 
   return (
-    <FormIdContext.Provider value={prefix}>
     <form
       ref={formRef}
       noValidate
       onSubmit={handleSubmit}
       className="grid gap-x-6 gap-y-5 sm:grid-cols-2 lg:gap-x-[2.8cqw] lg:gap-y-[1.9cqw]"
     >
-      <Field label="Full Name" name="name" error={errors.name}>
+      <Field id={`${prefix}-name`} label="Full Name" required error={errors.name}>
         <input type="text" autoComplete="name" placeholder="Your Name here" {...fieldProps("name")} />
       </Field>
-      <Field label="Email" name="email" error={errors.email}>
-        <input
-          type="email"
-          autoComplete="email"
-          placeholder="Email Address"
-          {...fieldProps("email")}
-        />
+      <Field id={`${prefix}-email`} label="Email" required error={errors.email}>
+        <input type="email" autoComplete="email" placeholder="Email Address" {...fieldProps("email")} />
       </Field>
-      <Field label="Message" name="message" error={errors.message} className="sm:col-span-2">
+      <Field id={`${prefix}-message`} label="Message" required error={errors.message} className="sm:col-span-2">
         <textarea
           rows={4}
           placeholder="Tell me about your project"
@@ -182,6 +136,5 @@ export function ContactForm({ onSent }: ContactFormProps) {
         </p>
       </div>
     </form>
-    </FormIdContext.Provider>
   );
 }

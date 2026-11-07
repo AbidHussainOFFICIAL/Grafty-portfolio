@@ -177,12 +177,25 @@ html[data-header="hidden"] {
   animation: badge-spin 24s linear infinite;
 }
 
+/* A step of the phone brief form sliding in (components/contact/ProjectForm.tsx) */
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateX(1.25rem);
+  }
+}
+
+@utility animate-step {
+  animation: step-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
-  .animate-badge {
+  .animate-badge,
+  .animate-step {
     animation: none;
   }
 }

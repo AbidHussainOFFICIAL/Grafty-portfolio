@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Inter_Tight } from "next/font/google";
 import { IntroProvider } from "@/components/layout/Intro";
-import { ContactSheetProvider } from "@/components/contact/ContactSheetProvider";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -80,9 +79,7 @@ export default function RootLayout({
         <JsonLd />
         <ScrollProgress />
         <SmoothScroll />
-        <IntroProvider>
-          <ContactSheetProvider>{children}</ContactSheetProvider>
-        </IntroProvider>
+        <IntroProvider>{children}</IntroProvider>
       </body>
     </html>
   );

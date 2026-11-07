@@ -3,8 +3,8 @@ import { ScrollShift } from "@/components/ui/ScrollShift";
 import { CtaBand } from "./CtaBand";
 
 /**
- * The ghost heading and the "Let's work together" band. On phones the band's button opens the
- * full-screen contact sheet; on tablets and desktops the quick form follows in its own section.
+ * The ghost heading and the "Let's work together" band, whose buttons lead to the Contact page.
+ * On tablets and desktops the quick form follows in its own section.
  */
 export function Contact() {
   return (

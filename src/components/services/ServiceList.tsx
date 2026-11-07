@@ -2,6 +2,7 @@ import { services, showPrices, type Service } from "@/data/content";
 import { Accordion } from "@/components/ui/Accordion";
 import { Reveal } from "@/components/ui/Reveal";
 import { ContactArrowLink } from "@/components/contact/ContactActions";
+import { contactHref } from "@/lib/contactPrefill";
 
 const rowLabel = "text-[10px] font-semibold uppercase leading-none tracking-wide opacity-75 lg:text-[max(10px,0.9cqw)]";
 
@@ -35,7 +36,7 @@ function ServiceExtra({ service }: { service: Service }) {
       </dl>
 
       <div className="mt-5 lg:mt-[2cqw]">
-        <ContactArrowLink>{`Get a ${service.title.toLowerCase()} quote`}</ContactArrowLink>
+        <ContactArrowLink href={contactHref({ type: service.id })}>{`Get a ${service.title.toLowerCase()} quote`}</ContactArrowLink>
       </div>
     </div>
   );

@@ -4,7 +4,6 @@ import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { contact, routes } from "@/data/content";
 import { signature } from "@/data/artwork";
-import { useContactClick } from "@/components/contact/ContactLink";
 import { CircularBadge } from "@/components/ui/CircularBadge";
 import { ArrowUpRightIcon } from "@/components/ui/Icons";
 import { Reveal } from "@/components/ui/Reveal";
@@ -17,16 +16,15 @@ const pill =
   "inline-flex h-12 w-full select-none items-center justify-center rounded-full px-8 text-base font-medium transition duration-300 ease-out active:scale-[0.97] md:w-auto lg:h-[4.6cqw] lg:px-[3cqw] lg:text-[max(14px,1.5cqw)]";
 
 /**
- * The closing "Let's work together" panel. On phones "Start a project" opens the contact sheet;
- * on tablets and desktops it goes to the Contact page. The headline lines rise through masks
- * like the hero's, the buttons fade in one after the other and the seal turns slowly.
+ * The closing "Let's work together" panel: "Start a project" and "Book a call" lead to the Contact
+ * page. The headline lines rise through masks like the hero's, the buttons fade in one after the
+ * other and the seal turns slowly.
  */
 export function CtaBand({ className }: { className?: string }) {
   const { band } = contact;
   const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
-  const onContactClick = useContactClick();
 
   const fade = (delay: number) =>
     reduceMotion
@@ -73,7 +71,6 @@ export function CtaBand({ className }: { className?: string }) {
               <motion.div className="w-full md:w-auto" {...fade(0.45)}>
                 <SiteLink
                   href={routes.contact}
-                  onClick={onContactClick}
                   className={`${pill} bg-white text-ink hover:bg-ink hover:text-white`}
                 >
                   {band.primary}
@@ -93,7 +90,6 @@ export function CtaBand({ className }: { className?: string }) {
 
           <SiteLink
             href={routes.contact}
-            onClick={onContactClick}
             aria-label={band.primary}
             className="hidden transition duration-300 hover:scale-105 md:block"
           >

@@ -40,10 +40,10 @@ export const navLinks: readonly NavLink[] = [
   { label: "About", href: "/about", section: "about", inBar: true },
   { label: "Work", href: "/work", section: "work", inBar: true },
   { label: "Reviews", href: "#feedback", inBar: false },
-  { label: "Contact", href: "#contact", inBar: true },
+  { label: "Contact", href: "/contact", section: "contact", inBar: true },
 ];
 
-/** Pages that exist as "coming soon" placeholders until each one is designed. */
+/** The pages of the site. */
 export const routes = {
   work: "/work",
   about: "/about",
@@ -798,7 +798,28 @@ export const faqs: readonly Faq[] = [
     id: "contact",
     page: "contact",
     question: "How can I contact you?",
-    answer: `The quickest way is email at ${site.email}, or send a message through the contact form.`,
+    answer: `The quickest way is the project brief on this page. You can also email ${site.email} or book a call.`,
+  },
+  {
+    id: "brief-or-call",
+    page: "contact",
+    question: "Should I send a brief or book a call?",
+    answer:
+      "If you know roughly what you need, send a brief: it lets me come back with a precise reply. If you are still working it out, book a call and we will talk it through.",
+  },
+  {
+    id: "small-projects",
+    page: "contact",
+    question: "Do you take small projects?",
+    answer:
+      "Yes. A logo refresh, a landing page or a set of social templates is a good fit. Tell me what you have in mind and I will say honestly whether I am the right person for it.",
+  },
+  {
+    id: "no-budget",
+    page: "contact",
+    question: "What if I do not know my budget?",
+    answer:
+      "Choose “Not sure yet”. After we talk I will suggest a scope that fits what you need and give you a fixed quote, so you can decide with the full picture.",
   },
 ];
 
@@ -854,6 +875,9 @@ export interface Package {
   readonly includes: readonly string[];
   /** Shown as the dark card with a "Most chosen" tag. Only one. */
   readonly featured?: boolean;
+  /** What "Get started" pre-selects on the Contact page: service ids and a budget id. */
+  readonly projectTypes: readonly string[];
+  readonly budget: string;
 }
 
 export const packages: readonly Package[] = [
@@ -864,6 +888,8 @@ export const packages: readonly Package[] = [
     from: "$1,200",
     timeline: "3–5 weeks",
     includes: ["Logo suite", "Colour and type system", "Brand guidelines", "Stationery and social kit"],
+    projectTypes: ["branding"],
+    budget: "1500-3500",
   },
   {
     id: "product-design",
@@ -873,6 +899,8 @@ export const packages: readonly Package[] = [
     timeline: "4–8 weeks",
     includes: ["Research and wireframes", "Interactive prototype", "Full UI design system", "Developer handoff"],
     featured: true,
+    projectTypes: ["design"],
+    budget: "3500-7000",
   },
   {
     id: "complete-launch",
@@ -881,6 +909,8 @@ export const packages: readonly Package[] = [
     from: "$6,500",
     timeline: "8–12 weeks",
     includes: ["Everything in Brand Kit", "Everything in Product Design", "Responsive front-end build", "Launch campaign visuals"],
+    projectTypes: ["branding", "design", "code"],
+    budget: "7000-plus",
   },
 ];
 
@@ -916,6 +946,117 @@ export const contact = {
     alt: "Portrait of a person in sunglasses and a red turtleneck against a red background",
   },
 } as const;
+
+/**
+ * False: the project brief and the call booking only pretend to send (nothing leaves the browser),
+ * so the pages can be shown and tested without a mail account. True: both are sent through
+ * /api/contact, which needs the RESEND_* variables from .env.example. Set it to true when you go live.
+ */
+export const contactLive = false;
+
+/** The Contact page (/contact). Demo text. */
+export const contactPage = {
+  label: "Start a project",
+  intro:
+    "Tell me about your project, or pick a time to talk it through. I read every message myself and reply within a day.",
+  modes: {
+    brief: { label: "Project brief", note: "Reply in 24h" },
+    call: { label: "Book a call", note: "30 min, free" },
+  },
+  direct: {
+    title: "Prefer to write directly?",
+    text: "Email me or find me online. A few lines about what you need is plenty.",
+    promises: ["I reply within 24 hours", "You get a fixed quote, not a guess", "No obligation to continue"],
+  },
+} as const;
+
+export interface Choice {
+  readonly id: string;
+  readonly label: string;
+}
+
+/** The services, plus "something else", as the types of project a brief can be about. */
+export const projectTypes: readonly Choice[] = [
+  ...services.map((service) => ({ id: service.id, label: service.title })),
+  { id: "other", label: "Something else" },
+];
+
+export const budgets: readonly Choice[] = [
+  { id: "under-1500", label: "Under $1,500" },
+  { id: "1500-3500", label: "$1,500 – $3,500" },
+  { id: "3500-7000", label: "$3,500 – $7,000" },
+  { id: "7000-plus", label: "$7,000+" },
+  { id: "unsure", label: "Not sure yet" },
+];
+
+export const timelines: readonly Choice[] = [
+  { id: "asap", label: "As soon as possible" },
+  { id: "1-2-months", label: "1–2 months" },
+  { id: "3-plus-months", label: "3+ months" },
+  { id: "flexible", label: "Flexible" },
+];
+
+/** What a brief may attach. The files travel inside the request, so the total stays small. */
+export const uploadRules = {
+  maxFiles: 3,
+  maxTotalBytes: 3 * 1024 * 1024,
+  extensions: [".pdf", ".png", ".jpg", ".jpeg", ".webp", ".zip", ".docx"],
+  hint: "PDF, images, ZIP or DOCX. Up to 3 files, 3 MB in total. For anything bigger, add a link in your details.",
+} as const;
+
+/**
+ * The call booking. Demo availability: weekdays, one slot every `stepMinutes` from `startHour` until
+ * `endHour`, and a fixed pattern of taken times (see lib/booking.ts). Replace the pattern with a real
+ * calendar when there is one.
+ */
+export const booking = {
+  title: "Book a call",
+  intro: "A free intro call on Google Meet. No preparation needed: just bring your idea.",
+  durationMinutes: 30,
+  meeting: "Google Meet",
+  startHour: 10,
+  endHour: 17,
+  stepMinutes: 30,
+  daysAhead: 56,
+} as const;
+
+export interface NextStep {
+  readonly title: string;
+  readonly body: string;
+}
+
+/** The success screen. "{name}" becomes the visitor's first name. */
+export const contactSuccess = {
+  brief: {
+    title: "Message sent",
+    text: "Thank you, {name}. Your project brief is with me and I will read it today.",
+    steps: [
+      { title: "I read your brief", body: "Every message is read by me, usually the same day." },
+      {
+        title: "I reply within 24 hours",
+        body: "With questions, a first idea of the scope, or an invitation to a short call.",
+      },
+      {
+        title: "We agree the plan",
+        body: "You get a fixed quote and a schedule in writing before any work begins.",
+      },
+    ],
+    other: "Book a call too",
+  },
+  call: {
+    title: "You’re booked",
+    text: "Thank you, {name}. Your call is in my calendar.",
+    steps: [
+      { title: "Check your inbox", body: "A calendar invite with the video link is on its way to you." },
+      { title: "We talk it through", body: "Thirty relaxed minutes about your goals, your audience and your timeline." },
+      {
+        title: "You get a clear next step",
+        body: "Within two days I send a short summary and, if you would like one, a fixed quote.",
+      },
+    ],
+    other: "Send a brief too",
+  },
+} as const satisfies Record<string, { title: string; text: string; steps: readonly NextStep[]; other: string }>;
 
 export const footerLinks = [
   { label: "About", href: "/about" },

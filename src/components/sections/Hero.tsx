@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { hero, site } from "@/data/content";
+import { hero, routes, site } from "@/data/content";
 import { signature } from "@/data/artwork";
-import { useContactClick } from "@/components/contact/ContactLink";
 import { useIntroReady } from "@/components/layout/Intro";
 import { CircularBadge } from "@/components/ui/CircularBadge";
 import { GhostHeading } from "@/components/ui/GhostHeading";
 import { ArrowRightLongIcon } from "@/components/ui/Icons";
+import { SiteLink } from "@/components/ui/SiteLink";
 import { VectorArt } from "@/components/ui/VectorArt";
 import { withAmpersands } from "@/lib/text";
 
@@ -58,7 +58,6 @@ export function Hero() {
   const artRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const onContactClick = useContactClick();
   // On a first visit the entrance animations wait until the loader's curtain lifts.
   const ready = useIntroReady();
   // Whatever is already on screen when the page opens waits for the artwork to finish (ghost word,
@@ -229,10 +228,9 @@ export function Hero() {
             {site.email}
           </a>
 
-          <a
-            href="#contact"
-            onClick={onContactClick}
-            aria-label="Let's discuss: go to the contact form"
+          <SiteLink
+            href={routes.contact}
+            aria-label="Let's discuss: go to the contact page"
             className="absolute bottom-4 right-4 transition duration-300 hover:scale-105 lg:bottom-[1.5cqw] lg:right-[2.8cqw]"
           >
             <CircularBadge tone="dark" className="h-[88px] w-[88px] lg:h-[8.6cqw] lg:w-[8.6cqw]">
@@ -245,7 +243,7 @@ export function Hero() {
                 <ArrowRightLongIcon className="mt-1 w-7 lg:mt-[0.5cqw] lg:w-[3.2cqw]" />
               </span>
             </CircularBadge>
-          </a>
+          </SiteLink>
         </motion.div>
       </div>
     </section>

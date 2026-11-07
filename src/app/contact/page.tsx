@@ -1,18 +1,45 @@
 import { PageShell } from "@/components/layout/PageShell";
-import { ComingSoon } from "@/components/sections/ComingSoon";
-import { stubMetadata } from "@/lib/stubPage";
+import { PageJsonLd } from "@/components/seo/JsonLd";
+import { ContactFaq } from "@/components/contact/ContactFaq";
+import { ContactHeader } from "@/components/contact/ContactHeader";
+import { ContactPanel } from "@/components/contact/ContactPanel";
+import { routes, site } from "@/data/content";
+import { pageMetadata } from "@/lib/pageMetadata";
 
-export const metadata = stubMetadata("Contact", "/contact");
+const description =
+  "Start a project with Jessy Linda: send a project brief with your budget, timeline and files, or book a free 30-minute intro call. Replies within 24 hours.";
+
+export const metadata = pageMetadata({ title: "Contact", description, path: routes.contact });
+
+const url = `${site.url}${routes.contact}`;
+
+const nodes = [
+  {
+    "@type": "ContactPage",
+    "@id": `${url}#page`,
+    url,
+    name: `Contact | ${site.name}`,
+    description,
+    inLanguage: "en",
+    isPartOf: { "@id": `${site.url}/#website` },
+    about: { "@id": `${site.url}/#person` },
+  },
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+      { "@type": "ListItem", position: 2, name: "Contact", item: url },
+    ],
+  },
+];
 
 export default function ContactPage() {
   return (
     <PageShell>
-      <ComingSoon
-        title="Contact"
-        blurb="A full contact page with booking is coming soon. For now, use the form on the home page or email me."
-        backHref="/"
-        backLabel="Back to home"
-      />
+      <PageJsonLd nodes={nodes} />
+      <ContactHeader />
+      <ContactPanel />
+      <ContactFaq />
     </PageShell>
   );
 }

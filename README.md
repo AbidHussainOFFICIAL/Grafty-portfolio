@@ -23,7 +23,7 @@ Requires Node 20.9 or newer.
 | A section's layout | `src/components/sections/` |
 | Shared pieces (buttons, accordion, ghost headings, badges, scroll effects) | `src/components/ui/` |
 | Smooth scrolling, progress line, navbar, mobile menu, footer | `src/components/layout/` |
-| Phone contact sheet (full-screen form) | `src/components/contact/` |
+| Contact page: brief form, call booking, success screen, phone booking sheet | `src/components/contact/` (booking maths in `src/lib/booking.ts`) |
 | Which links the desktop bar shows | `inBar` on each entry of `navLinks` in `content.ts` |
 | Portfolio card colours | `tone` on each project in `src/data/content.ts` |
 | Images | `public/images/` (WebP, referenced from `content.ts`). Each has a blurred preview in `src/data/blur.ts`. |
@@ -36,7 +36,7 @@ Requires Node 20.9 or newer.
 
 ## Before you publish
 
-1. **Contact form.** Copy `.env.example` to `.env.local` and fill in a [Resend](https://resend.com) API key and a verified sender. Until then the form shows a polite "not set up yet" message.
+1. **Contact forms.** Copy `.env.example` to `.env.local` and fill in a [Resend](https://resend.com) API key and a verified sender, then set `contactLive = true` in `content.ts`. Until then the Contact page only pretends to send (so you can try the whole flow), and the quick form on Home shows a polite "not set up yet" message.
 2. **CV button.** Put your CV at `public/jessy-linda-cv.pdf` (or change `site.cvUrl`).
 3. **Social links and project links** in `content.ts` currently point at generic sites and `/work`.
 4. **Images.** The photos were cropped from design screenshots, so they are soft on large screens. Replace the files in `public/images/` with full-resolution exports, keeping the same names (or update `content.ts`).
@@ -50,7 +50,7 @@ Requires Node 20.9 or newer.
 
 - **1024px and up:** every size is measured against the page width (CSS `cqw` units), so the layout scales like the original design and stops growing at 1440px.
 - **Tablet and mobile:** redesigned from the same system. The hero fills the first screen with the artwork and the greeting + headline (the card sits below), the portfolio cards are compact and stack over each other as you scroll, client feedback uses a small avatar beside the name, and client logos become a slow marquee. The nav collapses into a full-screen menu.
-- **Below 768px:** every "Hire Me", "Start a project" and "Let's discuss" button opens the contact form as a full-screen sheet; the in-page form is used from 768px up.
+- **Below 768px:** the Contact page shows the project brief one step at a time (three steps with a progress bar), and "Pick a time" opens the calendar as a full-screen sheet; from 768px up the whole form and the calendar sit in the page.
 - **Desktop first screen:** the artwork only. The introduction and the card start just below the fold.
 
 ## Scroll experience
@@ -92,9 +92,9 @@ The page has a title and description, a canonical link, Open Graph and Twitter c
 Home order: Hero, Services, About, Skills strip, Work (featured first card), Client feedback, Clients, Contact (ghost heading and the "Let's work together" band), Say hello (quick form, tablet and up), Footer.
 
 - Demo content to replace: the featured card's Problem / Role / Result (`caseLine` in `projects`), `skills` and the legal pages.
-- "Coming soon" pages exist so no link is dead: `/contact`, `/privacy`, `/terms`. They are `noindex` and not in the sitemap. `/about`, `/services` and `/work` are finished pages: they are indexed, in the sitemap, and carry their own structured data. `/work/<project id>` are finished case study pages (see below). Replace a page by editing its `page.tsx`; the shell (`PageShell`) is shared.
+- "Coming soon" pages exist so no link is dead: `/privacy`, `/terms`. They are `noindex` and not in the sitemap. `/about`, `/services`, `/work` and `/contact` are finished pages: they are indexed, in the sitemap, and carry their own structured data. `/work/<project id>` are finished case study pages (see below). Replace a page by editing its `page.tsx`; the shell (`PageShell`) is shared.
 - All internal links go through `SiteLink`: `#section` links scroll on Home and become `/#section` on other pages.
-- The contact form has no Subject field; the email subject is "Portfolio enquiry from <name>". The Contact page's question stays in `content.ts` (`faqs`, `page: "contact"`) until that page is built.
+- The contact form has no Subject field; the email subject is "Portfolio enquiry from <name>".
 
 ## Fast taps on phones
 
@@ -117,7 +117,7 @@ One template renders all 8 projects from `projects` in `src/data/content.ts` (`s
 
 Sections, top to bottom: header, the four services (open cards on tablets and desktops; on phones the Home accordion, with longer text, deliverables, timeline, price and a quote link in each panel), "How I work" (five steps that light up as you scroll, like the About statement), packages (a swipeable row below desktop width, with the middle package centred and dots underneath), questions, and the closing call-to-action band. Components are in `src/components/services/`; the route is `src/app/services/page.tsx`.
 
-- All text, prices and questions are demo content in `src/data/content.ts`: `services` (detail, deliverables, timeline, from), `workflow`, `packages`, `hireGuide` and `faqs` (the `page: "services"` ones are shown here; the `contact` and `about` ones wait for those pages).
+- All text, prices and questions are demo content in `src/data/content.ts`: `services` (detail, deliverables, timeline, from), `workflow`, `packages`, `hireGuide` and `faqs` (the `page: "services"` ones are shown here, the `page: "contact"` ones on the Contact page).
 - `showPrices` in `content.ts`: `true` shows "from" prices and the packages; `false` hides every price, replaces the packages with "How to hire me", and the service panels show "On request" and "Get a quote". Prices are demo amounts in US dollars.
 - The page is indexed and in the sitemap, and carries FAQPage, Service and breadcrumb data built from the same content as the visible text. Service data has no price markup while the prices are demo.
 - The menu and footer "Services" links go to this page; the Home Services section is unchanged and its last row leads to `#process` here.
@@ -130,3 +130,15 @@ Sections, top to bottom: header, a lead statement that lights up word by word, t
 - The CV is a one-page placeholder at `public/jessy-linda-cv.pdf` (both the badge and the CV panel link to it through `site.cvUrl`). Replace the file with your own, keeping the name.
 - The page is indexed and in the sitemap. Its structured data (AboutPage, the person's skills, breadcrumbs) leaves out awards and employers while they are placeholder text.
 - The menu and footer "About" links go to this page; the Home About section is unchanged, and its "Awards" stat and "More about me" button lead here.
+
+## Contact page (`/contact`)
+
+Sections, top to bottom: header, the panel, and questions. The panel has two halves behind a tab switch, "Project brief" and "Book a call", with the email, social links and what to expect beside it (below it on phones). Components are in `src/components/contact/`; the route is `src/app/contact/page.tsx`.
+
+- **Project brief:** type of project (several allowed), budget, timeline, details, up to three reference files, name and email. Tablets and desktops show it as three numbered groups; phones show one group at a time. Typed text, choices and files are kept when you switch to "Book a call" and back.
+- **Book a call:** a month of weekdays, the free times of the chosen day, then name, email and an optional topic. Inline from tablet width; on phones "Pick a time" opens it as a full-screen sheet. The availability is a fixed demo pattern (`lib/booking.ts`): replace it with a real calendar when there is one. There is no third-party booking service.
+- **Success screen:** "Message sent" (or "You're booked", with an "Add to my calendar" file) and a short "What happens next". It replaces the form; "Start over" brings the form back empty.
+- **Links in:** `/contact#book` opens the booking. `/contact?package=product-design`, `?type=design,code`, `&budget=3500-7000` and `&timeline=asap` arrive with the brief already filled in (`contactHref()` in `lib/contactPrefill.ts` builds them; the "Get started" buttons and service quote links use it). Every "Start a project" and "Hire Me" button goes to this page on every screen size.
+- **Sending:** `contactLive` in `content.ts` is `false`, so nothing leaves the browser. Set it to `true` (with the Resend variables) and both halves post to `/api/contact`. Files travel inside that request, so they are limited to three files and 3 MB in total (`uploadRules`); the form tells the visitor to share a link for anything larger.
+- All text is demo content in `src/data/content.ts`: `contactPage`, `projectTypes`, `budgets`, `timelines`, `uploadRules`, `booking`, `contactSuccess` and the `page: "contact"` entries of `faqs`. The budget bands are demo amounts in US dollars; each package names the budget band and services it pre-selects.
+- The page is indexed and in the sitemap, with ContactPage and breadcrumb data. It has no closing call-to-action band, since it is the destination.
