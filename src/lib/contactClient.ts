@@ -1,4 +1,5 @@
 import { contactLive } from "@/data/content";
+import { trackEvent } from "./analytics";
 import type { BriefValues, CallValues } from "./validation";
 
 export type ContactRequest =
@@ -56,7 +57,11 @@ export async function sendContact(request: ContactRequest): Promise<SendResult> 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (response.ok) return { ok: true };
+    if (response.ok) {
+      if (request.kind === "brief") trackEvent("Brief sent", { type: request.values.types.join(","), budget: request.values.budget });
+      else trackEvent("Call booked");
+      return { ok: true };
+    }
 
     const data: { error?: string } = await response.json().catch(() => ({}));
     return { ok: false, message: data.error ?? "Something went wrong. Please try again." };

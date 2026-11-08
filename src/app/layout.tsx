@@ -1,24 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Inter_Tight } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { IntroProvider } from "@/components/layout/Intro";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { site } from "@/data/content";
+import { fontVariables } from "./fonts";
 import "./globals.css";
-
-const archivo = Archivo({
-  subsets: ["latin"],
-  axes: ["wdth"],
-  variable: "--font-archivo",
-  display: "swap",
-});
-
-const interTight = Inter_Tight({
-  subsets: ["latin"],
-  variable: "--font-inter-tight",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -62,10 +50,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${interTight.variable}`}
-      data-scroll-behavior="smooth"
-      suppressHydrationWarning
-    >
+    <html lang="en" className={fontVariables} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
       </head>
@@ -80,6 +65,7 @@ export default function RootLayout({
         <ScrollProgress />
         <SmoothScroll />
         <IntroProvider>{children}</IntroProvider>
+        <Analytics />
       </body>
     </html>
   );

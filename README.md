@@ -19,11 +19,15 @@ Requires Node 20.9 or newer.
 | To change | Edit |
 | --- | --- |
 | Any text, link, rating, FAQ, project | `src/data/content.ts` |
-| Colours and fonts | `src/app/globals.css` (`@theme`) and `src/app/layout.tsx` |
+| Colours and fonts | `src/app/globals.css` (`@theme`) and `src/app/fonts.ts` |
 | A section's layout | `src/components/sections/` |
 | Shared pieces (buttons, accordion, ghost headings, badges, scroll effects) | `src/components/ui/` |
 | Smooth scrolling, progress line, navbar, mobile menu, footer | `src/components/layout/` |
 | Contact page: brief form, call booking, success screen, phone booking sheet | `src/components/contact/` (booking maths in `src/lib/booking.ts`) |
+| Privacy and Terms text | `src/data/legal.ts` (pages in `src/components/legal/`) |
+| 404, error and loading screens | `src/app/not-found.tsx`, `error.tsx`, `global-error.tsx`, `loading.tsx` (shared look in `src/components/status/`) |
+| Analytics events | `src/lib/analytics.ts` (the one list of events; nothing personal is ever sent) |
+| Printable CV page | `src/components/cv/`; its text is `cvPage` in `content.ts`, the rest comes from `experience`, `skillGroups` and `awards` |
 | Which links the desktop bar shows | `inBar` on each entry of `navLinks` in `content.ts` |
 | Portfolio card colours | `tone` on each project in `src/data/content.ts` |
 | Images | `public/images/` (WebP, referenced from `content.ts`). Each has a blurred preview in `src/data/blur.ts`. |
@@ -43,8 +47,10 @@ Requires Node 20.9 or newer.
 5. **Site address.** The canonical link, sitemap, share image and structured data use `https://grafty-portfolio.vercel.app`. When you move to your own domain, set `NEXT_PUBLIC_SITE_URL` in Vercel (see `.env.example`).
 6. **Share image and icons.** They were generated from the hero portrait and the Grafty mark. Replace `opengraph-image.png` (1200×630) and the icon files with final artwork when you have it.
 7. **Social links.** The structured data lists your profiles (`sameAs`) only once the links in `content.ts` point at real profiles instead of site home pages.
-8. **Search Console.** Submit `/sitemap.xml` once the site is live, and run Lighthouse on the deployed site (targets: LCP under 2.5 s, CLS under 0.1, INP under 200 ms).
-9. **Logos.** The signature, Grafty wordmark and client logos in `src/data/artwork.ts` are vector traces of the screenshots. Swap in the official SVGs when you have them. The client logos are third-party trademarks; make sure you have the right to show them.
+8. **Analytics.** Run `npm install` (it adds `@vercel/analytics`), then switch on Web Analytics in your Vercel project (Analytics tab) and redeploy. It uses no cookies, so no banner is needed. Page views work on every plan; the custom events listed in `src/lib/analytics.ts` need a Vercel Pro plan. Vercel's Hobby plan is meant for personal, non-commercial use, so check its terms for a business portfolio.
+9. **Privacy and Terms.** `src/data/legal.ts` describes what the site does today, in plain language. Have it reviewed, add your business name and address, and update it if you add a service that handles visitors' data. The governing law is set to California as a placeholder.
+10. **Search Console.** Submit `/sitemap.xml` once the site is live, and run Lighthouse on the deployed site (targets: LCP under 2.5 s, CLS under 0.1, INP under 200 ms).
+11. **Logos.** The signature, Grafty wordmark and client logos in `src/data/artwork.ts` are vector traces of the screenshots. Swap in the official SVGs when you have them. The client logos are third-party trademarks; make sure you have the right to show them.
 
 ## Responsive behaviour
 
@@ -91,8 +97,8 @@ The page has a title and description, a canonical link, Open Graph and Twitter c
 
 Home order: Hero, Services, About, Skills strip, Work (featured first card), Client feedback, Clients, Contact (ghost heading and the "Let's work together" band), Say hello (quick form, tablet and up), Footer.
 
-- Demo content to replace: the featured card's Problem / Role / Result (`caseLine` in `projects`), `skills` and the legal pages.
-- "Coming soon" pages exist so no link is dead: `/privacy`, `/terms`. They are `noindex` and not in the sitemap. `/about`, `/services`, `/work` and `/contact` are finished pages: they are indexed, in the sitemap, and carry their own structured data. `/work/<project id>` are finished case study pages (see below). Replace a page by editing its `page.tsx`; the shell (`PageShell`) is shared.
+- Demo content to replace: the featured card's Problem / Role / Result (`caseLine` in `projects`) and `skills`.
+- Every page is finished: `/about`, `/services`, `/work`, `/contact`, `/privacy` and `/terms` are indexed, in the sitemap and carry their own structured data; `/work/<project id>` are case study pages (see below); `/cv` is a printable page kept out of search. The shell (`PageShell`) is shared.
 - All internal links go through `SiteLink`: `#section` links scroll on Home and become `/#section` on other pages.
 - The contact form has no Subject field; the email subject is "Portfolio enquiry from <name>".
 
@@ -142,3 +148,10 @@ Sections, top to bottom: header, the panel, and questions. The panel has two hal
 - **Sending:** `contactLive` in `content.ts` is `false`, so nothing leaves the browser. Set it to `true` (with the Resend variables) and both halves post to `/api/contact`. Files travel inside that request, so they are limited to three files and 3 MB in total (`uploadRules`); the form tells the visitor to share a link for anything larger.
 - All text is demo content in `src/data/content.ts`: `contactPage`, `projectTypes`, `budgets`, `timelines`, `uploadRules`, `booking`, `contactSuccess` and the `page: "contact"` entries of `faqs`. The budget bands are demo amounts in US dollars; each package names the budget band and services it pre-selects.
 - The page is indexed and in the sitemap, with ContactPage and breadcrumb data. It has no closing call-to-action band, since it is the destination.
+
+## Privacy, Terms, error screens, analytics and the CV page
+
+- **Privacy and Terms (`/privacy`, `/terms`).** One layout (`components/legal/`): the ghost word (the two pages alternate sides), "The short version", the full text in one panel with a contents list (sticky beside it on desktop, a bar that opens on phones and tablets), and a questions strip. Indexed and in the sitemap.
+- **404, error and loading.** `not-found.tsx` (ghost "404", a way home, "Start a project" and quick links), `error.tsx` ("Try again" and a reference code) and `global-error.tsx` (the last resort when the whole layout fails: no header or footer). `loading.tsx` is a pale skeleton that stays invisible for 0.3 s so quick page changes never flash it; pages are prerendered, so it is rarely seen.
+- **Analytics.** Vercel Web Analytics is mounted in `layout.tsx`. `lib/analytics.ts` lists every custom event: Contact click, Brief sent (only while `contactLive` is `true`), Call booked, CV downloaded, CV printed and Email copied. They carry no names, emails or messages, and nothing is sent while developing.
+- **Printable CV (`/cv`).** A sheet built from the site's own content. "Print / Save as PDF" (desktop only) prints just the sheet: the header, footer and buttons are hidden and the paper size and margins follow the visitor's printer. Phones get the PDF download. It is `noindex` and not in the sitemap. The PDF in `public/` stays your separate real file.

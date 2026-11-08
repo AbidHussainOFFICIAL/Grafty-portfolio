@@ -1,6 +1,8 @@
-import { about, site } from "@/data/content";
+import { about, routes } from "@/data/content";
+import { CvLink } from "@/components/ui/CvLink";
 import { ArrowDownIcon } from "@/components/ui/Icons";
 import { Reveal } from "@/components/ui/Reveal";
+import { SiteLink } from "@/components/ui/SiteLink";
 
 /** A slim dark panel (the style of the Results panel on case studies) with the CV download. */
 export function AboutCv() {
@@ -25,19 +27,24 @@ export function AboutCv() {
             </p>
           </div>
 
-          <a
-            href={site.cvUrl}
-            download
-            className="group mt-6 inline-flex h-12 w-full shrink-0 select-none items-center justify-between gap-3 rounded-full bg-white pl-7 pr-1.5 text-base font-medium text-ink transition duration-300 ease-out hover:bg-violet hover:text-white active:scale-[0.97] md:mt-0 md:w-auto lg:h-[5cqw] lg:gap-[1.2cqw] lg:pl-[2.8cqw] lg:pr-[0.8cqw] lg:text-[max(14px,1.4cqw)]"
-          >
-            Download CV
-            <span
-              aria-hidden="true"
-              className="grid h-9 w-9 place-items-center rounded-full bg-ink text-white transition duration-300 lg:h-[3.4cqw] lg:w-[3.4cqw]"
+          <div className="mt-6 md:mt-0 md:flex md:shrink-0 md:flex-col md:items-end md:gap-3 lg:gap-[1cqw]">
+            <CvLink className="group inline-flex h-12 w-full shrink-0 select-none items-center justify-between gap-3 rounded-full bg-white pl-7 pr-1.5 text-base font-medium text-ink transition duration-300 ease-out hover:bg-violet hover:text-white active:scale-[0.97] md:w-auto lg:h-[5cqw] lg:gap-[1.2cqw] lg:pl-[2.8cqw] lg:pr-[0.8cqw] lg:text-[max(14px,1.4cqw)]">
+              Download CV
+              <span
+                aria-hidden="true"
+                className="grid h-9 w-9 place-items-center rounded-full bg-ink text-white transition duration-300 lg:h-[3.4cqw] lg:w-[3.4cqw]"
+              >
+                <ArrowDownIcon className="h-5 w-3 lg:h-[2.2cqw] lg:w-[1.4cqw]" />
+              </span>
+            </CvLink>
+            {/* Printing is for computers: phones and tablets only get the PDF. */}
+            <SiteLink
+              href={routes.cv}
+              className="hidden text-white/80 underline underline-offset-4 transition-colors duration-300 hover:text-white lg:inline lg:text-[max(13px,1.3cqw)]"
             >
-              <ArrowDownIcon className="h-5 w-3 lg:h-[2.2cqw] lg:w-[1.4cqw]" />
-            </span>
-          </a>
+              View online
+            </SiteLink>
+          </div>
         </div>
       </Reveal>
     </section>

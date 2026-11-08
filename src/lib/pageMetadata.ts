@@ -7,7 +7,7 @@ interface PageMetadataInput {
   description?: string;
   /** The page's own address, e.g. "/work". It is also its canonical link. */
   path: string;
-  /** False for "coming soon" pages, which stay out of search results. */
+  /** False for pages that should stay out of search results. */
   indexable?: boolean;
 }
 

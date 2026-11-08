@@ -189,6 +189,17 @@ html[data-header="hidden"] {
   animation: step-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* The loading screen (app/loading.tsx) stays invisible for its first 0.3 s, so quick page changes never flash it. */
+@keyframes wait-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@utility animate-wait {
+  animation: wait-in 0.4s ease 0.3s both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -197,6 +208,22 @@ html[data-header="hidden"] {
   .animate-badge,
   .animate-step {
     animation: none;
+  }
+
+  /* Keeps the 0.3 s wait, but appears at once instead of fading. */
+  .animate-wait {
+    animation-duration: 0.01s;
+  }
+}
+
+/* Printing (the CV page, components/cv): even margins and a plain white page. */
+@page {
+  margin: 12mm;
+}
+
+@media print {
+  body {
+    background: #fff;
   }
 }
 

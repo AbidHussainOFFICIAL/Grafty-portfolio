@@ -1,18 +1,10 @@
-import { PageShell } from "@/components/layout/PageShell";
-import { ComingSoon } from "@/components/sections/ComingSoon";
-import { stubMetadata } from "@/lib/stubPage";
+import { LegalPage } from "@/components/legal/LegalPage";
+import { routes } from "@/data/content";
+import { privacy } from "@/data/legal";
+import { pageMetadata } from "@/lib/pageMetadata";
 
-export const metadata = stubMetadata("Privacy", "/privacy");
+export const metadata = pageMetadata({ title: privacy.title, description: privacy.description, path: routes.privacy });
 
 export default function PrivacyPage() {
-  return (
-    <PageShell>
-      <ComingSoon
-        title="Privacy"
-        blurb="The privacy policy is coming soon."
-        backHref="/"
-        backLabel="Back to home"
-      />
-    </PageShell>
-  );
+  return <LegalPage doc={privacy} path={routes.privacy} />;
 }

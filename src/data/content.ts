@@ -52,6 +52,7 @@ export const routes = {
   servicesProcess: "/services#process",
   contact: "/contact",
   contactBook: "/contact#book",
+  cv: "/cv",
   privacy: "/privacy",
   terms: "/terms",
 } as const;
@@ -190,6 +191,8 @@ export interface Role {
   readonly years: string;
   readonly title: string;
   readonly place: string;
+  /** Education rather than a job: the printable CV lists it under "Education". */
+  readonly study?: boolean;
 }
 
 export const experience: readonly Role[] = [
@@ -197,8 +200,17 @@ export const experience: readonly Role[] = [
   { id: "pulse", years: "2022 – 2024", title: "UI/UX Designer", place: "Pulse Labs, Remote" },
   { id: "tape", years: "2020 – 2022", title: "Brand Designer", place: "Tape & Co., Los Angeles" },
   { id: "alba", years: "2019 – 2020", title: "Junior Designer", place: "Studio Alba, San Diego" },
-  { id: "school", years: "2015 – 2019", title: "BA Visual Communication", place: "California Institute of Arts" },
+  { id: "school", years: "2015 – 2019", title: "BA Visual Communication", place: "California Institute of Arts", study: true },
 ];
+
+/** The printable CV page (/cv). Demo text. */
+export const cvPage = {
+  label: "Curriculum vitae",
+  intro: "My CV on one page: experience, skills and awards. Print it from a computer, or download the PDF.",
+  summary:
+    "Creative designer with seven years of experience in branding, product UI/UX and visual design. I take ideas from first sketch to shipped code for startups, studios and growing teams.",
+  updated: "November 2026",
+} as const;
 
 /** Skills and tools, grouped for the About page. The Home strip shows them all in one run. */
 export interface SkillGroup {

@@ -27,7 +27,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-section">
+    <footer className="mt-section print:hidden">
       {/* Phones and tablets: a purpose-built footer. Every row spans the same width. */}
       <div className="px-5 md:px-8 lg:hidden">
         <div className="mx-auto max-w-xl">

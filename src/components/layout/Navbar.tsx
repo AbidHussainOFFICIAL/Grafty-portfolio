@@ -139,7 +139,7 @@ export function Navbar() {
     <>
       <motion.header
         ref={headerRef}
-        className="sticky top-0 z-40 w-full"
+        className="sticky top-0 z-40 w-full print:hidden"
         animate={{ y: hidden ? "-100%" : "0%" }}
         transition={{ duration: reduceMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
         onFocusCapture={(event) => {

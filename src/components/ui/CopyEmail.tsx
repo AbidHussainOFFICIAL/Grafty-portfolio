@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { site } from "@/data/content";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import { CheckIcon, CopyIcon } from "./Icons";
 
@@ -16,6 +18,7 @@ export function CopyEmail({
 }) {
   const [copied, setCopied] = useState(false);
   const timer = useRef<number | undefined>(undefined);
+  const pathname = usePathname();
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
@@ -26,6 +29,7 @@ export function CopyEmail({
       return; // Clipboard access can be blocked; the mailto link still works.
     }
     setCopied(true);
+    trackEvent("Email copied", { page: pathname });
     window.clearTimeout(timer.current);
     timer.current = window.setTimeout(() => setCopied(false), 2000);
   }

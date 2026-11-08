@@ -1,18 +1,10 @@
-import { PageShell } from "@/components/layout/PageShell";
-import { ComingSoon } from "@/components/sections/ComingSoon";
-import { stubMetadata } from "@/lib/stubPage";
+import { LegalPage } from "@/components/legal/LegalPage";
+import { routes } from "@/data/content";
+import { terms } from "@/data/legal";
+import { pageMetadata } from "@/lib/pageMetadata";
 
-export const metadata = stubMetadata("Terms", "/terms");
+export const metadata = pageMetadata({ title: terms.title, description: terms.description, path: routes.terms });
 
 export default function TermsPage() {
-  return (
-    <PageShell>
-      <ComingSoon
-        title="Terms"
-        blurb="The terms of use are coming soon."
-        backHref="/"
-        backLabel="Back to home"
-      />
-    </PageShell>
-  );
+  return <LegalPage doc={terms} path={routes.terms} />;
 }
