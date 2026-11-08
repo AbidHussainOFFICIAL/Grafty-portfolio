@@ -16,7 +16,7 @@ const nodes = [
     "@type": "CollectionPage",
     "@id": `${site.url}${routes.work}#page`,
     url: `${site.url}${routes.work}`,
-    name: `Work | ${site.name}`,
+    name: `Work | ${site.brand}`,
     description,
     inLanguage: "en",
     isPartOf: { "@id": `${site.url}/#website` },

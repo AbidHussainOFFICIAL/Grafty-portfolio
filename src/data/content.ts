@@ -16,12 +16,16 @@ export const site = {
    */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://grafty-portfolio.vercel.app",
   jobTitle: "Creative designer",
-  title: "Jessy Linda | Branding, Product UI/UX & Design",
+  /** The page title in browser tabs and search results, and the title when a link is shared. */
+  title: "Grafty | Next.js Portfolio Website, Figma to Code",
+  /** The description search engines show. */
   description:
-    "Jessy Linda is an award-winning creative designer in California, USA, crafting intuitive, user-friendly experiences through branding, wireframing, prototyping and visual design.",
-  /** Shown when the page is shared (Open Graph and Twitter cards). */
+    "A responsive Next.js portfolio website built from a Figma mockup, with scroll animations, a first-visit loader and a mobile-first layout.",
+  /** Shown when the page is shared (Open Graph and Twitter cards, the web manifest). */
   shareDescription:
-    "Award-winning creative designer specialising in branding, product UI/UX and visual design.",
+    "A responsive Next.js portfolio website built from a Figma mockup, with scroll animations and a first-visit loader.",
+  /** About the designer; used in the structured data (Person, ProfessionalService), not as the page description. */
+  bio: "Jessy Linda is an award-winning creative designer in California, USA, crafting intuitive, user-friendly experiences through branding, wireframing, prototyping and visual design.",
 } as const;
 
 export interface NavLink {

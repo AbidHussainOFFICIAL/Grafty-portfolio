@@ -10,13 +10,15 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: site.title, template: `%s | ${site.name}` },
+  title: { default: site.title, template: `%s | ${site.brand}` },
   description: site.description,
   applicationName: site.brand,
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },
+  // Google Search Console's HTML-tag code, from GOOGLE_SITE_VERIFICATION (see .env.example). Without it no tag is added.
+  verification: { google: process.env.GOOGLE_SITE_VERIFICATION },
   // The share image comes from app/opengraph-image.png, which Next.js wires up automatically.
   openGraph: {
     type: "website",

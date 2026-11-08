@@ -33,8 +33,8 @@ Requires Node 20.9 or newer.
 | Which links the desktop bar shows | `inBar` on each entry of `navLinks` in `content.ts` |
 | Portfolio card colours | `tone` on each project in `src/data/content.ts` |
 | Images | `public/images/` (WebP, referenced from `content.ts`). Each has a blurred preview in `src/data/blur.ts`. |
-| Page title, description, site address, share text | `site` in `src/data/content.ts` |
-| Share image (Open Graph and Twitter card) | `src/app/opengraph-image.png` (1200×630) and its alt text in `opengraph-image.alt.txt` |
+| Page title, description, share text, site address | `site` in `src/data/content.ts` (`title`, `description` and `shareDescription` are what search results and shared links show; `bio` is the designer's description used only in the structured data) |
+| Share image (Open Graph and Twitter card) | `src/app/opengraph-image.png` (1200×630, device mockups) and its alt text in `opengraph-image.alt.txt` |
 | Favicon, Apple icon, app icons | `src/app/favicon.ico`, `src/app/icon.svg`, `src/app/apple-icon.png`, `public/icon-*.png` |
 | Structured data (Person, ProfessionalService, WebSite) | `src/components/seo/JsonLd.tsx` (built from `content.ts`) |
 | First-visit loader | `src/components/layout/Intro.tsx` and the `.intro-*` rules at the end of `globals.css` |
@@ -51,8 +51,9 @@ Requires Node 20.9 or newer.
 7. **Social links.** The structured data lists your profiles (`sameAs`) only once the links in `content.ts` point at real profiles instead of site home pages.
 8. **Analytics.** Run `npm install` (it adds `@vercel/analytics`), then switch on Web Analytics in your Vercel project (Analytics tab) and redeploy. It uses no cookies, so no banner is needed. Page views work on every plan; the custom events listed in `src/lib/analytics.ts` need a Vercel Pro plan. Vercel's Hobby plan is meant for personal, non-commercial use, so check its terms for a business portfolio.
 9. **Privacy and Terms.** `src/data/legal.ts` describes what the site does today, in plain language. Have it reviewed, add your business name and address, and update it if you add a service that handles visitors' data. The governing law is set to California as a placeholder.
-10. **Search Console.** Submit `/sitemap.xml` once the site is live, and run Lighthouse on the deployed site (targets: LCP under 2.5 s, CLS under 0.1, INP under 200 ms).
-11. **Logos.** The signature, Grafty wordmark and client logos in `src/data/artwork.ts` are vector traces of the screenshots. Swap in the official SVGs when you have them. The client logos are third-party trademarks; make sure you have the right to show them.
+10. **Search Console.** Add a **URL-prefix** property for the site address (the Domain property needs DNS access, which a `.vercel.app` address does not give you) and verify it with the **HTML tag** method. Put the code from the tag's `content="..."` in the `GOOGLE_SITE_VERIFICATION` environment variable in Vercel (see `.env.example`), redeploy, then click Verify. After that: submit `/sitemap.xml`, use URL Inspection → Request indexing for the home page and the other pages, and check progress with a search for `site:` followed by your address (it can take days to weeks). Then run Lighthouse on the deployed site (targets: LCP under 2.5 s, CLS under 0.1, INP under 200 ms).
+11. **Link previews.** Platforms cache the preview of a link. After changing the title, description or share image, deploy and re-scan the address in LinkedIn's Post Inspector (and Facebook's Sharing Debugger) so the new preview replaces the old one.
+12. **Logos.** The signature, Grafty wordmark and client logos in `src/data/artwork.ts` are vector traces of the screenshots. Swap in the official SVGs when you have them. The client logos are third-party trademarks; make sure you have the right to show them.
 
 ## Responsive behaviour
 
@@ -86,7 +87,7 @@ A short loader plays on a visitor's first visit: the wordmark draws in, a counte
 
 ## Search and sharing
 
-The page has a title and description, a canonical link, Open Graph and Twitter card tags (with the share image), a sitemap, a robots file, a web manifest, a theme colour and structured data. Review markup is left out on purpose: Google does not show stars for reviews a business publishes about itself, and the testimonials are placeholders. FAQ markup is on the Services page only: markup must match questions visible on the same page, and Home does not show the FAQ.
+The title reads "Grafty | Next.js Portfolio Website, Figma to Code" and inner pages end in "| Grafty". The page has a title and description, a canonical link, Open Graph and Twitter card tags (with the share image), a sitemap, a robots file, a web manifest, a theme colour and structured data. Review markup is left out on purpose: Google does not show stars for reviews a business publishes about itself, and the testimonials are placeholders. FAQ markup is on the Services page only: markup must match questions visible on the same page, and Home does not show the FAQ.
 
 ## Spacing, images and accessibility
 

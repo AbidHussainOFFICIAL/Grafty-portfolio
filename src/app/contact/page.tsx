@@ -18,7 +18,7 @@ const nodes = [
     "@type": "ContactPage",
     "@id": `${url}#page`,
     url,
-    name: `Contact | ${site.name}`,
+    name: `Contact | ${site.brand}`,
     description,
     inLanguage: "en",
     isPartOf: { "@id": `${site.url}/#website` },

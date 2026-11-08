@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { site } from "@/data/content";
 
 interface PageMetadataInput {
-  /** Becomes "<title> | Jessy Linda" through the root layout's template. */
+  /** Becomes "<title> | Grafty" through the root layout's template. */
   title: string;
   description?: string;
   /** The page's own address, e.g. "/work". It is also its canonical link. */
@@ -16,7 +16,7 @@ interface PageMetadataInput {
  * without them it would inherit the Home page's.
  */
 export function pageMetadata({ title, description, path, indexable = true }: PageMetadataInput): Metadata {
-  const shareTitle = `${title} | ${site.name}`;
+  const shareTitle = `${title} | ${site.brand}`;
   return {
     title,
     ...(description && { description }),

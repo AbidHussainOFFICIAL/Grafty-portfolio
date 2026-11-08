@@ -21,7 +21,7 @@ const nodes = [
     "@type": "WebPage",
     "@id": `${url}#page`,
     url,
-    name: `Services | ${site.name}`,
+    name: `Services | ${site.brand}`,
     description,
     inLanguage: "en",
     isPartOf: { "@id": `${site.url}/#website` },

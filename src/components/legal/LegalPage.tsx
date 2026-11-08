@@ -27,7 +27,7 @@ export function LegalPage({ doc, path }: LegalPageProps) {
       "@type": "WebPage",
       "@id": `${url}#page`,
       url,
-      name: `${doc.title} | ${site.name}`,
+      name: `${doc.title} | ${site.brand}`,
       description: doc.description,
       inLanguage: "en",
       isPartOf: { "@id": `${site.url}/#website` },

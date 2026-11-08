@@ -3,7 +3,7 @@ import { site } from "@/data/content";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: site.title,
+    name: site.brand,
     short_name: site.brand,
     description: site.shareDescription,
     start_url: "/",
